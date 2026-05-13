@@ -84,47 +84,56 @@ export default function Szolgaltatas() {
           </div>
         </section>
 
-        {/* Detailed pillers */}
-        {detailedPillers.map((p) => (
-          <section key={p.no} className="border-b border-border">
-            <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
-              <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
-                <div className="md:col-span-4">
-                  <div className="flex items-baseline justify-between">
-                    <SectionLabel>{p.name}</SectionLabel>
-                    <span className="font-mono text-xs text-foreground-muted">{p.no}</span>
+        {/* Detailed pillers — zig-zag symmetry */}
+        {detailedPillers.map((p, idx) => {
+          const reverse = idx % 2 === 1;
+          return (
+            <section key={p.no} className="border-b border-border">
+              <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
+                <div
+                  className={`flex flex-col gap-12 md:gap-16 ${
+                    reverse ? "md:flex-row-reverse" : "md:flex-row"
+                  }`}
+                >
+                  {/* Headline + intro — 1/3 width */}
+                  <div className="md:basis-1/3 md:shrink-0">
+                    <div className="flex items-baseline justify-between">
+                      <SectionLabel>{p.name}</SectionLabel>
+                      <span className="font-mono text-xs text-foreground-muted">{p.no}</span>
+                    </div>
+                    <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl lg:text-5xl">
+                      <em className="italic">{p.headline}</em>
+                    </h2>
+                    <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
+                      {p.intro}
+                    </p>
                   </div>
-                  <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl lg:text-5xl">
-                    <em className="italic">{p.headline}</em>
-                  </h2>
-                  <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
-                    {p.intro}
-                  </p>
-                </div>
 
-                <div className="md:col-span-8">
-                  <div className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-                    Mit tartalmaz
-                  </div>
-                  <ul className="mt-6 grid gap-px bg-border-strong">
-                    {p.items.map((item) => (
-                      <li
-                        key={item}
-                        className="flex items-start gap-4 bg-background p-5 font-sans text-sm text-foreground md:text-base"
-                      >
-                        <span className="mt-2 inline-block h-px w-4 shrink-0 bg-foreground-muted" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-8 border-l-2 border-foreground-dim pl-6 font-sans text-sm italic leading-relaxed text-foreground-soft md:text-base">
-                    {p.result}
+                  {/* List + result — 2/3 width */}
+                  <div className="md:basis-2/3">
+                    <div className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+                      Mit tartalmaz
+                    </div>
+                    <ul className="mt-6 grid gap-px bg-border-strong">
+                      {p.items.map((item) => (
+                        <li
+                          key={item}
+                          className="flex items-start gap-4 bg-background p-5 font-sans text-sm text-foreground md:text-base"
+                        >
+                          <span className="mt-2 inline-block h-px w-4 shrink-0 bg-foreground-muted" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-8 border-l-2 border-foreground-dim pl-6 font-sans text-sm italic leading-relaxed text-foreground-soft md:text-base">
+                      {p.result}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-        ))}
+            </section>
+          );
+        })}
 
         {/* Folyamat */}
         <section className="border-b border-border">

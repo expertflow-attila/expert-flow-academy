@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CTA_URL, Footer, Header, SectionLabel, SectionTitle } from "@/components/site-chrome";
 
@@ -322,17 +323,20 @@ function RolamIntro() {
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
           <div className="md:col-span-5">
-            <div className="bg-glow-violet relative aspect-square overflow-hidden border border-border-strong animate-pulse-glow">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="select-none font-display text-[16rem] italic leading-none text-foreground-dim opacity-60">
-                  A
-                </span>
-              </div>
-              <div className="absolute inset-x-5 bottom-5 flex items-end justify-between">
-                <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+            <div className="bg-glow-violet relative aspect-square overflow-hidden border border-border-strong">
+              <Image
+                src="/images/attila.jpg"
+                alt="Nagy Attila"
+                fill
+                sizes="(min-width: 768px) 42vw, 100vw"
+                className="object-cover opacity-95"
+                priority
+              />
+              <div className="pointer-events-none absolute inset-x-5 bottom-5 flex items-end justify-between text-background">
+                <span className="rounded-sm bg-background/55 px-2 py-1 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground backdrop-blur-sm">
                   Nagy Attila
                 </span>
-                <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+                <span className="rounded-sm bg-background/55 px-2 py-1 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground backdrop-blur-sm">
                   Founder
                 </span>
               </div>

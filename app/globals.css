@@ -1,24 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  /* Dark theme — EV-Landings inspired */
+  /* Dark theme — EV-Landings inspired (subtle, desaturated) */
   --color-background: oklch(0.13 0.005 280);
-  --color-foreground: oklch(0.95 0.005 90);
-  --color-foreground-soft: oklch(0.95 0.005 90 / 0.7);
-  --color-foreground-muted: oklch(0.95 0.005 90 / 0.5);
-  --color-foreground-dim: oklch(0.95 0.005 90 / 0.35);
-  --color-border: oklch(0.95 0.005 90 / 0.1);
-  --color-border-strong: oklch(0.95 0.005 90 / 0.18);
+  --color-foreground: oklch(0.90 0.005 90);          /* less bright off-white */
+  --color-foreground-soft: oklch(0.90 0.005 90 / 0.65);
+  --color-foreground-muted: oklch(0.90 0.005 90 / 0.45);
+  --color-foreground-dim: oklch(0.90 0.005 90 / 0.30);
+  --color-border: oklch(0.90 0.005 90 / 0.08);
+  --color-border-strong: oklch(0.90 0.005 90 / 0.14);
   --color-surface: oklch(0.16 0.005 280);
   --color-surface-2: oklch(0.18 0.005 280);
 
-  /* Accent palette — colored italics (különböző színek) */
-  --color-accent-rose: oklch(0.83 0.09 15);     /* rose/peach */
-  --color-accent-gold: oklch(0.82 0.10 80);     /* warm gold */
-  --color-accent-violet: oklch(0.78 0.10 290);  /* violet */
-  --color-accent-sky: oklch(0.80 0.08 230);     /* sky */
-  --color-accent-mint: oklch(0.82 0.08 160);    /* mint */
-  --color-accent-coral: oklch(0.75 0.13 30);    /* coral */
+  /* Accent palette — very subtle, mostly desaturated. Tints not full colors. */
+  --color-accent-rose: oklch(0.86 0.035 15);    /* warm peach */
+  --color-accent-violet: oklch(0.84 0.035 290); /* cool lavender */
+  --color-accent-sky: oklch(0.85 0.030 220);    /* misty blue */
+  --color-accent-mint: oklch(0.86 0.030 165);   /* pale mint */
+  --color-accent-coral: oklch(0.83 0.045 25);   /* dusty coral */
+  --color-accent-cream: oklch(0.88 0.025 70);   /* warm cream (replaces gold) */
 
   --font-sans: var(--font-instrument-sans), system-ui, sans-serif;
   --font-display: var(--font-instrument-serif), Georgia, serif;
@@ -56,28 +56,92 @@ body {
 *::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 4px; }
 *::-webkit-scrollbar-thumb:hover { background: var(--color-foreground-dim); }
 
-/* ─── Multi-color italic emphasis utilities ─────────────── */
+/* ─── Multi-color italic emphasis utilities (subtle) ──────────── */
 .em-rose   { color: var(--color-accent-rose); }
-.em-gold   { color: var(--color-accent-gold); }
 .em-violet { color: var(--color-accent-violet); }
 .em-sky    { color: var(--color-accent-sky); }
 .em-mint   { color: var(--color-accent-mint); }
 .em-coral  { color: var(--color-accent-coral); }
+.em-cream  { color: var(--color-accent-cream); }
+/* legacy: em-gold maps to cream (no harsh yellow) */
+.em-gold   { color: var(--color-accent-cream); }
 
-/* ─── Soft radial glow background (for showcase panel) ───── */
+/* ─── Soft radial glow background (for showcase / Rólam panel) ─── */
 .bg-glow-violet {
   background: radial-gradient(
     ellipse 80% 60% at 50% 40%,
-    oklch(0.78 0.10 290 / 0.18),
+    oklch(0.84 0.035 290 / 0.10),
     transparent 70%
   ), var(--color-surface);
 }
 .bg-glow-rose {
   background: radial-gradient(
     ellipse 80% 60% at 50% 40%,
-    oklch(0.83 0.09 15 / 0.16),
+    oklch(0.86 0.035 15 / 0.10),
     transparent 70%
   ), var(--color-surface);
+}
+.bg-glow-cream {
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 40%,
+    oklch(0.88 0.025 70 / 0.08),
+    transparent 70%
+  ), var(--color-surface);
+}
+
+/* ─── Hover-spotlight effect for cards (EV-Landings inspired) ─── */
+.card-hover {
+  position: relative;
+  transition: background-color 0.4s ease;
+}
+.card-hover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 0%),
+    oklch(0.90 0.005 90 / 0.05),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.card-hover:hover::before {
+  opacity: 1;
+}
+.card-hover:hover {
+  background-color: var(--color-surface);
+}
+
+/* Variant: rose-tinted hover */
+.card-hover-rose::before {
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 0%),
+    oklch(0.86 0.045 15 / 0.10),
+    transparent 40%
+  );
+}
+.card-hover-violet::before {
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 0%),
+    oklch(0.84 0.045 290 / 0.10),
+    transparent 40%
+  );
+}
+.card-hover-sky::before {
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 0%),
+    oklch(0.85 0.040 220 / 0.10),
+    transparent 40%
+  );
+}
+.card-hover-mint::before {
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 0%),
+    oklch(0.86 0.040 165 / 0.10),
+    transparent 40%
+  );
 }
 
 /* ─── Subtle fade-in-up animations ───────────────────────── */
@@ -98,8 +162,8 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.8; }
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.7; }
 }
 
 .animate-fade-in-up {
@@ -127,7 +191,7 @@ body {
   }
 }
 
-/* ─── Subtle border-decorated heading underline on hover ─── */
+/* ─── Hover-arrow micro animation ─── */
 .hover-arrow .arrow {
   display: inline-block;
   transition: transform 0.3s ease;
