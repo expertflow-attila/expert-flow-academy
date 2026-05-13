@@ -18,8 +18,8 @@ function Hero() {
         </p>
 
         <h1 className="animate-fade-in-up delay-100 mt-10 font-display text-5xl leading-[1.05] text-balance tracking-tight md:text-6xl lg:text-7xl">
-          AI-alapú <em className="italic em-violet">rendszerek</em> — szolgáltató{" "}
-          <em className="italic em-gold">egyéni</em> vállalkozóknak.
+          AI-alapú <em className="italic em-violet">rendszerek</em>{" "}
+          <em className="italic em-gold">szolgáltató</em> vállalkozóknak.
         </h1>
 
         <p className="animate-fade-in-up delay-200 mx-auto mt-8 max-w-2xl font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
