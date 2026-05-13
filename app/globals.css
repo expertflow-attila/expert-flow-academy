@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* Dark theme — EV-Landings inspired */
   --color-background: oklch(0.13 0.005 280);
   --color-foreground: oklch(0.95 0.005 90);
   --color-foreground-soft: oklch(0.95 0.005 90 / 0.7);
@@ -9,8 +10,15 @@
   --color-border: oklch(0.95 0.005 90 / 0.1);
   --color-border-strong: oklch(0.95 0.005 90 / 0.18);
   --color-surface: oklch(0.16 0.005 280);
-  --color-emphasis: oklch(0.95 0.005 90);
-  --color-accent: oklch(0.78 0.12 80);
+  --color-surface-2: oklch(0.18 0.005 280);
+
+  /* Accent palette — colored italics (különböző színek) */
+  --color-accent-rose: oklch(0.83 0.09 15);     /* rose/peach */
+  --color-accent-gold: oklch(0.82 0.10 80);     /* warm gold */
+  --color-accent-violet: oklch(0.78 0.10 290);  /* violet */
+  --color-accent-sky: oklch(0.80 0.08 230);     /* sky */
+  --color-accent-mint: oklch(0.82 0.08 160);    /* mint */
+  --color-accent-coral: oklch(0.75 0.13 30);    /* coral */
 
   --font-sans: var(--font-instrument-sans), system-ui, sans-serif;
   --font-display: var(--font-instrument-serif), Georgia, serif;
@@ -47,3 +55,83 @@ body {
 *::-webkit-scrollbar-track { background: transparent; }
 *::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 4px; }
 *::-webkit-scrollbar-thumb:hover { background: var(--color-foreground-dim); }
+
+/* ─── Multi-color italic emphasis utilities ─────────────── */
+.em-rose   { color: var(--color-accent-rose); }
+.em-gold   { color: var(--color-accent-gold); }
+.em-violet { color: var(--color-accent-violet); }
+.em-sky    { color: var(--color-accent-sky); }
+.em-mint   { color: var(--color-accent-mint); }
+.em-coral  { color: var(--color-accent-coral); }
+
+/* ─── Soft radial glow background (for showcase panel) ───── */
+.bg-glow-violet {
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 40%,
+    oklch(0.78 0.10 290 / 0.18),
+    transparent 70%
+  ), var(--color-surface);
+}
+.bg-glow-rose {
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 40%,
+    oklch(0.83 0.09 15 / 0.16),
+    transparent 70%
+  ), var(--color-surface);
+}
+
+/* ─── Subtle fade-in-up animations ───────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out backwards;
+}
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out backwards;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+/* Stagger helpers */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-pulse-glow {
+    animation: none;
+  }
+}
+
+/* ─── Subtle border-decorated heading underline on hover ─── */
+.hover-arrow .arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+.hover-arrow:hover .arrow {
+  transform: translateX(4px);
+}

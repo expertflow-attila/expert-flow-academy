@@ -1,235 +1,86 @@
 import Link from "next/link";
-
-const CTA_URL = "https://cal.com/attila-nagy-8uefco/30min";
-const YOUTUBE_URL = "https://www.youtube.com/@nagyattilaferenc";
-const GITHUB_URL = "https://github.com/expertflow-attila";
-
-/* ─────────────────────────────────────────────────────────────────── */
-/*  HEADER (top nav + product sub-nav)                                  */
-/* ─────────────────────────────────────────────────────────────────── */
-
-function Header() {
-  return (
-    <header className="border-b border-border">
-      {/* Top row */}
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
-        <Link
-          href="/"
-          aria-label="Expert Flow — főoldal"
-          className="font-display text-2xl italic tracking-tight"
-        >
-          Expert Flow
-        </Link>
-
-        <nav aria-label="Külső linkek" className="flex items-center gap-8">
-          <Link
-            href={CTA_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground"
-          >
-            Konzultáció ↗
-          </Link>
-          <Link
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground"
-          >
-            GitHub ↗
-          </Link>
-          <div className="hidden items-center gap-3 border-l border-border-strong pl-8 md:flex">
-            <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-              Közösség
-            </span>
-            <Link
-              href={YOUTUBE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-              className="text-foreground-soft transition-colors hover:text-foreground"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z" />
-              </svg>
-            </Link>
-            <Link
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className="text-foreground-soft transition-colors hover:text-foreground"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.3 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3" />
-              </svg>
-            </Link>
-          </div>
-        </nav>
-      </div>
-
-      {/* Sub-nav: 3 tabs */}
-      <nav
-        aria-label="Termékek"
-        className="border-t border-border bg-background"
-      >
-        <div className="mx-auto grid max-w-7xl grid-cols-3 px-6 lg:px-10">
-          <Link
-            href="/"
-            className="border-r border-border py-6 transition-colors hover:bg-surface"
-            aria-current="page"
-          >
-            <div className="font-mono text-xs uppercase tracking-[0.22em] text-foreground">
-              Áttekintés
-            </div>
-            <div className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-              Index
-            </div>
-          </Link>
-          <Link
-            href="/alap"
-            className="border-r border-border py-6 transition-colors hover:bg-surface"
-          >
-            <div className="font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft">
-              EV-Alap
-            </div>
-            <div className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-              Kiindulópont
-            </div>
-          </Link>
-          <Link
-            href="/aios"
-            className="py-6 transition-colors hover:bg-surface"
-          >
-            <div className="font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft">
-              EV-AIOS
-            </div>
-            <div className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-              AI Operációs Rendszer
-            </div>
-          </Link>
-        </div>
-      </nav>
-    </header>
-  );
-}
+import { CTA_URL, Footer, Header, SectionLabel, SectionTitle } from "@/components/site-chrome";
 
 /* ─────────────────────────────────────────────────────────────────── */
 /*  HERO                                                                */
 /* ─────────────────────────────────────────────────────────────────── */
 
-function CodeBlock({ step, code, copyLabel = "Másol" }: { step: string; code: string; copyLabel?: string }) {
-  return (
-    <div className="border border-border-strong">
-      <div className="flex items-center justify-between border-b border-border-strong bg-surface px-4 py-2.5">
-        <span className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-foreground-muted">
-          {step}
-        </span>
-        <button
-          type="button"
-          className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-foreground-soft transition-colors hover:text-foreground"
-        >
-          {copyLabel}
-        </button>
-      </div>
-      <pre className="overflow-x-auto bg-background px-4 py-3">
-        <code className="font-mono text-sm text-foreground">{code}</code>
-      </pre>
-    </div>
-  );
-}
-
 function Hero() {
   return (
     <section className="border-b border-border py-24 md:py-32 lg:py-40">
       <div className="mx-auto max-w-3xl px-6 text-center lg:px-10">
-        {/* Breadcrumb label */}
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
+        <p className="animate-fade-in font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
           <span>Expert Flow</span>
           <span className="mx-3 text-foreground-dim">●</span>
-          <span>Áttekintés</span>
+          <span>AI rendszerek</span>
           <span className="mx-3 text-foreground-dim">●</span>
-          <span>AI rendszerek egyéni vállalkozóknak</span>
+          <span>v2.0</span>
         </p>
 
-        {/* Headline */}
-        <h1 className="mt-10 font-display text-5xl leading-[1.05] text-balance tracking-tight md:text-6xl lg:text-7xl">
-          Az AI <em className="italic text-foreground">operációs rendszered</em>
-          <br className="hidden md:block" /> — egyéni vállalkozónak.
+        <h1 className="animate-fade-in-up delay-100 mt-10 font-display text-5xl leading-[1.05] text-balance tracking-tight md:text-6xl lg:text-7xl">
+          AI-alapú <em className="italic em-violet">rendszerek</em> — szolgáltató{" "}
+          <em className="italic em-gold">egyéni</em> vállalkozóknak.
         </h1>
 
-        {/* Subtitle */}
-        <p className="mx-auto mt-8 max-w-2xl font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
-          Három skill, három pillér, két keretrendszer. Minimális, használat által bővülő rendszer
-          ami nem a 47-lépéses workflow-kban hisz — hanem a Lego-elvben: kis, cserélhető darabok.
+        <p className="animate-fade-in-up delay-200 mx-auto mt-8 max-w-2xl font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
+          Szolgáltatási rendszert hozunk létre vállalkozásod köré, amely láthatóvá és értékesíthetővé
+          teszi a szakmai tudásodat. Magyarul. AI-csapattal.
         </p>
-
-        {/* Two code blocks */}
-        <div className="mx-auto mt-14 max-w-xl space-y-5 text-left">
-          <CodeBlock
-            step="1. Foglalj 30 perces konzultációt"
-            code={CTA_URL}
-          />
-          <CodeBlock
-            step="2. Indítsd a bemelegítő kérdőívet"
-            code="Olvasd el a CLAUDE.md-t és kezdj el dokumentálni — ev-intake.md"
-          />
-        </div>
       </div>
     </section>
   );
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
-/*  DEMO SECTION ("Lásd működés közben")                                */
+/*  TWO LARGE CARDS — Válassz                                           */
 /* ─────────────────────────────────────────────────────────────────── */
 
-function DemoSection() {
+function TwoChoice() {
   return (
     <section className="border-b border-border">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
-        <h2 className="font-display text-2xl italic tracking-tight md:text-3xl">
-          Lásd működés közben
-        </h2>
+        <SectionTitle>Válassz</SectionTitle>
 
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-2">
-          {/* Left: mockup card */}
-          <div className="aspect-[4/3] border border-border-strong bg-background p-5">
-            <div className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-foreground-dim" />
-              <span className="h-2.5 w-2.5 rounded-full bg-foreground-dim" />
-              <span className="h-2.5 w-2.5 rounded-full bg-foreground-dim" />
-              <span className="ml-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-                expert-flow
-              </span>
+        <div className="mt-10 grid grid-cols-1 gap-px bg-border-strong md:grid-cols-2">
+          <Link
+            href={CTA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover-arrow group flex flex-col bg-background p-8 transition-colors hover:bg-surface lg:p-12"
+          >
+            <div className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
+              01 · Konzultáció
             </div>
-            <div className="mt-8 space-y-4">
-              <div className="font-mono text-xs text-foreground-soft">
-                <span className="text-foreground-dim">$</span> /attekintes
-              </div>
-              <div className="space-y-2 font-mono text-xs text-foreground-muted">
-                <div>→ Heti audit indítása…</div>
-                <div>→ pillér: ügyfélszerzés</div>
-                <div>→ napló: decisions/naplo.md</div>
-                <div>→ commit: 2026-05-13 23:47</div>
-              </div>
+            <h3 className="mt-8 font-display text-5xl tracking-tight md:text-6xl">
+              30 perces <em className="italic em-rose">felmérés</em>
+            </h3>
+            <p className="mt-6 max-w-prose font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
+              Átbeszéljük hol a legnagyobb fájdalompont — a 3 pillér közül melyiken kell először
+              dolgozni nálad. Cal.com-on át, 30 perc, ingyenes.
+            </p>
+            <div className="mt-10 font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors group-hover:text-foreground">
+              Hívás foglalása <span className="arrow">→</span>
             </div>
-          </div>
+          </Link>
 
-          {/* Right: large stylized letter */}
-          <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden border-y border-r border-border-strong bg-background lg:border-l-0">
-            <span className="select-none font-display text-[18rem] italic leading-none text-foreground-soft opacity-70">
-              E
-            </span>
-            <div className="absolute inset-x-5 bottom-4 flex items-center justify-between">
-              <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-                Expert Flow
-              </span>
-              <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-                AIOS
-              </span>
+          <Link
+            href="/araink"
+            className="hover-arrow group flex flex-col bg-background p-8 transition-colors hover:bg-surface lg:p-12"
+          >
+            <div className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
+              02 · Havi együttműködés
             </div>
-          </div>
+            <h3 className="mt-8 font-display text-5xl tracking-tight md:text-6xl">
+              Retainer <em className="italic em-violet">csomagok</em>
+            </h3>
+            <p className="mt-6 max-w-prose font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
+              Indító (120k Ft), Növekedési (220k Ft), Skálázó (450k Ft). Havi együttműködés,
+              3 hónap minimum, részletfizetés.
+            </p>
+            <div className="mt-10 font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors group-hover:text-foreground">
+              Áraink megnyitása <span className="arrow">→</span>
+            </div>
+          </Link>
         </div>
       </div>
     </section>
@@ -237,53 +88,126 @@ function DemoSection() {
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
-/*  FEATURES (6-card grid)                                              */
+/*  3 PILLER (services preview)                                         */
 /* ─────────────────────────────────────────────────────────────────── */
 
-const features = [
+const pillers = [
   {
-    label: "Három skill",
-    text: "/bevezetes (setup), /attekintes (heti audit), /fejlesztes (heti 3Ms interjú). Több nem kell — bővítsd használat által.",
+    no: "01",
+    name: "Ügyfélszerzés",
+    em: "em-rose",
+    title: "Leegyszerűsítjük az ügyfélszerzés folyamatát.",
+    text: "Olyan rendszert építünk, ami a háttérben dolgozik — így a meglévő ügyfeleid kiszolgálására fordíthatod az energiád.",
   },
   {
-    label: "Három pillér",
-    text: "Ügyfélszerzés, ügyfélkezelés, háttérműködés — minden hét egy pillér, egy darab.",
+    no: "02",
+    name: "Kiszolgálás",
+    em: "em-mint",
+    title: "Professzionális szintre emeljük az ügyfeleid kiszolgálását.",
+    text: "Egységes folyamatokat alakítunk ki, hogy minden kliensed ugyanazt a magas színvonalú élményt kapja.",
   },
   {
-    label: "3Ms keretrendszer",
-    text: "Mindset → Method → Machine — soha nem ugorható át. A Machine-re menés Mindset nélkül = hype.",
-  },
-  {
-    label: "Lego-elv",
-    text: "Kis, cserélhető darabok — nem egyetlen 47-lépéses workflow. A cserélhetőség = túlélés.",
-  },
-  {
-    label: "Append-only napló",
-    text: "decisions/naplo.md — mit döntöttél, miért. Nem felejt. A /attekintes és /fejlesztes ide ír.",
-  },
-  {
-    label: "Magyar nyelv natív",
-    text: "Tegező operátor-hang, nem fordított ChatGPT-szöveg. A CLAUDE.md fix válaszsztenderdet ad.",
+    no: "03",
+    name: "Háttérműködés",
+    em: "em-sky",
+    title: "Fókuszálttá tesszük a vállalkozásod működését.",
+    text: "Automatizáljuk az ismétlődő háttérfeladataidat — te pedig a szakmai fejlődésedre és az ügyfeleidre koncentrálhatsz.",
   },
 ];
 
-function Features() {
+function ThreePillers() {
   return (
     <section className="border-b border-border">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
-        <h2 className="font-display text-2xl italic tracking-tight md:text-3xl">Funkciók</h2>
+        <SectionTitle>Három pillér</SectionTitle>
+        <p className="mt-4 max-w-prose font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
+          A három legnagyobb kihívásodra fókuszálunk — mert tudjuk, ezek viszik el a legtöbb
+          energiádat.
+        </p>
 
         <div className="mt-10 grid grid-cols-1 border-l border-t border-border-strong md:grid-cols-3">
-          {features.map((feature) => (
+          {pillers.map((p) => (
             <article
-              key={feature.label}
+              key={p.no}
+              className="hover-arrow border-b border-r border-border-strong px-6 py-8 transition-colors hover:bg-surface"
+            >
+              <div className="flex items-baseline justify-between">
+                <span className="font-mono text-xs uppercase tracking-[0.22em] text-foreground">
+                  {p.name}
+                </span>
+                <span className="font-mono text-[0.7rem] text-foreground-muted">{p.no}</span>
+              </div>
+              <h3 className="mt-6 font-display text-2xl italic leading-snug md:text-3xl">
+                <span className={p.em}>{p.title}</span>
+              </h3>
+              <p className="mt-5 font-sans text-sm leading-relaxed text-foreground-soft md:text-[0.95rem]">
+                {p.text}
+              </p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-10 text-center">
+          <Link
+            href="/szolgaltatas"
+            className="hover-arrow group font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground"
+          >
+            Szolgáltatás részletek <span className="arrow">→</span>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────── */
+/*  KÜLÖNBSÉG — 6 card grid                                             */
+/* ─────────────────────────────────────────────────────────────────── */
+
+const differences = [
+  {
+    label: "Szolgáltatói fókusz",
+    text: "Kizárólag szolgáltató vállalkozók számára kínálunk személyre szabott megoldásokat, amelyek igazodnak a célközönség igényeihez.",
+  },
+  {
+    label: "Teljes körű megoldások",
+    text: "Nem különálló automatizációkat építünk, hanem egy rendszert, ami összeköti a marketinged, az ügyfélkezelésed és a napi működésed.",
+  },
+  {
+    label: "Fenntartható szemlélet",
+    text: "Nem hiszünk a végtelen növekedésben. Az AI-t arra használjuk, hogy a vállalkozásod stabil, egyszerű és fenntartható legyen.",
+  },
+  {
+    label: "Magyar nyelv natív",
+    text: "Tegező operátor-hang, nem fordított ChatGPT-szöveg. Beszélj velünk az anyanyelveden.",
+  },
+  {
+    label: "Build-in-public",
+    text: "Minden lépést dokumentálok — a hibákat is. Aki velem tart, látja a folyamatot, nem csak az eredményt.",
+  },
+  {
+    label: "Lego-elv",
+    text: "Kis, cserélhető darabok — nem egyetlen 47-lépéses workflow. Heti egy darab épül, használat által nő a rendszer.",
+  },
+];
+
+function SixCardGrid() {
+  return (
+    <section className="border-b border-border">
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
+        <SectionTitle>Miben vagyunk mások?</SectionTitle>
+
+        <div className="mt-10 grid grid-cols-1 border-l border-t border-border-strong md:grid-cols-3">
+          {differences.map((d) => (
+            <article
+              key={d.label}
               className="border-b border-r border-border-strong px-6 py-8 transition-colors hover:bg-surface"
             >
               <h3 className="font-mono text-xs uppercase tracking-[0.22em] text-foreground">
-                {feature.label}
+                {d.label}
               </h3>
               <p className="mt-5 font-sans text-sm leading-relaxed text-foreground-soft md:text-[0.95rem]">
-                {feature.text}
+                {d.text}
               </p>
             </article>
           ))}
@@ -294,56 +218,93 @@ function Features() {
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
-/*  TWO-CARD CTA                                                        */
+/*  PRICING PILLARS — like Webflow original, dark-styled                */
 /* ─────────────────────────────────────────────────────────────────── */
 
-function TwoCardCta() {
+const pricingPillars = [
+  {
+    no: "01",
+    name: "Ügyfélszerzés",
+    em: "em-rose",
+    headline: "Kiszámítható ügyfélszerzés minden hónapban.",
+    items: [
+      "Hatékony értékesítési rendszerek",
+      "AI asszisztens az érdeklődők előszűrésére",
+      "Automatizált email marketing és utánkövetés",
+    ],
+  },
+  {
+    no: "02",
+    name: "Kiszolgálás",
+    em: "em-mint",
+    headline: "Átlátható folyamatok meglévő és új ügyfeleidnek.",
+    items: [
+      "Professzionális onboarding minden ügyfélnek",
+      "Személyre szabott ügyfélkezelő rendszer",
+      "Automatikus visszajelzés és elégedettség-mérés",
+    ],
+  },
+  {
+    no: "03",
+    name: "Háttérműködés",
+    em: "em-sky",
+    headline: "Rendezett háttér, hogy az ügyfeleidre fókuszálhass.",
+    items: [
+      "Automatizált számlázás és adminisztráció",
+      "AI-alapú belső tudásbázis és döntéstámogatás",
+      "Digitális csapatod munkájának összehangolása",
+    ],
+  },
+];
+
+function PricingPillars() {
   return (
     <section className="border-b border-border">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
-        <h2 className="font-display text-2xl italic tracking-tight md:text-3xl">
-          Még nem volt felmérő hívásod?
-        </h2>
+        <div className="mx-auto max-w-3xl text-center">
+          <SectionLabel>Egyéni szolgáltatásunk</SectionLabel>
+          <h2 className="mt-6 font-display text-4xl tracking-tight text-balance md:text-5xl lg:text-6xl">
+            Három <em className="italic em-gold">alappillér</em>
+          </h2>
+          <p className="mx-auto mt-6 max-w-prose font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
+            Az eszközök és platformok változásától függetlenül mindig ezek határozzák meg
+            egy vállalkozás sikerét.
+          </p>
+        </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-px bg-border-strong md:grid-cols-2">
-          <Link
-            href={CTA_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block bg-background p-8 transition-colors hover:bg-surface lg:p-12"
-          >
-            <div className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
-              Először ez kell
-            </div>
-            <h3 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-              Először a <em className="italic">felmérés</em>
-            </h3>
-            <p className="mt-5 font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
-              Ha még nem tudod pontosan kit szolgálsz és mit ajánlasz, az AIOS context fájljai
-              homályosak maradnak. Egy 30 perces hívás tisztázza az alapot.
-            </p>
-            <div className="mt-10 font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors group-hover:text-foreground">
-              Hívás foglalása →
-            </div>
-          </Link>
+        <div className="mt-14 grid grid-cols-1 border-l border-t border-border-strong md:grid-cols-3">
+          {pricingPillars.map((p) => (
+            <article
+              key={p.no}
+              className="border-b border-r border-border-strong px-6 py-10 lg:px-8 lg:py-12"
+            >
+              <div className="flex items-baseline justify-between">
+                <span className="font-mono text-xs uppercase tracking-[0.22em] text-foreground">
+                  {p.name}
+                </span>
+                <span className="font-mono text-[0.7rem] text-foreground-muted">{p.no}</span>
+              </div>
+              <h3 className="mt-6 font-display text-2xl italic leading-snug md:text-3xl">
+                <span className={p.em}>{p.headline}</span>
+              </h3>
+              <ul className="mt-8 space-y-3 font-sans text-sm leading-relaxed text-foreground-soft md:text-[0.95rem]">
+                {p.items.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <span className="mt-2 inline-block h-px w-3 shrink-0 bg-foreground-muted" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
 
+        <div className="mt-12 text-center">
           <Link
-            href="/aios"
-            className="group block bg-background p-8 transition-colors hover:bg-surface lg:p-12"
+            href="/araink"
+            className="hover-arrow group font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground"
           >
-            <div className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
-              Áttekintés
-            </div>
-            <h3 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-              Miért így <em className="italic">épül</em>
-            </h3>
-            <p className="mt-5 font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
-              Két repó, egy út. Az áttekintés megmutatja a teljes folyamatot a kezdéstől a heti
-              automatizálási ritmusig — Lego-elv szerint.
-            </p>
-            <div className="mt-10 font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors group-hover:text-foreground">
-              Áttekintés megnyitása →
-            </div>
+            Áraink megnyitása <span className="arrow">→</span>
           </Link>
         </div>
       </div>
@@ -352,45 +313,161 @@ function TwoCardCta() {
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
-/*  FOOTER                                                              */
+/*  RÓLAM intro                                                         */
 /* ─────────────────────────────────────────────────────────────────── */
 
-function Footer() {
+function RolamIntro() {
   return (
-    <footer>
-      <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-6 py-10 text-xs uppercase tracking-[0.22em] text-foreground-muted md:flex-row md:items-center lg:px-10">
-        <div className="font-mono">
-          <span>Expert Flow</span>
-          <span className="mx-3 text-foreground-dim">·</span>
-          <span>v0.1.0</span>
+    <section className="border-b border-border">
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <div className="bg-glow-violet relative aspect-square overflow-hidden border border-border-strong animate-pulse-glow">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="select-none font-display text-[16rem] italic leading-none text-foreground-dim opacity-60">
+                  A
+                </span>
+              </div>
+              <div className="absolute inset-x-5 bottom-5 flex items-end justify-between">
+                <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+                  Nagy Attila
+                </span>
+                <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+                  Founder
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="md:col-span-7 md:pt-8">
+            <SectionLabel>Rólam</SectionLabel>
+            <h3 className="mt-6 font-display text-3xl tracking-tight md:text-4xl lg:text-5xl">
+              Üdvözöllek az <em className="italic em-rose">oldalamon!</em>
+            </h3>
+            <p className="mt-6 max-w-prose font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
+              Nagy Attilának hívnak, és célom azoknak a vállalkozóknak a támogatása, akik hozzám
+              hasonlóan szeretnék a legtöbbet kihozni hivatásukból, miközben másokat támogatnak a
+              megszerzett tudásukkal.
+            </p>
+            <p className="mt-4 max-w-prose font-sans text-sm leading-relaxed text-foreground-muted md:text-base">
+              Most a build-in-public útvonalon dokumentálom az utam — nulla fizetős ügyféltől
+              az első retainerig.
+            </p>
+            <Link
+              href="/rolam"
+              className="hover-arrow group mt-10 inline-block font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground"
+            >
+              Ismerj meg jobban <span className="arrow">→</span>
+            </Link>
+          </div>
         </div>
-        <Link
-          href="https://expertflow.hu"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-mono transition-colors hover:text-foreground"
-        >
-          expertflow.hu ↗
-        </Link>
-        <div className="font-mono">© 2026 · Nagy Attila e.v.</div>
       </div>
-    </footer>
+    </section>
   );
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
-/*  PAGE                                                                */
+/*  SHOWCASE — terminal mockup + giant E letter (like "Az út")          */
+/* ─────────────────────────────────────────────────────────────────── */
+
+function Showcase() {
+  return (
+    <section className="border-b border-border">
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-24">
+        <SectionTitle>Hogyan néz ki</SectionTitle>
+
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-2">
+          {/* Terminal-style code block */}
+          <div className="border border-border-strong bg-background p-5">
+            <div className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-foreground-dim" />
+              <span className="h-2.5 w-2.5 rounded-full bg-foreground-dim" />
+              <span className="h-2.5 w-2.5 rounded-full bg-foreground-dim" />
+              <span className="ml-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+                expert-flow · áttekintés
+              </span>
+            </div>
+            <pre className="mt-8 overflow-x-auto font-mono text-xs leading-relaxed text-foreground-soft">
+              <code>{`› git clone expertflow-ai-team && cd expertflow
+/bevezetes                # felmérés, 3 pillér priorizálása
+  → kontext/ ügyfél-profil generálva
+  → ajánlat / icp kész
+
+› cd ev-aios && cp ../kontext/* context/
+/attekintes               # heti audit
+  → pillér: ügyfélszerzés
+  → napló: decisions/naplo.md
+
+› hetente: /fejlesztes    # 3Ms interjú
+  Mindset → Method → Machine
+  → 1 automatizálási darab kész
+
+Done. AIOS működik. Heti egy darab épül.`}</code>
+            </pre>
+          </div>
+
+          {/* Giant E with glow */}
+          <div className="bg-glow-rose relative flex aspect-auto items-center justify-center overflow-hidden border-y border-r border-border-strong lg:border-l-0">
+            <div className="absolute inset-x-6 top-6 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+              Expert Flow
+            </div>
+            <span className="animate-pulse-glow select-none font-display text-[20rem] italic leading-none text-foreground opacity-30">
+              E
+            </span>
+            <div className="absolute inset-x-6 bottom-6 flex items-end justify-between font-mono text-[0.65rem] uppercase tracking-[0.22em]">
+              <span className="text-foreground-muted">3 pillér</span>
+              <span className="text-foreground-muted">Egy rendszer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────── */
+/*  CTA                                                                 */
+/* ─────────────────────────────────────────────────────────────────── */
+
+function FinalCta() {
+  return (
+    <section className="border-b border-border">
+      <div className="mx-auto max-w-3xl px-6 py-20 text-center lg:px-10 lg:py-32">
+        <h2 className="font-display text-4xl tracking-tight text-balance md:text-5xl lg:text-6xl">
+          Készen állsz <em className="italic em-coral">elindulni?</em>
+        </h2>
+        <p className="mx-auto mt-6 max-w-prose font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
+          Foglalj egy 30 perces felmérést. Kiderítjük melyik pilléren a legnagyobb a hatás nálad —
+          és építünk egy konkrét tervet.
+        </p>
+        <Link
+          href={CTA_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover-arrow group mt-12 inline-block border border-foreground bg-foreground px-10 py-5 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
+        >
+          30 perces felmérés foglalása <span className="arrow">→</span>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 /* ─────────────────────────────────────────────────────────────────── */
 
 export default function Home() {
   return (
     <>
-      <Header />
+      <Header active="/" />
       <main id="main">
         <Hero />
-        <DemoSection />
-        <Features />
-        <TwoCardCta />
+        <TwoChoice />
+        <ThreePillers />
+        <SixCardGrid />
+        <PricingPillars />
+        <RolamIntro />
+        <Showcase />
+        <FinalCta />
       </main>
       <Footer />
     </>
