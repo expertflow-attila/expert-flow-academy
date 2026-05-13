@@ -110,7 +110,7 @@ const pillers = [
   {
     no: "03",
     name: "Háttérműködés",
-    em: "em-rose",
+    em: "em-sky",
     title: "Fókuszálttá tesszük a vállalkozásod működését.",
     text: "Automatizáljuk az ismétlődő háttérfeladataidat — te pedig a szakmai fejlődésedre és az ügyfeleidre koncentrálhatsz.",
   },
@@ -248,7 +248,7 @@ const pricingPillars = [
   {
     no: "03",
     name: "Háttérműködés",
-    em: "em-rose",
+    em: "em-sky",
     headline: "Rendezett háttér, hogy az ügyfeleidre fókuszálhass.",
     items: [
       "Automatizált számlázás és adminisztráció",
@@ -438,7 +438,7 @@ function FinalCta() {
     <section className="border-b border-border">
       <div className="mx-auto max-w-3xl px-6 py-20 text-center lg:px-10 lg:py-32">
         <h2 className="font-display text-4xl tracking-tight text-balance md:text-5xl lg:text-6xl">
-          Készen állsz <em className="italic em-violet">elindulni?</em>
+          Készen állsz <em className="italic em-sky">elindulni?</em>
         </h2>
         <p className="mx-auto mt-6 max-w-prose font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
           Foglalj egy 30 perces felmérést. Kiderítjük melyik pilléren a legnagyobb a hatás nálad —
