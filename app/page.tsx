@@ -20,7 +20,7 @@ function Hero() {
 
         <h1 className="animate-fade-in-up delay-100 mt-10 font-display text-5xl leading-[1.05] text-balance tracking-tight md:text-6xl lg:text-7xl">
           AI-alapú <em className="italic em-violet">rendszerek</em>{" "}
-          <em className="italic em-gold">szolgáltató</em> vállalkozóknak.
+          <em className="italic em-violet">szolgáltató</em> vállalkozóknak.
         </h1>
 
         <p className="animate-fade-in-up delay-200 mx-auto mt-8 max-w-2xl font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
@@ -103,14 +103,14 @@ const pillers = [
   {
     no: "02",
     name: "Kiszolgálás",
-    em: "em-mint",
+    em: "em-violet",
     title: "Professzionális szintre emeljük az ügyfeleid kiszolgálását.",
     text: "Egységes folyamatokat alakítunk ki, hogy minden kliensed ugyanazt a magas színvonalú élményt kapja.",
   },
   {
     no: "03",
     name: "Háttérműködés",
-    em: "em-sky",
+    em: "em-rose",
     title: "Fókuszálttá tesszük a vállalkozásod működését.",
     text: "Automatizáljuk az ismétlődő háttérfeladataidat — te pedig a szakmai fejlődésedre és az ügyfeleidre koncentrálhatsz.",
   },
@@ -237,7 +237,7 @@ const pricingPillars = [
   {
     no: "02",
     name: "Kiszolgálás",
-    em: "em-mint",
+    em: "em-violet",
     headline: "Átlátható folyamatok meglévő és új ügyfeleidnek.",
     items: [
       "Professzionális onboarding minden ügyfélnek",
@@ -248,7 +248,7 @@ const pricingPillars = [
   {
     no: "03",
     name: "Háttérműködés",
-    em: "em-sky",
+    em: "em-rose",
     headline: "Rendezett háttér, hogy az ügyfeleidre fókuszálhass.",
     items: [
       "Automatizált számlázás és adminisztráció",
@@ -265,7 +265,7 @@ function PricingPillars() {
         <div className="mx-auto max-w-3xl text-center">
           <SectionLabel>Egyéni szolgáltatásunk</SectionLabel>
           <h2 className="mt-6 font-display text-4xl tracking-tight text-balance md:text-5xl lg:text-6xl">
-            Három <em className="italic em-gold">alappillér</em>
+            Három <em className="italic em-violet">alappillér</em>
           </h2>
           <p className="mx-auto mt-6 max-w-prose font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
             Az eszközök és platformok változásától függetlenül mindig ezek határozzák meg
@@ -438,7 +438,7 @@ function FinalCta() {
     <section className="border-b border-border">
       <div className="mx-auto max-w-3xl px-6 py-20 text-center lg:px-10 lg:py-32">
         <h2 className="font-display text-4xl tracking-tight text-balance md:text-5xl lg:text-6xl">
-          Készen állsz <em className="italic em-coral">elindulni?</em>
+          Készen állsz <em className="italic em-violet">elindulni?</em>
         </h2>
         <p className="mx-auto mt-6 max-w-prose font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
           Foglalj egy 30 perces felmérést. Kiderítjük melyik pilléren a legnagyobb a hatás nálad —
