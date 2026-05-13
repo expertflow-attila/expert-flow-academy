@@ -5,6 +5,37 @@ import { CTA_URL, Footer, Header, SectionLabel, SectionTitle, YOUTUBE_URL } from
 export const metadata: Metadata = {
   title: "Rólam",
   description: "Nagy Attila — AI-vezérelt vállalkozás építése build-in-public keretben. Nulla fizetős ügyfél, dokumentált út.",
+  alternates: { canonical: "/rolam" },
+  openGraph: {
+    title: "Rólam · Expert Flow",
+    description: "Nagy Attila — AI-vezérelt vállalkozás build-in-public keretben.",
+    url: "/rolam",
+    type: "profile",
+  },
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Expert Flow", item: "https://expertflow-aios.vercel.app/" },
+    { "@type": "ListItem", position: 2, name: "Rólam", item: "https://expertflow-aios.vercel.app/rolam" },
+  ],
+};
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Nagy Attila",
+  url: "https://expertflow-aios.vercel.app/rolam",
+  image: "https://expertflow-aios.vercel.app/images/attila.jpg",
+  jobTitle: "AI Operations Builder",
+  worksFor: { "@type": "Organization", name: "Expert Flow", url: "https://expertflow.hu" },
+  sameAs: [
+    "https://github.com/expertflow-attila",
+    "https://www.youtube.com/@nagyattilaferenc",
+    "https://expertflow.hu",
+  ],
 };
 
 const values = [
@@ -35,6 +66,8 @@ const mentors = [
 export default function Rolam() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
       <Header active="/rolam" />
       <main id="main">
         {/* Hero */}

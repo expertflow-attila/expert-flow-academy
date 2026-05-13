@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="0" cy="0" r="0.85">
+      <stop offset="0%" stop-color="#c8a3b8" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#c8a3b8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="1" cy="1" r="0.7">
+      <stop offset="0%" stop-color="#a8b8d4" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#a8b8d4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#1a1a1f"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#vignette)"/>
+  <text x="80" y="100" font-family="JetBrains Mono, ui-monospace, monospace" font-size="22" letter-spacing="4" fill="#9ca0a8">EXPERT FLOW · AI OPERÁCIÓS RENDSZER</text>
+  <text x="80" y="240" font-family="Georgia, serif" font-size="78" fill="#f5f3f0">Három <tspan font-style="italic" fill="#d6a8b8">skill</tspan>, három <tspan font-style="italic" fill="#b5a8d6">pillér</tspan>,</text>
+  <text x="80" y="330" font-family="Georgia, serif" font-size="78" fill="#f5f3f0">két <tspan font-style="italic" fill="#a8c4d6">keretrendszer</tspan>.</text>
+  <text x="80" y="450" font-family="Inter, sans-serif" font-size="28" fill="#9ca0a8">Minimális, használat által bővülő rendszer szolgáltató</text>
+  <text x="80" y="488" font-family="Inter, sans-serif" font-size="28" fill="#9ca0a8">egyéni vállalkozóknak. Magyarul. Lego-elv.</text>
+  <line x1="80" y1="556" x2="200" y2="556" stroke="#d6a8b8" stroke-width="3"/>
+  <text x="1120" y="578" font-family="JetBrains Mono, ui-monospace, monospace" font-size="16" letter-spacing="3" fill="#b5a8d6" text-anchor="end">EXPERTFLOW-AIOS.VERCEL.APP</text>
+</svg>

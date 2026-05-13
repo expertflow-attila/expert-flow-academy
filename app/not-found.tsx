@@ -1,0 +1,69 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Footer, Header, SectionLabel } from "@/components/site-chrome";
+
+export const metadata: Metadata = {
+  title: "404 — Az oldal nem található",
+  description: "Az oldal amit kerestél nem létezik. Térj vissza a főoldalra, vagy nézd meg a szolgáltatást, az árakat vagy a rólam fület.",
+  robots: { index: false, follow: true },
+};
+
+export default function NotFound() {
+  return (
+    <>
+      <Header active="/" />
+      <main id="main">
+        <section className="border-b border-border py-20 md:py-32 lg:py-40">
+          <div className="mx-auto max-w-3xl px-6 text-center lg:px-10">
+            <SectionLabel>404</SectionLabel>
+            <h1 className="mt-8 font-display text-4xl leading-[1.05] tracking-tight text-balance md:text-5xl lg:text-6xl">
+              Ez az oldal <em className="italic text-[var(--color-accent-rose)]">eltévedt</em>.
+            </h1>
+            <p className="mx-auto mt-6 max-w-xl text-foreground-soft leading-relaxed">
+              Lehet hogy elgépelted az URL-t, vagy egy régi link követett ide. Az alábbiakból folytasd:
+            </p>
+            <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Link
+                href="/"
+                className="border border-border-strong px-6 py-5 text-left transition-colors hover:bg-surface"
+              >
+                <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-foreground-muted">
+                  Főoldal
+                </div>
+                <div className="mt-2 font-display text-lg italic">Áttekintés</div>
+              </Link>
+              <Link
+                href="/szolgaltatas"
+                className="border border-border-strong px-6 py-5 text-left transition-colors hover:bg-surface"
+              >
+                <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-foreground-muted">
+                  Szolgáltatás
+                </div>
+                <div className="mt-2 font-display text-lg italic">Mit építek</div>
+              </Link>
+              <Link
+                href="/araink"
+                className="border border-border-strong px-6 py-5 text-left transition-colors hover:bg-surface"
+              >
+                <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-foreground-muted">
+                  Áraink
+                </div>
+                <div className="mt-2 font-display text-lg italic">Csomagok</div>
+              </Link>
+              <Link
+                href="/rolam"
+                className="border border-border-strong px-6 py-5 text-left transition-colors hover:bg-surface"
+              >
+                <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-foreground-muted">
+                  Rólam
+                </div>
+                <div className="mt-2 font-display text-lg italic">Nagy Attila</div>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}

@@ -5,6 +5,13 @@ import { CTA_URL, Footer, Header, SectionLabel, SectionTitle } from "@/component
 export const metadata: Metadata = {
   title: "Áraink",
   description: "Expert Flow AI Operations retainer 3 csomagban — Indító, Növekedési, Skálázó. Havi együttműködés, 3 hónap minimum.",
+  alternates: { canonical: "/araink" },
+  openGraph: {
+    title: "Áraink · Expert Flow",
+    description: "AI Operations retainer 3 csomagban — Indító, Növekedési, Skálázó.",
+    url: "/araink",
+    type: "website",
+  },
 };
 
 const plans = [
@@ -81,9 +88,30 @@ const faqs = [
   },
 ];
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Expert Flow", item: "https://expertflow-aios.vercel.app/" },
+    { "@type": "ListItem", position: 2, name: "Áraink", item: "https://expertflow-aios.vercel.app/araink" },
+  ],
+};
+
 export default function Araink() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Header active="/araink" />
       <main id="main">
         {/* Hero */}

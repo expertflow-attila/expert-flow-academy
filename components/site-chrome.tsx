@@ -53,7 +53,7 @@ export function Header({ active }: { active: string }) {
           </span>
         </Link>
 
-        {/* Közösség cell */}
+        {/* Közösség cell — YouTube + Expert-Flow org (különböző helyek, nincs duplikáció) */}
         <div className="flex items-center justify-between gap-4 px-6 py-7 lg:px-10">
           <span className="font-mono text-xs uppercase tracking-[0.22em] text-foreground-muted">
             Közösség
@@ -63,7 +63,7 @@ export function Header({ active }: { active: string }) {
               href={YOUTUBE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="YouTube"
+              aria-label="YouTube csatorna"
               className="text-foreground-soft transition-colors hover:text-foreground"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -71,14 +71,16 @@ export function Header({ active }: { active: string }) {
               </svg>
             </Link>
             <Link
-              href={GITHUB_URL}
+              href="https://github.com/Expert-Flow"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="GitHub"
+              aria-label="Expert-Flow GitHub szervezet"
               className="text-foreground-soft transition-colors hover:text-foreground"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.3 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3" />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M2 12h20" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
               </svg>
             </Link>
           </div>
@@ -129,11 +131,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border">
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-6 py-10 text-xs uppercase tracking-[0.22em] text-foreground-muted md:flex-row md:items-center lg:px-10">
-        <div className="font-mono">
-          <span>Expert Flow</span>
-          <span className="mx-3 text-foreground-dim">·</span>
-          <span>v0.1.0</span>
-        </div>
+        <div className="font-mono">Expert Flow AIOS</div>
         <Link
           href="https://expertflow.hu"
           target="_blank"
@@ -164,23 +162,6 @@ export function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function CodeBlock({ step, code, copyLabel = "Másol" }: { step: string; code: string; copyLabel?: string }) {
-  return (
-    <div className="border border-border-strong">
-      <div className="flex items-center justify-between border-b border-border-strong bg-surface px-4 py-2.5">
-        <span className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-foreground-muted">
-          {step}
-        </span>
-        <button
-          type="button"
-          className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-foreground-soft transition-colors hover:text-foreground"
-        >
-          {copyLabel}
-        </button>
-      </div>
-      <pre className="overflow-x-auto bg-background px-4 py-3">
-        <code className="font-mono text-sm text-foreground">{code}</code>
-      </pre>
-    </div>
-  );
-}
+// Note: CodeBlock-ot eltávolítottuk (dead code, sehol nem importálva).
+// Ha újra kell, kliens komponensként implementáld (clipboard API + onClick),
+// külön fájlban (components/code-block.tsx, "use client" direktívával).

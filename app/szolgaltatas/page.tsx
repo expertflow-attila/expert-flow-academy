@@ -5,6 +5,22 @@ import { CTA_URL, Footer, Header, SectionLabel, SectionTitle } from "@/component
 export const metadata: Metadata = {
   title: "Szolgáltatás",
   description: "Három pillér: ügyfélszerzés, kiszolgálás, háttérműködés. Sub-features pillérenként + 5 lépéses folyamat.",
+  alternates: { canonical: "/szolgaltatas" },
+  openGraph: {
+    title: "Szolgáltatás · Expert Flow",
+    description: "Három pillér: ügyfélszerzés, kiszolgálás, háttérműködés.",
+    url: "/szolgaltatas",
+    type: "website",
+  },
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Expert Flow", item: "https://expertflow-aios.vercel.app/" },
+    { "@type": "ListItem", position: 2, name: "Szolgáltatás", item: "https://expertflow-aios.vercel.app/szolgaltatas" },
+  ],
 };
 
 const detailedPillers = [
@@ -68,6 +84,7 @@ const process = [
 export default function Szolgaltatas() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Header active="/szolgaltatas" />
       <main id="main">
         {/* Hero */}

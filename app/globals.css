@@ -5,7 +5,7 @@
   --color-background: oklch(0.13 0.005 280);
   --color-foreground: oklch(0.90 0.005 90);          /* less bright off-white */
   --color-foreground-soft: oklch(0.90 0.005 90 / 0.65);
-  --color-foreground-muted: oklch(0.90 0.005 90 / 0.45);
+  --color-foreground-muted: oklch(0.90 0.005 90 / 0.62);
   --color-foreground-dim: oklch(0.90 0.005 90 / 0.30);
   --color-border: oklch(0.90 0.005 90 / 0.08);
   --color-border-strong: oklch(0.90 0.005 90 / 0.14);

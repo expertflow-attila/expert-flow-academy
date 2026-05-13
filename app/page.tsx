@@ -12,9 +12,9 @@ function Hero() {
       <div className="mx-auto max-w-3xl px-6 text-center lg:px-10">
         <p className="animate-fade-in font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
           <span>Expert Flow</span>
-          <span className="mx-3 text-foreground-dim">●</span>
+          <span aria-hidden="true" className="mx-3 text-foreground-dim">●</span>
           <span>AI rendszerek</span>
-          <span className="mx-3 text-foreground-dim">●</span>
+          <span aria-hidden="true" className="mx-3 text-foreground-dim">●</span>
           <span>v2.0</span>
         </p>
 
@@ -415,7 +415,7 @@ Done. AIOS működik. Heti egy darab épül.`}</code>
             <div className="absolute inset-x-6 top-6 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
               Expert Flow
             </div>
-            <span className="animate-pulse-glow select-none font-display text-[20rem] italic leading-none text-foreground opacity-30">
+            <span aria-hidden="true" className="animate-pulse-glow select-none font-display text-[20rem] italic leading-none text-foreground opacity-30">
               E
             </span>
             <div className="absolute inset-x-6 bottom-6 flex items-end justify-between font-mono text-[0.65rem] uppercase tracking-[0.22em]">
