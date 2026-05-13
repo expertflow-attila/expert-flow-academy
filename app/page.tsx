@@ -24,7 +24,7 @@ function Hero() {
 
         <p className="animate-fade-in-up delay-200 mx-auto mt-8 max-w-2xl font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
           Szolgáltatási rendszert hozunk létre vállalkozásod köré, amely láthatóvá és értékesíthetővé
-          teszi a szakmai tudásodat. Magyarul. AI-csapattal.
+          teszi a szakmai tudásodat.
         </p>
       </div>
     </section>
