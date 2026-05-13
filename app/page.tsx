@@ -19,7 +19,7 @@ function Hero() {
         </p>
 
         <h1 className="animate-fade-in-up delay-100 mt-10 font-display text-5xl leading-[1.05] text-balance tracking-tight md:text-6xl lg:text-7xl">
-          AI-alapú <em className="italic em-violet">rendszerek</em>{" "}
+          AI-alapú <em className="italic em-sky">rendszerek</em>{" "}
           <em className="italic em-violet">szolgáltató</em> vállalkozóknak
         </h1>
 
@@ -72,7 +72,7 @@ function TwoChoice() {
               02 · Havi együttműködés
             </div>
             <h3 className="mt-8 font-display text-5xl tracking-tight md:text-6xl">
-              Retainer <em className="italic em-violet">csomagok</em>
+              Retainer <em className="italic em-sky">csomagok</em>
             </h3>
             <p className="mt-6 max-w-prose font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
               Indító (120k Ft), Növekedési (220k Ft), Skálázó (450k Ft). Havi együttműködés,
@@ -265,7 +265,7 @@ function PricingPillars() {
         <div className="mx-auto max-w-3xl text-center">
           <SectionLabel>Egyéni szolgáltatásunk</SectionLabel>
           <h2 className="mt-6 font-display text-4xl tracking-tight text-balance md:text-5xl lg:text-6xl">
-            Három <em className="italic em-violet">alappillér</em>
+            Három <em className="italic em-sky">alappillér</em>
           </h2>
           <p className="mx-auto mt-6 max-w-prose font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
             Az eszközök és platformok változásától függetlenül mindig ezek határozzák meg

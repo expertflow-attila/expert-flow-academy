@@ -13,12 +13,12 @@
   --color-surface-2: oklch(0.18 0.005 280);
 
   /* Accent palette — very subtle, mostly desaturated. Tints not full colors. */
-  --color-accent-rose: oklch(0.86 0.035 15);    /* warm peach */
-  --color-accent-violet: oklch(0.84 0.035 290); /* cool lavender */
-  --color-accent-sky: oklch(0.85 0.030 220);    /* misty blue */
-  --color-accent-mint: oklch(0.86 0.030 165);   /* pale mint */
-  --color-accent-coral: oklch(0.83 0.045 25);   /* dusty coral */
-  --color-accent-cream: oklch(0.88 0.025 70);   /* warm cream (replaces gold) */
+  --color-accent-rose: oklch(0.86 0.040 15);     /* warm peach */
+  --color-accent-violet: oklch(0.82 0.055 285);  /* cool lavender */
+  --color-accent-sky: oklch(0.78 0.075 235);     /* misty blue — more visible */
+  --color-accent-mint: oklch(0.86 0.030 165);    /* pale mint */
+  --color-accent-coral: oklch(0.83 0.045 25);    /* dusty coral */
+  --color-accent-cream: oklch(0.88 0.025 70);    /* warm cream (replaces gold) */
 
   --font-sans: var(--font-instrument-sans), system-ui, sans-serif;
   --font-display: var(--font-instrument-serif), Georgia, serif;
