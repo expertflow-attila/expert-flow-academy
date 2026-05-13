@@ -15,38 +15,50 @@ const pages: Page[] = [
 
 export function Header({ active }: { active: string }) {
   return (
-    <header className="border-b border-border">
-      {/* Top row */}
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
+    <header className="border-b border-border-strong">
+      {/* Top row — 4-cell grid (ExpertFlow / Konzultáció / GitHub / Közösség) */}
+      <div className="mx-auto grid max-w-7xl grid-cols-2 md:grid-cols-4">
+        {/* Logo cell */}
+        <div className="flex items-center border-b border-r border-border-strong px-6 py-7 lg:px-10 md:border-b-0">
+          <Link
+            href="/"
+            aria-label="Expert Flow — főoldal"
+            className="font-display text-2xl italic tracking-tight"
+          >
+            ExpertFlow
+          </Link>
+        </div>
+
+        {/* Konzultáció cell */}
         <Link
-          href="/"
-          aria-label="Expert Flow — főoldal"
-          className="font-display text-2xl italic tracking-tight"
+          href={CTA_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center border-b border-border-strong px-6 py-7 transition-colors hover:bg-surface lg:px-10 md:border-b-0 md:border-r"
         >
-          Expert Flow
+          <span className="font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground">
+            Konzultáció ↗
+          </span>
         </Link>
 
-        <nav aria-label="Külső linkek" className="flex items-center gap-8">
-          <Link
-            href={CTA_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground md:inline"
-          >
-            Konzultáció ↗
-          </Link>
-          <Link
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground md:inline"
-          >
+        {/* GitHub cell */}
+        <Link
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center border-r border-border-strong px-6 py-7 transition-colors hover:bg-surface lg:px-10"
+        >
+          <span className="font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground">
             GitHub ↗
-          </Link>
-          <div className="hidden items-center gap-3 border-l border-border-strong pl-8 md:flex">
-            <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-              Közösség
-            </span>
+          </span>
+        </Link>
+
+        {/* Közösség cell */}
+        <div className="flex items-center justify-between gap-4 px-6 py-7 lg:px-10">
+          <span className="font-mono text-xs uppercase tracking-[0.22em] text-foreground-muted">
+            Közösség
+          </span>
+          <div className="flex items-center gap-3">
             <Link
               href={YOUTUBE_URL}
               target="_blank"
@@ -70,12 +82,12 @@ export function Header({ active }: { active: string }) {
               </svg>
             </Link>
           </div>
-        </nav>
+        </div>
       </div>
 
-      {/* Sub-nav */}
-      <nav aria-label="Oldalak" className="border-t border-border bg-background">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 md:grid-cols-4 px-6 lg:px-10">
+      {/* Sub-nav — pages, with short active indicator line above active cell */}
+      <nav aria-label="Oldalak" className="border-t border-border-strong">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 md:grid-cols-4">
           {pages.map((p, i) => {
             const isActive = active === p.href;
             return (
@@ -83,10 +95,17 @@ export function Header({ active }: { active: string }) {
                 key={p.href}
                 href={p.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`border-border py-6 transition-colors hover:bg-surface ${
+                className={`relative border-border-strong px-6 py-6 transition-colors hover:bg-surface lg:px-10 ${
                   i < pages.length - 1 ? "md:border-r" : ""
                 } ${i % 2 === 0 ? "border-r md:border-r" : ""}`}
               >
+                {/* Active indicator — short colored line above */}
+                {isActive && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -top-px h-px bg-[var(--color-accent-violet)]"
+                  />
+                )}
                 <div
                   className={`font-mono text-xs uppercase tracking-[0.22em] ${
                     isActive ? "text-foreground" : "text-foreground-soft"
