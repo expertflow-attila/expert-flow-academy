@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CTA_URL, Footer, Header, SectionLabel, SectionTitle } from "@/components/site-chrome";
+import { ANNA_URL, CTA_URL, Footer, Header, SectionLabel, SectionTitle } from "@/components/site-chrome";
 
 /* ─────────────────────────────────────────────────────────────────── */
 /*  HERO                                                                */
@@ -27,6 +27,20 @@ function Hero() {
           Szolgáltatási rendszert hozunk létre vállalkozásod köré, amely láthatóvá és értékesíthetővé
           teszi a szakmai tudásodat.
         </p>
+
+        {/* Beszélj Annával — primary CTA */}
+        <div className="animate-fade-in-up delay-300 mt-12 flex flex-col items-center gap-3">
+          <Link
+            href={ANNA_URL}
+            className="hover-arrow group inline-flex items-center gap-3 border border-foreground bg-foreground px-8 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
+          >
+            <span className="inline-block h-2 w-2 rounded-full bg-[var(--color-accent-mint)] animate-pulse" />
+            Beszélj Annával <span className="arrow">→</span>
+          </Link>
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-foreground-muted">
+            AI asszisztens · 0–24 online · magyarul
+          </span>
+        </div>
       </div>
     </section>
   );

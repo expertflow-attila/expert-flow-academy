@@ -3,6 +3,7 @@ import Link from "next/link";
 export const CTA_URL = "https://cal.com/attila-nagy-8uefco/30min";
 export const YOUTUBE_URL = "https://www.youtube.com/@nagyattilaferenc";
 export const GITHUB_URL = "https://github.com/expertflow-attila";
+export const ANNA_URL = "https://expertflow-anna.vercel.app";
 
 type Page = { href: string; label: string; sub: string };
 
