@@ -115,6 +115,16 @@ create table if not exists public.stripe_events (
   received_at timestamptz default now()
 );
 
+-- Login throttling (IP + email kombináció)
+create table if not exists public.login_attempts (
+  key text primary key,           -- pl. "ip:1.2.3.4" vagy "email:foo@bar.hu"
+  count integer not null default 1,
+  window_started_at timestamptz default now(),
+  last_at timestamptz default now()
+);
+create index if not exists login_attempts_window_idx
+  on public.login_attempts (window_started_at);
+
 -- ─── RLS — service_role only (a Next.js server-component verifikálja) ─
 alter table public.courses        enable row level security;
 alter table public.course_modules enable row level security;
@@ -122,6 +132,7 @@ alter table public.course_lessons enable row level security;
 alter table public.memberships    enable row level security;
 alter table public.lesson_progress enable row level security;
 alter table public.stripe_events  enable row level security;
+alter table public.login_attempts enable row level security;
 
 -- Egyetlen policy minden táblára: csak service_role
 -- (anon/authenticated blokkolva — a front a server-component API-n keresztül megy)
@@ -136,7 +147,8 @@ begin
       'course_lessons',
       'memberships',
       'lesson_progress',
-      'stripe_events'
+      'stripe_events',
+      'login_attempts'
     ])
   loop
     execute format(

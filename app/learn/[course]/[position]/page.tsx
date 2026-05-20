@@ -77,9 +77,14 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
       <Header active="/learn" member={Boolean(session?.user)} />
       <main id="main" className="border-b border-border">
         <div className="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)]">
-          {/* Sidebar */}
-          <aside className="border-b border-border-strong px-6 py-8 lg:border-b-0 lg:border-r lg:py-12 lg:pl-10 lg:pr-6">
-            <div className="sticky top-6">
+          {/* Sidebar — mobile: <details> drawer, desktop: sticky */}
+          <aside className="border-b border-border-strong px-6 py-4 lg:border-b-0 lg:border-r lg:py-12 lg:pl-10 lg:pr-6">
+            <details open className="group [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-center justify-between py-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:text-foreground lg:hidden">
+                <span>Tartalomjegyzék · {totalLessons} lecke</span>
+                <span className="font-display text-base text-foreground-muted transition-transform group-open:rotate-180">▾</span>
+              </summary>
+            <div className="sticky top-6 mt-4 lg:mt-0">
               <SectionLabel>{course.title}</SectionLabel>
               <ol className="mt-6 space-y-6 font-sans text-sm">
                 {modules.map((m, midx) => (
@@ -138,6 +143,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                 ))}
               </ol>
             </div>
+            </details>
           </aside>
 
           {/* Main content */}

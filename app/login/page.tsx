@@ -1,22 +1,36 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { signIn } from "@/lib/auth";
 import { Footer, Header, SectionLabel } from "@/components/site-chrome";
 import { safeInternalPath } from "@/lib/url-safety";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const metadata = { title: "Belépés" };
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
   const params = await searchParams;
   const callbackUrl = safeInternalPath(params?.callbackUrl, "/learn");
+  const error = params?.error;
 
   async function emailSignIn(formData: FormData) {
     "use server";
-    const email = String(formData.get("email") ?? "").trim();
-    if (!email) return;
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    if (!email || !email.includes("@")) return;
     const target = safeInternalPath(formData.get("callbackUrl"), "/learn");
+
+    // Rate limit: 5 próbálkozás / 10 perc IP-nként + 3 / 10 perc email-enként
+    const hdrs = await headers();
+    const ip = getClientIp(hdrs);
+    const ipCheck = await checkRateLimit(`ip:${ip}`, 5, 10 * 60);
+    const emailCheck = await checkRateLimit(`email:${email}`, 3, 10 * 60);
+    if (!ipCheck.allowed || !emailCheck.allowed) {
+      redirect("/login?error=too-many");
+    }
+
     await signIn("nodemailer", { email, redirectTo: target });
   }
 
@@ -33,6 +47,12 @@ export default async function LoginPage({
             <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
               Küldünk egy belépési linket. Nincs jelszó. A link 10 percig érvényes.
             </p>
+
+            {error === "too-many" && (
+              <div className="mt-8 border border-[var(--color-accent-rose)] bg-surface px-4 py-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-[var(--color-accent-rose)]">
+                Túl sok próbálkozás. Próbáld meg újra 10 perc múlva.
+              </div>
+            )}
 
             <form action={emailSignIn} className="mt-10 space-y-5">
               <input type="hidden" name="callbackUrl" value={callbackUrl} />
