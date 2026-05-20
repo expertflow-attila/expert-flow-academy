@@ -29,17 +29,17 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://expertflow-aios.vercel.app"),
+  metadataBase: new URL("https://akademia.solobusiness.hu"),
   title: {
-    default: "Expert Flow — AI operációs rendszer egyéni vállalkozóknak",
-    template: "%s · Expert Flow",
+    default: "Solo Business Akadémia — kurzusok szolgáltató vállalkozóknak",
+    template: "%s · Solo Business Akadémia",
   },
   description:
-    "Három skill, három pillér, két keretrendszer. Minimális, használat által bővülő AI-rendszer szolgáltató egyéni vállalkozóknak.",
-  applicationName: "Expert Flow AIOS",
+    "Zárt kurzusplatform szolgáltató vállalkozóknak. Build-in-public, AI rendszerek, ügyfélszerzés — pilot 49 000 Ft-tól.",
+  applicationName: "Solo Business Akadémia",
   authors: [{ name: "Nagy Attila", url: "https://expertflow.hu" }],
-  creator: "Expert Flow",
-  publisher: "Expert Flow",
+  creator: "Solo Business",
+  publisher: "Solo Business",
   alternates: {
     canonical: "/",
     languages: { "hu-HU": "/", "x-default": "/" },
@@ -56,19 +56,19 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Expert Flow — AI operációs rendszer",
+    title: "Solo Business Akadémia",
     description:
-      "Három skill, három pillér, két keretrendszer. Lego-elv: kis cserélhető darabok, nem 47-lépéses workflow.",
+      "Zárt kurzusplatform szolgáltató vállalkozóknak. Build-in-public, AI rendszerek, pilot 49 000 Ft-tól.",
     url: "/",
-    siteName: "Expert Flow AIOS",
+    siteName: "Solo Business Akadémia",
     locale: "hu_HU",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Expert Flow — AI operációs rendszer",
+    title: "Solo Business Akadémia",
     description:
-      "Három skill, három pillér, két keretrendszer. Minimális, használat által bővülő AI-rendszer.",
+      "Zárt kurzusplatform szolgáltató vállalkozóknak. AI rendszerek, ügyfélszerzés, build-in-public.",
   },
   category: "technology",
 };
@@ -76,12 +76,12 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Expert Flow",
-  alternateName: "Expert Flow AIOS",
-  url: "https://expertflow-aios.vercel.app",
-  logo: "https://expertflow-aios.vercel.app/icon.png",
+  name: "Solo Business Akadémia",
+  alternateName: "Solo Business Academy",
+  url: "https://akademia.solobusiness.hu",
+  logo: "https://akademia.solobusiness.hu/icon.png",
   description:
-    "AI operációs rendszer egyéni szolgáltató vállalkozóknak — három skill, három pillér, két keretrendszer.",
+    "Zárt kurzusplatform szolgáltató vállalkozóknak — AI rendszerek, ügyfélszerzés, build-in-public.",
   founder: { "@type": "Person", name: "Nagy Attila" },
   sameAs: [
     "https://github.com/expertflow-attila",
@@ -101,8 +101,8 @@ const organizationJsonLd = {
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Expert Flow AIOS",
-  url: "https://expertflow-aios.vercel.app",
+  name: "Solo Business Akadémia",
+  url: "https://akademia.solobusiness.hu",
   inLanguage: "hu-HU",
 };
 
