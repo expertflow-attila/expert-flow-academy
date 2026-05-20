@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { isSameOriginRequest, safeInternalPath } from "@/lib/url-safety";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
+  if (!isSameOriginRequest(req)) {
+    return NextResponse.json({ error: "Cross-origin elutasítva" }, { status: 403 });
+  }
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Belépés szükséges" }, { status: 401 });
@@ -12,7 +16,7 @@ export async function POST(req: Request) {
 
   const form = await req.formData();
   const lessonId = (form.get("lesson_id") as string) ?? null;
-  const redirectTo = (form.get("redirect_to") as string) ?? "/learn";
+  const redirectTo = safeInternalPath(form.get("redirect_to"), "/learn");
   if (!lessonId) {
     return NextResponse.json({ error: "lesson_id kötelező" }, { status: 400 });
   }

@@ -1,20 +1,23 @@
 import { signIn } from "@/lib/auth";
 import { Footer, Header, SectionLabel } from "@/components/site-chrome";
+import { safeInternalPath } from "@/lib/url-safety";
 
 export const metadata = { title: "Belépés" };
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { callbackUrl?: string };
+  searchParams: Promise<{ callbackUrl?: string }>;
 }) {
-  const callbackUrl = searchParams?.callbackUrl ?? "/learn";
+  const params = await searchParams;
+  const callbackUrl = safeInternalPath(params?.callbackUrl, "/learn");
 
   async function emailSignIn(formData: FormData) {
     "use server";
     const email = String(formData.get("email") ?? "").trim();
     if (!email) return;
-    await signIn("nodemailer", { email, redirectTo: callbackUrl });
+    const target = safeInternalPath(formData.get("callbackUrl"), "/learn");
+    await signIn("nodemailer", { email, redirectTo: target });
   }
 
   return (
@@ -32,6 +35,7 @@ export default function LoginPage({
             </p>
 
             <form action={emailSignIn} className="mt-10 space-y-5">
+              <input type="hidden" name="callbackUrl" value={callbackUrl} />
               <input
                 type="email"
                 name="email"

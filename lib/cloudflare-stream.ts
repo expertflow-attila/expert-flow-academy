@@ -33,22 +33,31 @@ function base64url(input: Buffer | string): string {
     .replace(/\//g, "_");
 }
 
+// Szűkebb default expiry (30 perc) — a Stream player automatikusan
+// új tokent kér ha kell, és egy szivárgott token rövidebb ideig használható.
 export async function signStreamToken({
   videoUid,
-  expiresInSeconds = 4 * 60 * 60,
+  expiresInSeconds = 30 * 60,
 }: SignTokenParams): Promise<string> {
   if (!accountId || !signingKeyId) {
     throw new Error("CF_STREAM_ACCOUNT_ID és CF_STREAM_SIGNING_KEY_ID kötelező");
   }
   const header = { alg: "RS256", kid: signingKeyId };
   const now = Math.floor(Date.now() / 1000);
+  // Geo-allow-list — Magyarország + szomszéd országok. Egy lopott token így
+  // EU-n kívülről nem használható. Bővítsd ha a target piac nyílik.
+  const allowedCountries = (process.env.CF_STREAM_ALLOWED_COUNTRIES ?? "HU,RO,SK,AT,DE,UA,RS,HR,SI")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   const payload = {
     sub: videoUid,
     kid: signingKeyId,
     exp: now + expiresInSeconds,
     nbf: now - 60,
     accessRules: [
-      { type: "any", action: "allow" },
+      { type: "ip.geoip.country", action: "allow", country: allowedCountries },
+      { type: "any", action: "block" },
     ],
   };
   const headerB64 = base64url(JSON.stringify(header));

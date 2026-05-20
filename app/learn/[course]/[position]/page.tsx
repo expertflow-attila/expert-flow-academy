@@ -10,6 +10,7 @@ import {
 } from "@/lib/courses";
 import { signStreamToken, streamIframeUrl } from "@/lib/cloudflare-stream";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -149,7 +150,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
             {lesson.body_html && (
               <div
                 className="prose mt-10 max-w-prose font-sans text-base leading-relaxed text-foreground-soft"
-                dangerouslySetInnerHTML={{ __html: lesson.body_html }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(lesson.body_html) }}
               />
             )}
 

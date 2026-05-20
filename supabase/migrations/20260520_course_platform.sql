@@ -108,12 +108,20 @@ create table if not exists public.lesson_progress (
   primary key (user_id, lesson_id)
 );
 
+-- Stripe webhook idempotencia tábla
+create table if not exists public.stripe_events (
+  event_id text primary key,
+  type text not null,
+  received_at timestamptz default now()
+);
+
 -- ─── RLS — service_role only (a Next.js server-component verifikálja) ─
 alter table public.courses        enable row level security;
 alter table public.course_modules enable row level security;
 alter table public.course_lessons enable row level security;
 alter table public.memberships    enable row level security;
 alter table public.lesson_progress enable row level security;
+alter table public.stripe_events  enable row level security;
 
 -- Egyetlen policy minden táblára: csak service_role
 -- (anon/authenticated blokkolva — a front a server-component API-n keresztül megy)
@@ -127,7 +135,8 @@ begin
       'course_modules',
       'course_lessons',
       'memberships',
-      'lesson_progress'
+      'lesson_progress',
+      'stripe_events'
     ])
   loop
     execute format(

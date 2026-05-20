@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Footer, Header, SectionLabel } from "@/components/site-chrome";
 import { auth } from "@/lib/auth";
 import { getCourseBySlug, getCourseModulesWithLessons, userHasMembership } from "@/lib/courses";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +49,7 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
             {course.description && (
               <div
                 className="mt-8 max-w-prose font-sans text-base leading-relaxed text-foreground-soft"
-                dangerouslySetInnerHTML={{ __html: course.description }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(course.description) }}
               />
             )}
 
@@ -60,7 +61,7 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
                 >
                   Indítás <span className="arrow">→</span>
                 </Link>
-              ) : (
+              ) : session?.user?.id ? (
                 <form action="/api/checkout" method="post">
                   <input type="hidden" name="course_id" value={course.id} />
                   <button
@@ -72,6 +73,13 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
                       : "Hamarosan"} <span className="arrow">→</span>
                   </button>
                 </form>
+              ) : (
+                <Link
+                  href={`/login?callbackUrl=/courses/${course.slug}`}
+                  className="hover-arrow group inline-block border border-foreground bg-foreground px-8 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
+                >
+                  Belépés a vásárláshoz <span className="arrow">→</span>
+                </Link>
               )}
             </div>
           </div>
