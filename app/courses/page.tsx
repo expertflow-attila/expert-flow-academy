@@ -37,23 +37,35 @@ export default async function CoursesIndex() {
                   <Link
                     key={c.id}
                     href={`/courses/${c.slug}`}
-                    className="hover-arrow group border-b border-r border-border-strong p-8 transition-colors hover:bg-surface lg:p-12"
+                    className="hover-arrow group flex flex-col border-b border-r border-border-strong transition-colors hover:bg-surface"
                   >
-                    <div className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
-                      {c.price_huf
-                        ? `${new Intl.NumberFormat("hu-HU").format(c.price_huf)} Ft`
-                        : "Hamarosan"}
-                    </div>
-                    <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-                      <em className="italic em-rose">{c.title}</em>
-                    </h2>
-                    {c.subtitle && (
-                      <p className="mt-5 max-w-prose font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
-                        {c.subtitle}
-                      </p>
+                    {c.cover_image_url && (
+                      <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-border-strong">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={c.cover_image_url}
+                          alt=""
+                          className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
+                        />
+                      </div>
                     )}
-                    <div className="mt-10 font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors group-hover:text-foreground">
-                      Megnyitás <span className="arrow">→</span>
+                    <div className="flex flex-1 flex-col p-8 lg:p-12">
+                      <div className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
+                        {c.price_huf
+                          ? `${new Intl.NumberFormat("hu-HU").format(c.price_huf)} Ft`
+                          : "Hamarosan"}
+                      </div>
+                      <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
+                        <em className="italic em-rose">{c.title}</em>
+                      </h2>
+                      {c.subtitle && (
+                        <p className="mt-5 max-w-prose font-sans text-sm leading-relaxed text-foreground-soft md:text-base">
+                          {c.subtitle}
+                        </p>
+                      )}
+                      <div className="mt-auto pt-10 font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors group-hover:text-foreground">
+                        Megnyitás <span className="arrow">→</span>
+                      </div>
                     </div>
                   </Link>
                 ))}

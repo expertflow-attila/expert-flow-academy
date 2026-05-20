@@ -92,29 +92,44 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                         const flatIdx = allLessons.findIndex((x) => x.lesson.id === l.id) + 1;
                         const isActive = flatIdx === position;
                         const isDone = completed.has(l.id);
+                        const isLocked = !isMember && !l.is_preview;
+                        const cls = `block border-l-2 pl-3 transition-colors ${
+                          isActive
+                            ? "border-[var(--color-accent-violet)] text-foreground"
+                            : isLocked
+                              ? "border-transparent text-foreground-dim cursor-not-allowed"
+                              : "border-transparent text-foreground-soft hover:text-foreground"
+                        }`;
+                        const inner = (
+                          <>
+                            <span className="font-mono text-[0.65rem] text-foreground-muted">
+                              {String(flatIdx).padStart(2, "0")}
+                            </span>{" "}
+                            {l.title}
+                            {isDone && (
+                              <span className="ml-2 text-[var(--color-accent-mint)]">✓</span>
+                            )}
+                            {isLocked && (
+                              <span className="ml-2 font-mono text-[0.55rem] uppercase tracking-[0.22em] text-foreground-dim">
+                                zárt
+                              </span>
+                            )}
+                            {!isMember && l.is_preview && (
+                              <span className="ml-2 font-mono text-[0.55rem] uppercase tracking-[0.22em] text-[var(--color-accent-sky)]">
+                                ingyenes
+                              </span>
+                            )}
+                          </>
+                        );
                         return (
                           <li key={l.id}>
-                            <Link
-                              href={`/learn/${course.slug}/${flatIdx}`}
-                              className={`block border-l-2 pl-3 transition-colors hover:text-foreground ${
-                                isActive
-                                  ? "border-[var(--color-accent-violet)] text-foreground"
-                                  : "border-transparent text-foreground-soft"
-                              }`}
-                            >
-                              <span className="font-mono text-[0.65rem] text-foreground-muted">
-                                {String(flatIdx).padStart(2, "0")}
-                              </span>{" "}
-                              {l.title}
-                              {isDone && (
-                                <span className="ml-2 text-[var(--color-accent-mint)]">✓</span>
-                              )}
-                              {!isMember && l.is_preview && (
-                                <span className="ml-2 font-mono text-[0.55rem] uppercase tracking-[0.22em] text-[var(--color-accent-sky)]">
-                                  ingyenes
-                                </span>
-                              )}
-                            </Link>
+                            {isLocked ? (
+                              <span className={cls} aria-disabled="true">{inner}</span>
+                            ) : (
+                              <Link href={`/learn/${course.slug}/${flatIdx}`} className={cls}>
+                                {inner}
+                              </Link>
+                            )}
                           </li>
                         );
                       })}
@@ -127,6 +142,24 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
 
           {/* Main content */}
           <article className="px-6 py-12 lg:px-12 lg:py-16">
+            {!isMember && lesson.is_preview && (
+              <div className="mb-10 flex flex-col gap-4 border border-border-strong bg-surface px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-[var(--color-accent-sky)]">
+                    Ingyenes minta lecke
+                  </div>
+                  <div className="mt-2 font-sans text-sm text-foreground-soft">
+                    A többi lecke a teljes hozzáférés megvásárlása után érhető el.
+                  </div>
+                </div>
+                <Link
+                  href={`/courses/${course.slug}`}
+                  className="hover-arrow group whitespace-nowrap border border-foreground bg-foreground px-5 py-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
+                >
+                  Teljes hozzáférés <span className="arrow">→</span>
+                </Link>
+              </div>
+            )}
             <div className="font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
               Lecke {String(position).padStart(2, "0")} / {String(totalLessons).padStart(2, "0")}
             </div>

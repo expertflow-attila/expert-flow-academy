@@ -31,6 +31,18 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
     <>
       <Header active="/courses" member={Boolean(session?.user)} />
       <main id="main">
+        {course.cover_image_url && (
+          <div className="relative w-full overflow-hidden border-b border-border-strong">
+            <div className="aspect-[21/9] w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={course.cover_image_url}
+                alt=""
+                className="h-full w-full object-cover opacity-90"
+              />
+            </div>
+          </div>
+        )}
         <section className="border-b border-border py-20 md:py-28">
           <div className="mx-auto max-w-3xl px-6 lg:px-10">
             <SectionLabel>

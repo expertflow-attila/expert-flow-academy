@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Nodemailer from "next-auth/providers/nodemailer";
 import { SupabaseAdapter } from "@auth/supabase-adapter";
+import { sendBrandedVerificationRequest } from "./auth-email";
 
 const url = process.env.SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -20,6 +21,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       server: process.env.EMAIL_SERVER ?? "",
       from: process.env.EMAIL_FROM ?? "akademia@solobusiness.hu",
       maxAge: 10 * 60,
+      sendVerificationRequest: sendBrandedVerificationRequest,
     }),
   ],
   pages: {
