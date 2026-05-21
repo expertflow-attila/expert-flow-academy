@@ -11,42 +11,21 @@ export async function sendBrandedVerificationRequest(params: {
   provider: { server?: unknown; from?: string };
 }): Promise<void> {
   const { identifier, url, provider } = params;
-  console.log("[auth-email] sendVerificationRequest called", {
-    identifier,
-    hasServer: Boolean(provider.server),
-    serverType: typeof provider.server,
-    from: provider.from,
-  });
   if (!provider.server) {
     throw new Error("EMAIL_SERVER nincs beállítva");
   }
   const { host } = new URL(url);
-  try {
-    const transport = createTransport(provider.server as never);
-    const result = await transport.sendMail({
-      to: identifier,
-      from: provider.from,
-      subject: `Belépés a Solo Business Akadémiára`,
-      text: textBody({ url, host }),
-      html: htmlBody({ url, host }),
-    });
-    const failed = (result.rejected ?? []).filter(Boolean);
-    console.log("[auth-email] sendMail result", {
-      accepted: result.accepted,
-      rejected: result.rejected,
-      response: result.response,
-      messageId: result.messageId,
-    });
-    if (failed.length) {
-      throw new Error(`Email rejected: ${failed.join(", ")}`);
-    }
-  } catch (err) {
-    console.error("[auth-email] sendMail threw", {
-      name: (err as Error).name,
-      message: (err as Error).message,
-      stack: (err as Error).stack,
-    });
-    throw err;
+  const transport = createTransport(provider.server as never);
+  const result = await transport.sendMail({
+    to: identifier,
+    from: provider.from,
+    subject: `Belépés a Solo Business Akadémiára`,
+    text: textBody({ url, host }),
+    html: htmlBody({ url, host }),
+  });
+  const failed = (result.rejected ?? []).filter(Boolean);
+  if (failed.length) {
+    throw new Error(`Email rejected: ${failed.join(", ")}`);
   }
 }
 

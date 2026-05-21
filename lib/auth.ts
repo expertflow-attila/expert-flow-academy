@@ -11,7 +11,7 @@ if (!url || !serviceKey) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  debug: process.env.NODE_ENV !== "production" || process.env.AUTH_DEBUG === "1",
+  debug: process.env.AUTH_DEBUG === "1",
   adapter: SupabaseAdapter({
     url,
     secret: serviceKey,
