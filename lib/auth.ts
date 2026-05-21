@@ -11,6 +11,7 @@ if (!url || !serviceKey) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  debug: process.env.NODE_ENV !== "production" || process.env.AUTH_DEBUG === "1",
   adapter: SupabaseAdapter({
     url,
     secret: serviceKey,
@@ -24,6 +25,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       sendVerificationRequest: sendBrandedVerificationRequest,
     }),
   ],
+  logger: {
+    error(error) {
+      console.error("[auth.error]", error?.name, error?.message, error?.stack);
+    },
+    warn(code) {
+      console.warn("[auth.warn]", code);
+    },
+  },
   pages: {
     signIn: "/login",
     verifyRequest: "/login/check-email",
