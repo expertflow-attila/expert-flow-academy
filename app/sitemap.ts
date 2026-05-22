@@ -1,13 +1,23 @@
 import type { MetadataRoute } from "next";
+import { unstable_noStore as noStore } from "next/cache";
 import { getPublishedCourses } from "@/lib/courses";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const BASE = process.env.NEXTAUTH_URL ?? "https://akademia.solobusiness.hu";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  noStore();
   const now = new Date();
-  const courses = await getPublishedCourses().catch(() => []);
+
+  let courses: Awaited<ReturnType<typeof getPublishedCourses>> = [];
+  try {
+    courses = await getPublishedCourses();
+  } catch (err) {
+    console.error("[sitemap] getPublishedCourses failed", err);
+  }
+
   const courseEntries: MetadataRoute.Sitemap = courses.map((c) => ({
     url: `${BASE}/courses/${c.slug}`,
     lastModified: now,
