@@ -67,11 +67,10 @@ async function patch(path, body) {
 // ─── A kurzus konfiguráció ────────────────────────────────────────────
 const SLUG = 'build-in-public-30nap'; // slug megmarad — 3 lead-magnet oldal hardcoded
 const NEW_TITLE = 'Saját AI Operations rendszer 30 nap alatt';
-const NEW_SUBTITLE = 'Magyar szolgáltató egyéni vállalkozóknak — az alapoktól (mit adsz el, kinek, hogyan találnak meg) a működő AI rendszerig, 7 modulban.';
-const NEW_DESCRIPTION = `<p>Ez egy <strong>30 napos bootcamp</strong> magyar szolgáltató egyéni vállalkozóknak — ügyvédeknek, könyvelőknek, ingatlanosoknak, orvosoknak, fotósoknak, fitness edzőknek, fizikoterapeutáknak —, akiknek <em>már van vagy most indít vállalkozást</em>, és AI rendszerrel akarják továbbfejleszteni.</p>
-<p><strong>A → B:</strong> Most: nincs vagy alig van rendszered, kézi munka mindenre. A 30. napon: van egy működő üzleti alapod (pozícionálás, ajánlat, weboldal, funnel, mérés) <em>és</em> egy AI Operations System ami lead-eket szűr, ügyfélkommunikációt automatizál, heti riportot küld.</p>
-<p>A kurzus ÖTVÖZI az ingyenes Business Start kurzus alapjait (mit adsz el, kinek, hogyan találnak meg, hogyan szólítsd meg, háttér + mérés) az AI agent építés komplett mechanikájával. Az AI nincs külön blokkban — végig beleszőve a modulokba.</p>
-<p><strong>7 modul, 27 lecke.</strong> Az első 5 modul az alapok (AI-jal kiegészítve), a 6. modulban felépítjük az első saját AI agentet, a 7. modulban összeáll az AI Operations System.</p>`;
+const NEW_SUBTITLE = 'Egyéni vállalkozóknak. Az alapoktól a saját AI rendszerig.';
+const NEW_DESCRIPTION = `<p>Felépítjük a vállalkozásod alapjait: pozícionálás, ajánlat, weboldal, ügyfélszerzés, mérés. Aztán beleépítünk egy AI rendszert, ami szűri a lead-eket, kommunikál az ügyfeleiddel és heti riportot küld.</p>
+<p>Akkor érdemes, ha most indítod a vállalkozásod, vagy ha van már, de AI-val szeretnéd megerősíteni.</p>
+<p>7 modul, 27 lecke.</p>`;
 
 const MODULES = [
   // ═══════════════════════════════════════════════════════════════════
