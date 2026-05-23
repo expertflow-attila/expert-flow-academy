@@ -1,431 +1,640 @@
-// Solo Business Akadémia — kurzus teljes újraépítése.
-// A korábbi "build-in-public 30 nap" tartalmát TÖRLI és lecseréli
-// egy strukturált 4-lépéses AI Operations progresszióra.
-// Futtatás: node scripts/rebuild-course.mjs
-// Idempotens: minden cleanup + insert előtt ellenőriz.
+// Solo Business Akadémia — kurzus újraépítése (v2)
+// Az alapokra építve (Business Start kurzus 12 modulja), az AI mindenbe beleszőve,
+// a végcél az AI Operations System.
+//
+// Futtatás:           node scripts/rebuild-course.mjs
+// Dry-run (próba):    node scripts/rebuild-course.mjs --dry-run
+//
+// Idempotens: minden futtatás előtt törli a meglévő modulokat (cascade-del a leckéket is)
+// és nullról építi újra. A `courses` rekord marad (slug + ID).
 
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const envFile = readFileSync(resolve(__dirname, '..', '.env.local'), 'utf-8');
-const env = Object.fromEntries(envFile.split('\n').filter(l => l && !l.startsWith('#') && l.includes('=')).map(l => { const i = l.indexOf('='); let v = l.slice(i+1).trim(); if ((v.startsWith('"')&&v.endsWith('"'))||(v.startsWith("'")&&v.endsWith("'"))) v = v.slice(1,-1); return [l.slice(0,i), v]; }));
+const DRY = process.argv.includes('--dry-run');
 
-const SUPA_URL = env.SUPABASE_URL.replace(/\/+$/, '');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+function loadEnv(file) {
+  const txt = readFileSync(resolve(__dirname, '..', file), 'utf-8');
+  return Object.fromEntries(txt.split('\n').filter(l => l && !l.startsWith('#') && l.includes('=')).map(l => {
+    const i = l.indexOf('=');
+    const k = l.slice(0, i);
+    let v = l.slice(i + 1).trim();
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+    return [k, v];
+  }));
+}
+
+const env = loadEnv('.env.local');
+const SUPA_URL = (env.SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPA_KEY = env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPA_URL || !SUPA_KEY) {
+  console.error('Hiányzik SUPABASE_URL vagy SUPABASE_SERVICE_ROLE_KEY az .env.local-ból.');
+  process.exit(1);
+}
+if (!/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPA_URL)) {
+  console.error(`SUPABASE_URL formátum gyanús: "${SUPA_URL}"`);
+  process.exit(1);
+}
+
 const H = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' };
 
 async function get(path) {
   const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, { headers: H });
-  if (!r.ok) throw new Error(`GET ${path}: ${r.status} ${await r.text()}`);
+  if (!r.ok) throw new Error(`GET ${path} ${r.status}: ${await r.text()}`);
   return r.json();
 }
 async function del(path) {
+  if (DRY) { console.log(`  [DRY] DELETE ${path}`); return; }
   const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, { method: 'DELETE', headers: H });
-  if (!r.ok) throw new Error(`DELETE ${path}: ${r.status} ${await r.text()}`);
+  if (!r.ok) throw new Error(`DELETE ${path} ${r.status}: ${await r.text()}`);
 }
 async function post(path, body) {
+  if (DRY) { console.log(`  [DRY] POST ${path} ${JSON.stringify(body).slice(0, 80)}...`); return [{ id: 'dry-id' }]; }
   const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, { method: 'POST', headers: { ...H, Prefer: 'return=representation' }, body: JSON.stringify(body) });
-  if (!r.ok) throw new Error(`POST ${path}: ${r.status} ${await r.text()}`);
+  if (!r.ok) throw new Error(`POST ${path} ${r.status}: ${await r.text()}`);
   return r.json();
 }
 async function patch(path, body) {
+  if (DRY) { console.log(`  [DRY] PATCH ${path} ${JSON.stringify(body).slice(0, 80)}...`); return [{}]; }
   const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, { method: 'PATCH', headers: { ...H, Prefer: 'return=representation' }, body: JSON.stringify(body) });
-  if (!r.ok) throw new Error(`PATCH ${path}: ${r.status} ${await r.text()}`);
+  if (!r.ok) throw new Error(`PATCH ${path} ${r.status}: ${await r.text()}`);
   return r.json();
 }
 
-const SLUG = 'build-in-public-30nap'; // slug marad: hardcoded a lead-magnet oldalakon
+// ─── A kurzus konfiguráció ────────────────────────────────────────────
+const SLUG = 'build-in-public-30nap'; // slug megmarad — 3 lead-magnet oldal hardcoded
 const NEW_TITLE = 'Saját AI Operations rendszer 30 nap alatt';
-const NEW_SUBTITLE = 'Magyar szolgáltató egyéni vállalkozóknak — az AI fogalmaktól a saját működő rendszerig, 4 lépésben.';
-const NEW_DESCRIPTION = `<p>Ez egy <strong>30 napos bootcamp</strong> magyar szolgáltató egyéni vállalkozóknak — ügyvédeknek, könyvelőknek, ingatlanosoknak, orvosoknak, fotósoknak, fitness edzőknek, fizikoterapeutáknak —, akiknek <em>már van vállalkozása</em> és AI Operations rendszerrel akarják továbbfejleszteni.</p>
-<p><strong>A → B:</strong> Most: hallottál az AI-ról, esetleg használtál ChatGPT-t. A 30. napon: van egy saját <strong>AI Operations System</strong>-ed ami lead-eket szűr, ügyfélkommunikációt automatizál, és heti riportot küld.</p>
-<p><strong>4 lépésben építjük fel:</strong> AI Agent → Agent Workflow → Multi-Agent rendszer → AI Operations System. Plusz egy modul a fogalmak tisztázására az elején és egy a feedback loop-ra a végén. <strong>6 modul, 24 lecke.</strong></p>
-<p><strong>NEM tartalmaz:</strong> pozicionálás, copywriting, landing-szövegezés, funnel-választás — ezek a Solo Business Library és az Agentic Start ingyenes anyagaiban már megvannak. <em>Itt csak az AI rendszer.</em></p>`;
+const NEW_SUBTITLE = 'Magyar szolgáltató egyéni vállalkozóknak — az alapoktól (mit adsz el, kinek, hogyan találnak meg) a működő AI rendszerig, 7 modulban.';
+const NEW_DESCRIPTION = `<p>Ez egy <strong>30 napos bootcamp</strong> magyar szolgáltató egyéni vállalkozóknak — ügyvédeknek, könyvelőknek, ingatlanosoknak, orvosoknak, fotósoknak, fitness edzőknek, fizikoterapeutáknak —, akiknek <em>már van vagy most indít vállalkozást</em>, és AI rendszerrel akarják továbbfejleszteni.</p>
+<p><strong>A → B:</strong> Most: nincs vagy alig van rendszered, kézi munka mindenre. A 30. napon: van egy működő üzleti alapod (pozícionálás, ajánlat, weboldal, funnel, mérés) <em>és</em> egy AI Operations System ami lead-eket szűr, ügyfélkommunikációt automatizál, heti riportot küld.</p>
+<p>A kurzus ÖTVÖZI az ingyenes Business Start kurzus alapjait (mit adsz el, kinek, hogyan találnak meg, hogyan szólítsd meg, háttér + mérés) az AI agent építés komplett mechanikájával. Az AI nincs külön blokkban — végig beleszőve a modulokba.</p>
+<p><strong>7 modul, 27 lecke.</strong> Az első 5 modul az alapok (AI-jal kiegészítve), a 6. modulban felépítjük az első saját AI agentet, a 7. modulban összeáll az AI Operations System.</p>`;
 
 const MODULES = [
+  // ═══════════════════════════════════════════════════════════════════
+  // MODUL 1 — MIT ADSZ EL ÉS KINEK (BS 1-3 sűrítve)
+  // ═══════════════════════════════════════════════════════════════════
   {
     position: 1,
-    title: 'AI alapok — mi az és mi nem',
-    description: 'Fogalom-tisztázás. A modul végén tudod a különbséget ChatGPT / AI bot / AI agent közt, és pontosan látod a 4 lépéses progressziót amit a kurzus során bejársz.',
+    title: 'Mit adsz el és kinek',
+    description: 'Az alap. Mielőtt egy sort is írnál a weboldaladra vagy AI-t építenél, tisztáznod kell: mit adsz, kinek, és milyen árcsomagokban. Modul végén: 1 mondatos pozíció + 1 oldalas vevőavatár + 3 csomag-szintes ajánlat.',
     lessons: [
-      { position: 1, title: 'ChatGPT, AI bot, AI agent — mi a különbség', is_preview: true,
-        body: `<p>A három fogalmat folyton összekeverik. Itt a tiszta szétválasztás:</p>
-<ul>
-<li><strong>ChatGPT</strong> (vagy Claude.ai, Gemini felület) — egy weboldal ahol beszélgetsz egy modellel. Nem cselekszik a nevedben, nincs memóriája az ügyfeled adatairól, nem indít akciókat.</li>
-<li><strong>AI bot / chatbot</strong> — egy modell + egy konkrét felület (pl. weboldali chat widget). Válaszol kérdésekre, de általában nem hoz döntést és nem csinál semmit a beszélgetésen kívül.</li>
-<li><strong>AI agent</strong> — egy modell + szerep + eszközök. Tud döntést hozni (pl. "ez a lead komoly, foglalom"), tud akciót indítani (Cal.com foglalás, email küldés), és tud emlékezni (Supabase adatbázis).</li>
-</ul>
-<p>A különbség nem méret kérdése, hanem hatáskör kérdése. A ChatGPT egy <em>eszköz amit te használsz</em>. Az agent <em>egy szereplő aki helyetted dolgozik egy konkrét folyamatban</em>.</p>
-<p>Ennek a kurzusnak a végén nem egy chatbotod lesz — egy működő AI agent rendszered.</p>` },
-      { position: 2, title: 'Mire való az AI a saját vállalkozásodban — 3 terület',
-        body: `<p>A vállalkozásodban ezer dolog van. Az AI nem mindenhez jó. Ez a 3 terület ami szolgáltatóként VALÓBAN megéri:</p>
+      { position: 1, title: 'A tudásod magja — a 4 fájdalom-kérdés', is_preview: true,
+        body: `<p>Nem a szenvedélyedből indulunk, hanem abból amiben évek óta kerestél megoldást — magadnak vagy a környezetednek. A 4 fájdalom-kérdés:</p>
 <ol>
-<li><strong>Lead-szűrés</strong> — egy ember kitölt egy űrlapot vagy chatel veled, az AI eldönti komoly-e, és csak a komolyakat juttatja el hozzád. Időt spórol: nem ülsz le 30 perces meetingre olyannal aki nem akar fizetni.</li>
-<li><strong>Ügyfélkommunikáció szűrése</strong> — visszatérő kérdésekre az AI válaszol (árak, folyamat, GYIK). Te csak az egyedi ügyekkel foglalkozol.</li>
-<li><strong>Riport és átláthatóság</strong> — heti összefoglaló a számaidról (hány lead, hány foglalás, hány új ügyfél). Az AI begyűjti és összerakja, te csak elolvasod.</li>
+<li><strong>Mit kerestél megoldani magadnak az utóbbi 5 évben?</strong> Konkrét helyzeteket írj le.</li>
+<li><strong>Mit szoktál ingyen megoldani a környezetednek?</strong> Amit annyira jól csinálsz hogy észre sem veszed.</li>
+<li><strong>Mi az amit más nem ért, de te igen?</strong> A te szempontodból teljesen logikus dolog ami másoknak rejtély.</li>
+<li><strong>Mi az amit megfizetnél valakitől hogy elvégezze helyetted, ha lenne ilyen szolgáltatás?</strong> Ez gyakran a saját jövőbeli ügyfeled.</li>
 </ol>
-<p>Ezt a hármat fogjuk felépíteni a kurzus során. Más területeket (pl. szerződéskötés, jogi tanácsadás, kreatív tervezés) szándékosan kihagyunk — ezek nem az AI dolga.</p>` },
-      { position: 3, title: 'Mire NEM való az AI — mit ne automatizálj',
-        body: `<p>Pont olyan fontos tudni mit NE csinálj AI-jal mint amit igen. Konkrét tilalmak szolgáltatónak:</p>
+<p>A 4 válasz egymást fedi. Ahol mind a 4 metszi egymást, ott van a tudásod magja. Egy mondatban: "Segítek [kinek] hogy [mit] elérje, mert [miért én]."</p>
+<p>Ezt papíron írd, ne fejben. Egy A4. Egy mondat. Ha nem megy egy mondatba, még nincs kész — de nem ezért nem indulunk. A pozíció minden hónapban finomodik, csak a mostani legjobb verziód kell.</p>` },
+      { position: 2, title: 'Az ideális vevőd — egy konkrét ember, nem szegmens',
+        body: `<p>"Magyar kis-és középvállalkozás" — ez nem avatár, hanem demográfiai adat. Az igazi avatár <strong>egy konkrét ember</strong>, akiről tudod mit csinál este 10-kor.</p>
+<p>Válassz ki most egy valódi embert a környezetedből aki illik a profilodra. Töltsd ki róla:</p>
 <ul>
-<li><strong>Szerződéskötés, jogi nyilatkozat</strong> — soha. Felelősséget nem vállalhat az AI, a hiba a tied lesz.</li>
-<li><strong>Diagnózis, kezelési terv</strong> (orvos / pszichológus / fizikoterapeuta) — az AI csak szűrhet és időpontot foglalhat, döntést nem hozhat.</li>
-<li><strong>Konkrét árajánlat egyedi munkára</strong> — ha minden ügyfél más, az ár-meghatározás nálad maradjon. Az AI csak a sávot mondja meg (pl. "120-450 ezer Ft között").</li>
-<li><strong>Bizalmi beszélgetés</strong> — ahol az ügyfél kibeszéli magát, az emberi kapcsolat számít, nem a hatékonyság.</li>
-<li><strong>Kreatív, egyedi kimenet</strong> ahol a te aláírásod a lényeg (esküvői fotó posztprodukciója, jogi vélemény).</li>
+<li>Keresztnév + életkor</li>
+<li>Foglalkozás (egy mondat)</li>
+<li>Családi állapot + hol lakik</li>
+<li>3 mondat amit valóban tudsz róla (nem találgatva — amit beszéltetek)</li>
 </ul>
-<p>Szabály: ha a hiba ára nagyobb mint az időmegtakarítás haszna, ne automatizáld.</p>` },
-      { position: 4, title: 'A 4 lépéses progresszió — mit építünk a 30 nap alatt',
-        body: `<p>Az AI-rendszered nem egy nap alatt épül fel. 4 szint van, mindegyik a következő alapja:</p>
+<p>Ezt követően írj 10-12 kérdést neki — különösen a frusztrációkról, pénzköltési szokásokról, döntési mintáiról. Tedd fel ezeket — vagy neki, vagy az emlékezetedből írd le a válaszait. <strong>Tíz valódi beszélgetés</strong> kell, nem képzelgés.</p>
+<p>A modul végén egy 1 oldalas avatár-portré, akinek a hangját MÁR HALLOTTAD. Nem szegmens, hanem ember.</p>
+<p>AI tipp: ha a 10-12 kérdés megvan, Claude-ot kérdezd hogy "mi az amit a kérdéseimből még nem tudok róla — segíts kérdezni az utolsó 3-at". <em>Nem helyettem dönt, csak kérdez tovább.</em></p>` },
+      { position: 3, title: 'Az ajánlatod és 3 csomag-szint',
+        body: `<p>5 elemes ajánlat-modell. Ezt töltöd ki:</p>
 <ol>
-<li><strong>AI Agent</strong> (Modul 2) — egy szerep, egy prompt, egy konkrét feladat. Pl. "GYIK-válaszoló a weboldalamon".</li>
-<li><strong>Agent Workflow</strong> (Modul 3) — az agent egy folyamatba kerül: input → szűrés → döntés → akció. Pl. "lead bejön → szűrök → ha komoly, foglalok időpontot".</li>
-<li><strong>Multi-Agent rendszer</strong> (Modul 4) — több specializált agent dolgozik együtt, mindegyiknek saját szerepe. Pl. egy lead-szűrő + egy kommunikációs + egy riport-író.</li>
-<li><strong>AI Operations System</strong> (Modul 6) — a teljes rendszer egyben, mérőszámokkal, költséggel, monitoringgal. Ez a végcél.</li>
+<li><strong>Vágyott eredmény</strong> — SZÁMSZERŰ ígéret. "Heti 5 óra megtakarítás" vagy "30 napon belül 3 új ügyfél" — nem "jobb hatékonyság".</li>
+<li><strong>Időkeret</strong> — rövid (7-30 nap), közepes (30-90 nap) vagy hosszú (3-12 hónap)?</li>
+<li><strong>Kockázat-visszafordítás / garancia</strong> — amit te valóban tartani tudsz.</li>
+<li><strong>Látható érték-stack</strong> — 5-8 elem, mindegyikhez becsült Ft-érték (mit fizetne külön-külön).</li>
+<li><strong>Egy mondat</strong> — a 4 fenti összegyúrva. Ezt írod a weboldaladra hero-headline-nak.</li>
 </ol>
-<p>Modul 5 közben a feedback loop-pal foglalkozunk: hogyan tanul és fejlődik a rendszer a használatból. Nélküle az agent statikus marad és lassan elavul.</p>
-<p>A 30 nap végén a 4. szinten vagy. Onnan a 120/220/450 ezer Ft havi AI Operations retainer a következő lépés — ha azt akarod hogy én karbantartsam helyetted.</p>` },
+<p>Csomag-szintek (3 db, anchor-logikával):</p>
+<ul>
+<li><strong>Belépő</strong> — alacsony elköteleződés, alacsony ár (pl. 49 000 Ft pilot, 1 hét, 1 konkrét probléma).</li>
+<li><strong>Komplett</strong> — a fő ajánlat, a célár. Itt vásárol a vevők 60%-a.</li>
+<li><strong>Premium</strong> — extra ár, extra szolgáltatás (esetleg személyes elérhetőség). Anchor — ettől tűnik kedvezőbbnek a Komplett.</li>
+</ul>
+<p>A három csomag mindig ugyanazt a problémát oldja meg, csak különböző mélységben. Sose csinálj "alap" és "haladó" csomagot ahol a két célközönség más.</p>` },
     ],
   },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MODUL 2 — ONLINE JELENLÉT ÉS COPY (BS 5-6 sűrítve + AI)
+  // ═══════════════════════════════════════════════════════════════════
   {
     position: 2,
-    title: 'Az első AI Agent',
-    description: 'Lépésről lépésre felépítesz egy egyetlen szereppel rendelkező AI agent-et a saját vállalkozásodra. A modul végén egy működő agent válaszol a GYIK kérdésekre — teszten, terminálban vagy chat felületen.',
+    title: 'Online jelenlét és copy',
+    description: 'Saját domaineden élesben egy 8-szekciós weboldal + egy szolgáltatás-specifikus landing. Modul végén: nyilvánosan létezel az interneten, és a copy nem leírja hanem ÉRTI a vevődet.',
     lessons: [
-      { position: 1, title: 'Mi az "single agent" — egy szerep, egy prompt',
-        body: `<p>Az első agent legyen egyszerű. Egy szerepe van, egy konkrét területen. Ne akarj mindent megoldó AI-t építeni az első héten.</p>
-<p>Egy single agent három részből áll:</p>
-<ul>
-<li><strong>System prompt</strong> — a szerep és a szabályok. Pl. "Te egy magyar fizikoterapeuta asszisztense vagy, csak árat és időpontot adsz, sohasem diagnózist".</li>
-<li><strong>Tudásbázis</strong> — amit ismernie kell. Pl. árak, szolgáltatások, GYIK válaszok.</li>
-<li><strong>Lekérdező felület</strong> — ahova az ügyfél kérdést ír. Lehet terminál először, később weboldali chat vagy Telegram.</li>
-</ul>
-<p>Az agent NEM lesz tökéletes az első körben. A cél most az, hogy <strong>működjön</strong> — válaszoljon a 10 leggyakoribb kérdésre épkézláb módon, anélkül hogy hülyeséget mondana.</p>
-<p>A finomítás Modul 5-ben jön (feedback loop). Most csak a működés.</p>` },
-      { position: 2, title: 'A system prompt megírása — lépésről lépésre',
-        body: `<p>A system prompt a "munkaköri leírás" amit az agent megkap. Itt a 6 elemes sablon amit használunk:</p>
+      { position: 1, title: 'A 8-szekciós weboldal — szerkezet',
+        body: `<p>A klasszikus 8 szekció, ami magyar szolgáltatóra mindig működik:</p>
 <ol>
-<li><strong>Szerep</strong> — ki vagy? Pl. "Te egy magyar könyvelő iroda asszisztense vagy."</li>
-<li><strong>Kihez beszélsz</strong> — Pl. "Magyar kisvállalkozóhoz aki első körben tájékozódik."</li>
-<li><strong>Mit csinálsz</strong> — Pl. "Válaszolsz az árakkal és a szolgáltatásokkal kapcsolatos kérdésekre, foglalsz konzultációt Cal.com-on."</li>
-<li><strong>Mit NEM csinálsz</strong> — Pl. "Nem adsz konkrét adótanácsot, nem véleményezel egyedi ügyet."</li>
-<li><strong>Hangütés</strong> — Pl. "Magázódsz, tárgyilagos, rövid mondatok."</li>
-<li><strong>Mit teszel ha nem tudod</strong> — Pl. "Ha nem tudod a választ, mondd hogy a könyvelő erre személyesen válaszol, és kínáld a Cal.com linket."</li>
+<li><strong>Hero</strong> — egy mondat (a modul 1.3-ban megírt összegzés) + egy CTA gomb.</li>
+<li><strong>Probléma</strong> — a vevőd hangján: "Ha az X-szel küzdesz..." Ne lista legyen, hanem konkrét helyzet.</li>
+<li><strong>Megoldás</strong> — a te módszered, lépésekben.</li>
+<li><strong>Csomagok</strong> — a 3 csomag-szint az 1.3-ból, anchor-logikával.</li>
+<li><strong>Bizonyíték</strong> — ügyfélvélemény, számok, esettanulmány. Build-in-public fázisban a saját 30 napos naplód.</li>
+<li><strong>GYIK</strong> — 5-8 valós kérdés, valós választ. NEM "Mennyibe kerül?" — hanem "Mi van ha még csak most indítok?".</li>
+<li><strong>Garancia</strong> — az 1.3-ban megírt garancia, kiemelve.</li>
+<li><strong>CTA</strong> — a végén megint a foglalási link, megerősítéssel ("30 perces díjmentes beszélgetés").</li>
 </ol>
-<p>Az egész system prompt általában 300-600 szó. Ne legyen hosszabb — minél több utasítás, annál nagyobb az esély hogy az agent kihagy valamit.</p>` },
-      { position: 3, title: 'Tesztelés — a saját ügyfeleid kérdéseivel',
-        body: `<p>Mielőtt élesítenéd, le kell tesztelni. A módszer:</p>
+<p>Eszközök: HTML + Tailwind + Vercel élesben, vagy Webflow / Carrd / Framer. Ne kódolj nulla tudásból — Claude Code-dal beszélgetve generálsz egy alapot, majd a saját adataidat behelyettesíted.</p>` },
+      { position: 2, title: 'Hero-headline 10 variációban + sales-szerkezet',
+        body: `<p>A hero-headline a legfontosabb mondat a weboldalon. Tipikusan 7-15 szó. Egy módszer 10 variáció generálására Claude-dal:</p>
+<p><strong>Prompt-sablon:</strong></p>
+<pre>Szolgáltatás: [1 mondat amit eladsz]
+Célközönség: [1 mondat avatár az 1.2-ből]
+Vágyott eredmény: [SZÁMSZERŰ ígéret az 1.3-ból]
+
+Adj 10 hero-headline variációt, amelyek:
+- Maximum 15 szóból állnak
+- Konkrét és SZÁMSZERŰ ígéret szerepel bennük
+- Magyar nyelv, nem fordításízű
+- Nincs benne anti-AI szótár szó (a 4. leckében részletezve)
+
+Mindegyiknél írd le 1 mondatban hogy MIÉRT működne — kihez szól, milyen érzelmi triggert üt meg.</pre>
+<p>A 10-ből 2-3-at szóban olvasol fel hangosan, és kérdezd meg magadtól: mintha valaki más mondaná, beleülne-e a hatása? A nyertes amelyik az olvasó hangján szól, nem a szerző hangján.</p>
+<p>A sales-szerkezet 7 eleme: Hook → Probléma → Megoldás → Hitelesség → Ajánlat → Garancia → CTA. Minden landing oldal ezt követi — csak a méretek változnak.</p>` },
+      { position: 3, title: 'Szolgáltatás-specifikus landing oldal',
+        body: `<p>A főoldal mellett minden egyedi szolgáltatáshoz külön landing oldal kell. Ez konkrétabb és konvertál jobban.</p>
+<p>Példa egy könyvelő irodánál:</p>
+<ul>
+<li>Főoldal: "Számvitel és könyvelés Budapesten — kisvállalkozásoknak."</li>
+<li>Landing 1: <code>/kata-konyveles</code> — KATA-s vállalkozóknak szóló külön oldal, KATA-specifikus GYIK-kel.</li>
+<li>Landing 2: <code>/ev-bevallasok</code> — egyéni vállalkozók év végi bevallása.</li>
+<li>Landing 3: <code>/cegalapitas</code> — új céget alapítóknak.</li>
+</ul>
+<p>Mindegyik ugyanazt a 7-elemes sales-szerkezetet követi, csak az adott szolgáltatásra szabva. Egy landing oldalt 2-3 óra megírni Claude-dal, és onnantól évekig dolgozik neked.</p>
+<p>Konverziós alapszabály: minél szűkebb a landing témája, annál magasabb a konverziós arány. Egy "általános könyvelő iroda" landing 2-3%-on konvertál; egy "KATA-konyveles-bp" landing 8-12%-on.</p>` },
+      { position: 4, title: 'AI a copy-finomításhoz — prompt-könyvtár',
+        body: `<p>Az AI itt még NEM saját agent — csak egy intelligens segédeszköz a copy-finomításhoz. 5 prompt amit ki kell próbálnod erre a modulra:</p>
 <ol>
-<li><strong>Gyűjts össze 10 valós kérdést</strong> — az utolsó 50 emailedből vagy 20 telefonbeszélgetésedből. Ne találd ki, hanem valós ügyfelek valós szavait használd.</li>
-<li><strong>Terminálban tesztelj</strong> először. <code>curl</code>-rel vagy egy 30 soros Node script-tel. NE rakd ki weboldalra amíg a 10 alap kérdést nem tudja jól.</li>
-<li><strong>Mindegyikre nézd meg:</strong> A válasz helyes? Magyarul jó? Nem ad olyan tanácsot amit nem szabadna? Nem hivatkozik nem létező árra?</li>
+<li><strong>Hero-variáció generálás</strong> (fent a 2.2 leckében részletezve).</li>
+<li><strong>Vevő-hang ellenőrzés</strong>: "Itt a hero-headline-em: [...] — egy [avatár az 1.2-ből] olvassa. Mit gondolna? 3 verzióban: pozitív, semleges, elutasító reakciót."</li>
+<li><strong>GYIK generálás</strong>: "Itt a szolgáltatásom: [...]. Mi az a 8 leggyakoribb kérdés amit egy [avatár] tényleg feltenne? NE általános marketing-kérdéseket adj, hanem konkrét aggályokat."</li>
+<li><strong>Anti-AI szótár pass</strong>: "Itt egy weboldal-szöveg: [...]. Cseréld ki az AI-stílusú szavakat (a teljes lista a kurzus repo-jában: <code>docs/anti-ai-szotar.md</code>) magyar megfelelőre — az AI-fordítás-szerű kifejezéseket konkrét, hétköznapi magyarra."</li>
+<li><strong>Garancia-megfogalmazás</strong>: "A vágyott eredményem: [SZÁM]. Az időkeretem: [...]. Adj 3 olyan garancia-szöveget amit reálisan tarthatok és nem érzem rizikónak."</li>
+</ol>
+<p>Az AI itt asszisztens — te döntesz mindenről. A 10 variációból 1-et választasz, a 8 GYIK-ből 5-öt használsz, és a 3 garancia-szövegből 1-et finomítasz tovább.</p>` },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MODUL 3 — ÜGYFÉLSZERZÉS (BS 8-9 sűrítve + első AI agent)
+  // ═══════════════════════════════════════════════════════════════════
+  {
+    position: 3,
+    title: 'Ügyfélszerzés — első ügyfelek és lista-építés',
+    description: 'Az első ügyfelek nem hirdetésből jönnek. 10 ember a környezetedből + egy lead magnet + automata email sorozat. Modul végén: 3 üzenet kiment, lead magnet él, email lista nő — és az AI szűri a feliratkozók komolyságát.',
+    lessons: [
+      { position: 1, title: 'Az ismerős-lista — első 10 név',
+        body: `<p>Nem hirdetés, nem cold outreach. Tíz ember a környezetedből, akik:</p>
+<ul>
+<li>Ismernek téged emberileg (nem csak LinkedIn-en).</li>
+<li>Olyan helyzetben vannak vagy voltak, hogy a szolgáltatásod releváns nekik.</li>
+<li>Vagy ismernek olyan embert akinek releváns.</li>
+</ul>
+<p>Excel táblázat 4 oszloppal: Név | Hogyan ismerlek | Mi a helyzete most | Mit írok neki?</p>
+<p>Az üzenet sablon (NEM marketingüzenet, hanem személyes):</p>
+<pre>Szia [Név],
+
+A [konkrét emlék közöttetek] óta nem nagyon beszéltünk.
+Most elindítottam valamit: [1 mondat amit eladsz].
+
+Nem rád akarom rátukmálni — egyszerűen csak végigveszem
+azokat akiket ismerek hátha aktuális.
+
+Ha bárkit ismersz aki [konkrét helyzetben van], és azt
+gondolod hasznos lenne neki, jelezz egyet és írok neki.
+Vagy ha te magad gondolkozol rajta, akkor is jelezz.
+
+[Te keresztneved]</pre>
+<p>3 üzenetnek menjen ki az első héten. Várj 5 napot. Mérd: hányan válaszolnak? Mit válaszolnak? Onnan iterálsz.</p>` },
+      { position: 2, title: 'Lead magnet — 5-10 oldalas PDF',
+        body: `<p>A lead magnet egy hasznos PDF amit a látogató ingyen letölt cserébe az emailjéért. NEM marketinganyag — valódi érték.</p>
+<p>4 típus szolgáltatóknak ami működik:</p>
+<ol>
+<li><strong>Checklist</strong> — pl. "10 pontos KATA-átállás checklist" könyvelőtől.</li>
+<li><strong>Sablonok</strong> — pl. "5 email-sablon első ügyfélhez" coach-tól (de coach NE — nálad más).</li>
+<li><strong>Esettanulmány</strong> — pl. "Hogyan dolgozott meg egy ügyvédi iroda 30 nap alatt egy peres ügyet" — anonimizálva.</li>
+<li><strong>Mini-audit</strong> — egy GYIK-stílusú dokumentum ami megmutatja milyen problémákra szokott megoldást adni.</li>
+</ol>
+<p>5-10 oldal Markdown-ban megírva, Claude-dal csiszolva. Aztán Pandoc vagy egy ingyenes online MD→PDF konverterrel PDF-be exportálva. Brand: csak a saját logód + színek a fejlécben — semmi sablon-design.</p>
+<p>FONTOS: NE legyen áthúzott eladás a PDF-ben. A PDF maga ÉRTÉK. A pozícionálás a végén egy "ha tovább szeretnél beszélgetni, itt a Cal.com link" — egyetlen sor.</p>` },
+      { position: 3, title: 'Email lista — 5-emailes welcome sorozat Kit-tel',
+        body: `<p>A feliratkozó form a lead magnet alatt. Eszköz: <strong>Kit (volt ConvertKit)</strong> ingyenes terv (1000 feliratkozó).</p>
+<p>A welcome sorozat 5 levél, az első 14 napban:</p>
+<ol>
+<li><strong>0. nap (azonnal)</strong> — köszöntés + PDF linkje. 50 szó.</li>
+<li><strong>1. nap</strong> — Egy konkrét történet rólad / az ügyfeledről. 150 szó. Nem eladás.</li>
+<li><strong>3. nap</strong> — Egy gyakori hiba amibe a célközönséged beleesik (és hogyan kerülöd el). 200 szó.</li>
+<li><strong>7. nap</strong> — Egy esettanulmány. 250 szó. Itt jöhet egy soft CTA: "ha hasonló helyzetben vagy, foglalj 30 percet".</li>
+<li><strong>14. nap</strong> — Visszatekintés és kérés: "milyen téma érdekelne legjobban?". Ez VÁLASZ-üzenetet generál — ami brand-építés.</li>
+</ol>
+<p>A leveleket Markdown-ban írod meg, Claude-dal csiszolod (anti-AI szótár pass!), és Kit-be másolod. 1-2 óra megírni, és 1-2 évig dolgozik neked.</p>
+<p>Mérőszám: open rate 35%+ az első levélnél, 25%+ a 5.-nél. Click rate 5%+. Ha alacsonyabb — a tárgy gyenge vagy a vevő-hang nem stimmel.</p>` },
+      { position: 4, title: 'Első AI érintés — Claude szűri a feliratkozókat',
+        body: `<p>Itt jön az első saját AI-elemed. Még nem agent, csak egy automatikus szűrő.</p>
+<p>Mit csinál: amikor valaki feliratkozik a lead magnet-re, a Kit webhook elküldi a feliratkozó adatait egy Vercel serverless function-nak. A function lehívja a Claude API-t egy rövid prompttal:</p>
+<pre>Új feliratkozó: [email], opcionálisan [név].
+A lead magnet: [PDF cím].
+
+Adj 1-10 score-t:
+- A személyes email cím (gmail/yahoo)? +1
+- Cég-domain (pl. @ugyvediroda.hu)? +3
+- Magyar név? +1
+- Megadott név egyáltalán? +1
+
+Egy mondat: ki lehet ez a feliratkozó valószínűleg?</pre>
+<p>A score Supabase-be kerül. Ha 5 felett: Telegram értesítés neked ("új komoly feliratkozó: Kovács István, könyvelőiroda"). 5 alatt: csak logolás.</p>
+<p>Costkalkuláció: 1 hívás Claude Haiku-val ~0.5 Ft. 1000 feliratkozó ~500 Ft. Elenyésző.</p>
+<p>Ezzel az első AI-elem MÁR DOLGOZIK a vállalkozásodban. A 6. modulig építjük tovább.</p>` },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MODUL 4 — KONZULTÁCIÓ ÉS ÉRTÉKESÍTÉS (BS 7 + AI bot)
+  // ═══════════════════════════════════════════════════════════════════
+  {
+    position: 4,
+    title: 'Konzultáció és értékesítés',
+    description: 'A funnel utolsó szakasza: a feliratkozó / érdeklődő lefoglal egy 30 perces díjmentes beszélgetést, és onnan vagy ajánlat-küldés, vagy elválás. Modul végén: Cal.com él, 4 automata email küldve, Stripe Payment Link kész — és AI bot foglal helyetted weboldalon.',
+    lessons: [
+      { position: 1, title: 'Cal.com beállítás + 4 automata email',
+        body: `<p>A Cal.com az ingyenes alternatíva a Calendly-nak. Setup:</p>
+<ol>
+<li>Regisztráció <code>cal.com</code>-on, Google Calendar bekötés.</li>
+<li>Új event-type: "30 perces díjmentes beszélgetés". URL: <code>cal.com/teneved/30perc</code>.</li>
+<li>Időpont-sávok beállítása (pl. munkanapokon 9-11 és 14-16).</li>
+<li>Automata Google Meet link generálás (Cal.com beállításai közt).</li>
+<li>Foglalási kérdések: 3-5 kérdés (pl. "milyen helyzetben vagy?", "mit szeretnél elérni a beszélgetésen?").</li>
+</ol>
+<p>4 automata email az ügyfélnek a Cal.com-on keresztül:</p>
+<ul>
+<li><strong>Foglalás után azonnal</strong>: visszaigazolás + Google Meet link + felkészülési útmutató (3 kérdés amit átgondolhat).</li>
+<li><strong>24 órával előtte</strong>: emlékeztető + Google Meet link megint.</li>
+<li><strong>1 órával előtte</strong>: röpke "találkozunk 1 óra múlva".</li>
+<li><strong>Beszélgetés után 2 órával</strong>: köszönő email + "itt egy 1 oldalas összefoglaló amit ígértem" — itt küldöd az ajánlatot.</li>
+</ul>
+<p>A 4. email kulcsfontosságú: NE a beszélgetésen küldj ajánlatot, hanem utána emailben. Ez tisztábbá teszi a döntést a vevőnek.</p>` },
+      { position: 2, title: 'A 30 perces discovery call — kérdéssor',
+        body: `<p>A 30 perces beszélgetés struktúrája (NEM értékesítés — diagnózis):</p>
+<p><strong>1. Bemelegítés (3 perc)</strong>: "Hogyan találtál meg? Mi indított hogy lefoglald?"</p>
+<p><strong>2. Helyzet (10 perc)</strong>: mi a jelenlegi állapot?</p>
+<ul>
+<li>"Pontosan mit csinálsz most?"</li>
+<li>"Mikor jelentett ez először problémát?"</li>
+<li>"Mit próbáltál eddig?"</li>
+<li>"Mi nem működött, és miért gondolod hogy nem?"</li>
+</ul>
+<p><strong>3. Cél (5 perc)</strong>: hova akarsz eljutni?</p>
+<ul>
+<li>"3 hónap múlva mire szeretnél visszanézhetni?"</li>
+<li>"Ha ez bejön, mit változtat ez a hétköznapjaidon?"</li>
+<li>"Mi van ha NEM oldódik meg?"</li>
+</ul>
+<p><strong>4. Útkép (10 perc)</strong>: itt mondod el a megoldást nagyvonalakban.</p>
+<ul>
+<li>NE add el — magyarázd el a saját szavaiddal hogy te hogyan oldod meg.</li>
+<li>Mondj egy konkrét példát egy hasonló ügyfélről.</li>
+<li>Bemutatod a 3 csomag-szintet (modul 1.3), de NEM dönt el most.</li>
+</ul>
+<p><strong>5. Zárás (2 perc)</strong>: "Küldök 1 oldalas összefoglalót emailben, abban benne lesz az ajánlat. Olvasd át, és ha kérdés van válaszolj rá, vagy ha mehet a következő lépés, írd vissza."</p>
+<p>SOHA NE zárj a meetingen. Egy nap kell a vevőnek hogy átgondolja.</p>` },
+      { position: 3, title: 'Stripe Payment Link + magyar számlázás',
+        body: `<p>Az ajánlat-email tartalma:</p>
+<ul>
+<li>1 oldal: a beszélgetés összefoglalója (probléma → cél → megoldás).</li>
+<li>3 csomag-szint árral (anchor-logikával).</li>
+<li>Stripe Payment Link-ek mind a 3 csomaghoz (egy-egy kattintás = fizetés).</li>
+<li>"Ha kérdés van, válaszolj erre az emailre. Ha mehet, kattintsd a csomagot."</li>
+</ul>
+<p><strong>Stripe Payment Link készítés:</strong></p>
+<ol>
+<li>Stripe Dashboard → Payment Links → Create.</li>
+<li>Termék: pl. "Pilot csomag — 49 000 Ft", áfa 0% (KATA esetén).</li>
+<li>Sikeres fizetés után redirect: <code>te-vallakozasod.hu/koszonom</code>.</li>
+<li>Másold ki a link-et, és emailben küldd.</li>
+</ol>
+<p><strong>Magyar számlázás:</strong> a Stripe NEM állít ki magyar áfás számlát. KATA-s vállalkozóként Számlázz.hu-n vagy Billingo-n kell utólag manuálisan kiállítani. A Stripe webhook (<code>checkout.session.completed</code>) értesít egy emailben hogy fizetés érkezett — onnan 5 perc a számla.</p>
+<p>Automatizálás később: webhook → automata Számlázz.hu számla. De az első 5-10 ügyfélnél kézzel csináld, hogy megérezd a folyamatot.</p>` },
+      { position: 4, title: 'AI bot foglal Cal.com-on — kommunikációs agent indítása',
+        body: `<p>Eddig az AI passzív volt (szűrés a háttérben). Most aktív: chat widget a weboldaladon, ami beszélget a látogatóval és FOGLALÁST kínál.</p>
+<p>A bot 3 feladata:</p>
+<ol>
+<li>Válaszol a 8-10 leggyakoribb kérdésre (árak, folyamat, idősávok).</li>
+<li>Ha az ügy komolynak tűnik, kínálja a Cal.com link-et és proaktívan kéri foglalni.</li>
+<li>Ha az ügy komplex (nem tudja eldönteni), mondja: "ezt személyesen érdemes átbeszélni" + link.</li>
+</ol>
+<p><strong>Architektúra:</strong></p>
+<ul>
+<li>Frontend: 50 soros Next.js chat widget komponens (kész minta a kurzus repo-ban).</li>
+<li>Backend: Vercel serverless function ami fogadja az üzenetet, hívja Claude API-t a system prompttal (modul 6.2-ben írod meg részletesen), visszaadja a választ.</li>
+<li>Memória: a beszélgetés Supabase-be naplózva.</li>
+</ul>
+<p>Itt még a system prompt csak a 8-10 GYIK-et és a Cal.com link-et tartalmazza. A "komoly-szűrés" még nem itt fut — az a feliratkozóknál fut (3.4).</p>
+<p>Modell-választás: <strong>Claude Haiku</strong> a chat-hez. Olcsó (0.8$/1M token), gyors (~500 ms), elég jó GYIK-válaszhoz. Sonnet-re csak akkor cseréled le ha a tesztelés (modul 6.3) megmutatja hogy szükséges.</p>` },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MODUL 5 — HÁTTÉR ÉS MÉRÉS (BS 10-11 + AI riport)
+  // ═══════════════════════════════════════════════════════════════════
+  {
+    position: 5,
+    title: 'Háttér és mérés',
+    description: 'A láthatatlan rész: CRM, dokumentum-rendszer, mérőszámok. Nélküle a 3-4. modulból káosz lesz. Modul végén: Google Sheets CRM él, Gmail label-rendszer beállítva, GA4 mér, és az AI heti riportot küld neked.',
+    lessons: [
+      { position: 1, title: 'Google Sheets CRM — 4 munkalap',
+        body: `<p>Drága CRM-szoftvert NE vegyél az első évben. Google Sheets bőven elég.</p>
+<p>A 4 munkalap (egy fájlban):</p>
+<ul>
+<li><strong>Lead-ek</strong> — minden érdeklődő: dátum, név, email, telefon, forrás (lead magnet / közvetlen / ajánlás), állapot (új / beszélgetés foglalva / ajánlat küldve / ügyfél / nem érdekel).</li>
+<li><strong>Ügyfelek</strong> — minden fizetős: dátum, név, csomag, ár, számla-azonosító, projektállapot.</li>
+<li><strong>Beszélgetések</strong> — Cal.com foglalások: dátum, ügyfél, témakör, eredmény (ajánlat / nem-fit / utánkövetés).</li>
+<li><strong>Számlák</strong> — Számlázz.hu-ból manuálisan átírva: dátum, számlaszám, ügyfél, összeg, fizetve-e.</li>
+</ul>
+<p>Mind a 4 munkalap egy oszloppal kezdődik: <code>Hash</code> (rövid azonosító, pl. <code>L-2026-001</code>). Ezzel hivatkozol rájuk a többi munkalapról.</p>
+<p>Apps Script automatizáció (a 4-es leckében bővebben): a Cal.com webhook ír egy új sort a Lead-ek munkalapba. A Stripe webhook ír egy új sort az Ügyfelek munkalapba. Nem kell kézzel.</p>` },
+      { position: 2, title: 'Gmail label-struktúra és Drive rendszer',
+        body: `<p>A Gmail-ed 200 emailes spam-káosz egy hónap alatt — ha nem rendszerezed. Egyszer beállítod, és onnantól mindig rendben van.</p>
+<p><strong>Gmail label-ek (5 db elég):</strong></p>
+<ul>
+<li><code>01-Aktív-ügyfél</code> — minden aktív projekttel kapcsolatos email.</li>
+<li><code>02-Lead</code> — érdeklődők, akik még nem ügyfelek.</li>
+<li><code>03-Számla</code> — kimenő és bejövő számlák.</li>
+<li><code>04-Operációs</code> — Vercel, Supabase, Stripe értesítések.</li>
+<li><code>05-Tanulás</code> — newsletter, podcast email.</li>
+</ul>
+<p>Szűrők (filter-ek): minden Stripe email automatikusan <code>03-Számla</code>, minden Cal.com email automatikusan <code>02-Lead</code>. Egyszer beállítod, és Gmail rendezi neked.</p>
+<p><strong>Google Drive mappa-rendszer:</strong></p>
+<pre>/Vallalkozas
+  /01-Ugyfelek
+    /[Ev]-[Ugyfel-nev]
+      /szerzodes.pdf
+      /atado-anyagok/
+      /szamlak/
+  /02-Marketing
+    /weboldal-tartalmak/
+    /lead-magnetek/
+  /03-Penzugy
+    /[Ev]/szamlak/
+  /04-Mukodes
+    /jegyzetek/</pre>
+<p>3 hónap után már nem keresgéled a szerződéseket — minden a helyén van.</p>` },
+      { position: 3, title: 'Mérés — GA4 + PostHog: 5 alap esemény',
+        body: `<p>A mérés ott kezdődik ahol forgalom van. Az első 30 napban CSAK 5 eseményt mérsz, nem 50-et.</p>
+<p><strong>Google Analytics 4 (GA4)</strong> a weboldali forgalomhoz:</p>
+<ol>
+<li><code>page_view</code> — automata, minden oldallátogatás.</li>
+<li><code>lead_magnet_download</code> — PDF letöltés (kattintás-tracking a letöltés-gombon).</li>
+<li><code>calcom_click</code> — Cal.com link megnyomása.</li>
+<li><code>calcom_booked</code> — Cal.com webhook hívja a backendet, az pedig elküldi GA4-nek.</li>
+<li><code>stripe_purchase</code> — fizetés sikerült, ár átadva.</li>
+</ol>
+<p><strong>PostHog</strong> ugyanezt méri, de gazdagabb funkcionalitással (heatmap, recording, funnel-elemzés). Free tier 1M event/hó — bőven elég.</p>
+<p>Heti riport (manuálisan vagy automata): hány page_view, hány letöltés, hány Cal.com foglalás, hány vásárlás. Két konverziós arány:</p>
+<ul>
+<li><strong>Látogató → letöltés</strong>: egészséges 5-10%.</li>
+<li><strong>Letöltés → vásárlás</strong>: egészséges 3-8% (long tail).</li>
+</ul>
+<p>NE optimalizálj amíg legalább 100 page_view-d van — az alacsony minta-szám téves következtetéshez vezet.</p>` },
+      { position: 4, title: 'AI heti riport — riport-író agent',
+        body: `<p>Eddig manuálisan kellett összerakni a heti számokat. Most az AI csinálja.</p>
+<p>A riport-író agent felépítése:</p>
+<ul>
+<li><strong>Trigger</strong>: cron job minden hétfő reggel 8-kor.</li>
+<li><strong>Bemenet</strong>: SQL-lekérdezések Supabase-ből és PostHog-ból az elmúlt 7 napról.</li>
+<li><strong>Feldolgozás</strong>: Claude Sonnet hívás egy prompttal: "Itt az elmúlt heti adat: [...]. Adj egy 5 mondatos összefoglalót: hány érdeklődő, hány komoly, hány foglalás, hány vásárlás. Mit jelent ez a múlt héthez képest? Mi a legfontosabb dolog ami történt?"</li>
+<li><strong>Kimenet</strong>: Telegram értesítés neked / vagy email.</li>
+</ul>
+<p>Példa riport (5 mondat):</p>
+<blockquote>
+"<em>Múlt héten 47 új látogató, 8 lead magnet letöltés, 3 Cal.com foglalás, 1 vásárlás (49k Ft pilot). A múlt heti 32 látogatóhoz képest +47% forgalom — valószínűleg a YouTube videó hozta. A 3 Cal.com foglalásból 2 még előtted áll. Legfontosabb dolog: az új ügyféled, Kovács István, könyvelő, érdekelt a komplettre is — utánkövetésre érdemes.</em>"
+</blockquote>
+<p>Az AI itt összegez és kiemel — TE döntöd el mit csinálsz az információval. Költség: heti 1 hívás Sonnet-tel ~5 Ft.</p>` },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MODUL 6 — AI AGENT ÉPÍTÉSE (dedikált AI modul)
+  // ═══════════════════════════════════════════════════════════════════
+  {
+    position: 6,
+    title: 'Saját AI agent építése — az első éles agent',
+    description: 'Eddig az AI passzív volt (szűrés, riport). Most aktívan beszélget az ügyfeleiddel. Modul végén: van egy működő AI agent a weboldaladon vagy Telegram bot-on, ami a saját ügyfeleid kérdéseire válaszol — és tudja mikor kell téged hívni.',
+    lessons: [
+      { position: 1, title: 'Mit jelent egy AI agent — vs ChatGPT, vs chatbot',
+        body: `<p>Tisztázzuk a fogalmakat mielőtt építünk:</p>
+<ul>
+<li><strong>ChatGPT / Claude.ai</strong> — egy weboldal ahol beszélgetsz egy modellel. Te használod, nem cselekszik a nevedben, nincs memóriája az ügyfeled adatairól.</li>
+<li><strong>Chatbot</strong> — egy modell + egy konkrét felület (pl. weboldali chat). Válaszol kérdésekre, de általában nem hoz döntést, nem indít akciókat a beszélgetésen kívül.</li>
+<li><strong>AI agent</strong> — egy modell + szerep (system prompt) + eszközök. Tud döntést hozni ("ez a lead komoly, foglalom"), tud akciót indítani (Cal.com foglalás, email küldés), és tud emlékezni (Supabase adatbázis).</li>
+</ul>
+<p>A különbség nem méret kérdése — hatáskör kérdése. Egy chatbot csak válaszol. Egy agent EGY szereplő aki helyetted dolgozik egy folyamatban.</p>
+<p>Ebben a modulban egy <strong>single agent</strong>-et építünk: 1 szerep, 1 prompt, 1 feladat. A 7. modulban összerakjuk őt a 3.4 (lead-szűrő) és 5.4 (riport-író) agentekkel egy rendszerré.</p>` },
+      { position: 2, title: 'A system prompt megírása — 6 elemes sablon',
+        body: `<p>A system prompt a "munkaköri leírás" amit az agent megkap minden hívásnál. Itt a 6 elemes sablon:</p>
+<ol>
+<li><strong>Szerep</strong> — Pl. "Te egy magyar [foglalkozás] iroda asszisztense vagy."</li>
+<li><strong>Kihez beszélsz</strong> — Pl. "Magyar [avatár az 1.2-ből] aki első körben tájékozódik."</li>
+<li><strong>Mit csinálsz</strong> — Pl. "Válaszolsz az [3 leggyakoribb téma] kérdésekre, foglalsz konzultációt Cal.com-on."</li>
+<li><strong>Mit NEM csinálsz</strong> — Pl. "Nem adsz [konkrét szakmai tanácsot — pl. jogi vélemény, diagnózis]. Ha ilyet kérdeznek, mondd hogy a [foglalkozás] erre személyesen válaszol."</li>
+<li><strong>Hangütés</strong> — Pl. "Magázódsz, tárgyilagos, rövid mondatok. SOHA ne használj anti-AI szótár szót (lista: <code>docs/anti-ai-szotar.md</code>)."</li>
+<li><strong>Mit teszel ha nem tudod</strong> — Pl. "Ha nem tudod a választ, mondd hogy [név] erre személyesen válaszol, és kínáld a Cal.com link-et: cal.com/teneved/30perc."</li>
+</ol>
+<p>Hossz: 300-600 szó. Ne legyen hosszabb — minél több utasítás, annál nagyobb az esély hogy az agent kihagy valamit.</p>
+<p>FONTOS sablon-szabály: minden szabály ELEJÉN konkrét példa legyen. NE "általában magázódsz" — hanem "ha az ügyfél tegez, te akkor is magázol. Példa: 'Igen, Önnek érdemes lenne...' nem 'Igen, neked érdemes...'".</p>` },
+      { position: 3, title: 'Tesztelés a saját ügyfeleid kérdéseivel',
+        body: `<p>Mielőtt élesítenéd, le kell tesztelni. Módszer:</p>
+<ol>
+<li><strong>Gyűjts össze 10 valós kérdést</strong> — az utolsó 50 emailedből vagy 20 telefonbeszélgetésedből. NE találd ki — valós ügyfelek valós szavait használd.</li>
+<li><strong>Terminálban tesztelj</strong> először, NE weboldalon. Egy 30 soros Node script ami kéri a Claude API-t a system prompttal és a kérdéssel.</li>
+<li><strong>Mindegyikre nézd meg:</strong>
+   <ul>
+   <li>A válasz helyes? (tényszerűen)</li>
+   <li>Magyarul jó? (nem-fordításízű, anti-AI szótár oké)</li>
+   <li>Nem ad olyan tanácsot amit nem szabadna? (jogi / diagnózis)</li>
+   <li>Nem hivatkozik nem létező árra vagy szolgáltatásra?</li>
+   </ul>
+</li>
 <li><strong>Iterálj a system prompton</strong>: ha valamit rosszul csinál, kiegészíted az utasítást és újra teszteled.</li>
 </ol>
 <p>Tipikus első kör: 10-ből 6-7 jó, 3-4 elcsúszik. Ne add fel — 2-3 prompt-frissítés után általában 10-ből 9 jó.</p>
-<p>Eszközök: Anthropic Workbench (console.anthropic.com) vagy a saját Node terminál script-ed.</p>` },
+<p>Eszközök: Anthropic Workbench (<code>console.anthropic.com</code>) vagy a saját Node terminál-script-ed (kész minta a kurzus repo-ban).</p>` },
       { position: 4, title: 'Bevetés — chat widget weboldalra vagy Telegram bot',
-        body: `<p>Két opció ahova az első agent élesben kerül:</p>
+        body: `<p>Két opció ahova az első agent élesben kerül. Mindkettő 1-2 óra setup.</p>
+<p><strong>Opció A — Weboldali chat widget</strong></p>
 <ul>
-<li><strong>Weboldali chat widget</strong> — egy gomb a jobb alsó sarokban, megnyit egy chat ablakot. A látogatók azonnal kérdezhetnek. Előnye: konverzió nő, hátránya: kódolni kell egy kicsit (Next.js + Tailwind komponens, kész minta a kurzusban).</li>
-<li><strong>Telegram bot</strong> — saját bot, az ügyfeleknek megadod (vagy QR-kód a névjegyeden). Előnye: 5 perc alatt él, ingyenes, mobil-első. Hátránya: a látogatóknak Telegram kell.</li>
+<li>Egy 50 soros Next.js komponens (kész minta a kurzus repo-ban): jobb alsó sarokban egy ikon, megnyit egy chat ablakot.</li>
+<li>Backend: egy Vercel serverless function (<code>/api/chat</code>) ami fogadja az üzenetet, hívja Claude API-t, visszaadja.</li>
+<li>Előnye: minden látogató látja, magas konverziós potenciál.</li>
+<li>Hátránya: kódolni kell (másold a sablont, állítsd be a saját adataidat).</li>
 </ul>
-<p>Először vesd be Telegram-on (gyorsabb tanulás, alacsonyabb tét), aztán amikor látod hogy működik, tedd weboldalra. A Telegram bot beállítása BotFather-en: <code>/newbot</code> parancs, név megadás, kapsz egy tokent, és kész.</p>
-<p>A backend mindkét esetnél ugyanaz: egy Vercel serverless function ami fogadja az üzenetet, hívja a Claude API-t a system prompttal, és visszaadja a választ.</p>` },
+<p><strong>Opció B — Telegram bot</strong></p>
+<ul>
+<li>BotFather-en regisztrálsz egy bot-ot: <code>/newbot</code> parancs, név megadás, token-t kapsz.</li>
+<li>Webhook konfigurálva a saját Vercel function-odra.</li>
+<li>Előnye: 30 perc setup, ingyenes, mobil-első.</li>
+<li>Hátránya: az ügyfeleidnek Telegram-ot kell használniuk (nem mindenki).</li>
+</ul>
+<p><strong>Javaslat</strong>: kezdj Telegram bot-tal (alacsony tét, gyors tanulás), aztán amikor látod hogy működik, tedd weboldali widget-be is.</p>
+<p>FONTOS: az első éles használat HETEKIG nem lesz tökéletes. Heti review (5.4 és 7.3) közben javítod a system prompt-ot. Az agent <strong>tanul a saját ügyfeleidből</strong> — ezt nem tudja egy SaaS megadni neked.</p>` },
     ],
   },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MODUL 7 — AI OPERATIONS SYSTEM (a végcél)
+  // ═══════════════════════════════════════════════════════════════════
   {
-    position: 3,
-    title: 'Agent Workflow — az agent egy folyamatban',
-    description: 'A single agent magában nem elég. Itt megtanulod hogyan illeszd egy folyamatba (input → szűrés → döntés → akció). A modul végén a saját üzleti folyamatodra felépítesz egy 4-lépéses workflow-t.',
+    position: 7,
+    title: 'AI Operations System — a 3 agent együtt',
+    description: 'A kurzus végpontja. Az eddigi 3 AI-elemed (lead-szűrő a 3.4-ből, kommunikációs a 6.4-ből, riport-író a 5.4-ből) most ÖSSZEÁLL egy rendszerré. Modul végén: működő AI Operations System, monitoringgal, költség-trackinggel.',
     lessons: [
-      { position: 1, title: 'Mi az "agent workflow" — input → szűrés → döntés → akció',
-        body: `<p>A single agent csak válaszol. A workflow ennél több: van neki egy <em>folyamata</em> amit végigvisz.</p>
-<p>A 4 alap-lépés:</p>
-<ol>
-<li><strong>Input</strong> — honnan jön az adat? (űrlap, chat, email)</li>
-<li><strong>Szűrés</strong> — releváns-e? (komoly-e a lead, hozzád való-e az ügy)</li>
-<li><strong>Döntés</strong> — mit tegyünk? (foglalás, válasz, továbbküldés neked)</li>
-<li><strong>Akció</strong> — végrehajtás (Cal.com foglalás, email küldés, riport)</li>
-</ol>
-<p>Példa egy ingatlanosnál: <strong>Input:</strong> egy érdeklődő beír a weboldalon "kerek 60 milliós lakást Pesten". → <strong>Szűrés:</strong> az AI elolvassa, megnézi a kataszteredet, lát-e ilyet. → <strong>Döntés:</strong> ha van 2-3 találat, jön ajánlat + foglalás. Ha nincs, udvarias "nincs most ilyen, értesítlek ha lesz". → <strong>Akció:</strong> Cal.com link kiküldése VAGY Supabase-be lead-mentés a "no-match" listára.</p>
-<p>Az agent <em>nem chatel</em> — egy lineáris folyamatot visz végig minden megkereséssel.</p>` },
-      { position: 2, title: 'Példa workflow: lead bejön → AI szűr → foglal → riport',
-        body: `<p>Konkrét példa végig, ahogy egy ügyvédi iroda használja:</p>
-<p><strong>1. Input:</strong> A weboldali űrlapon valaki kitölt: név, email, telefon, ügytípus, rövid leírás. Webhook a backendnek.</p>
-<p><strong>2. Szűrés (AI 1.):</strong> A leírást elolvassa egy Claude Haiku hívás. Megnézi:</p>
+      { position: 1, title: 'A 3 pillér × 3 agent térkép',
+        body: `<p>Az AI Operations System nem új technológia — egy <strong>szerkezet</strong>. 3 pillér, mindegyiken 1 agent dolgozik. Itt a térkép amit a kurzus során felépítettél:</p>
+<p><strong>Pillér 1 — Ügyfélszerzés</strong></p>
 <ul>
-<li>Az ügy típusa illik-e az iroda profiljához (büntető, munkajogi, családjogi)?</li>
-<li>A leírás komoly-e (van-e konkrét helyzet) vagy spam?</li>
-<li>A telefonszám valódi-e (formátum check)?</li>
+<li><strong>Lead-szűrő agent</strong> (3.4 lecke): minden új feliratkozót pontoz.</li>
+<li>Modell: Haiku, költség ~0.5 Ft / feliratkozó.</li>
 </ul>
-<p><strong>3. Döntés:</strong> Score-t ad (1-10). 7 felett "komoly", 5-7 között "talán", 5 alatt "spam".</p>
-<p><strong>4. Akció:</strong></p>
+<p><strong>Pillér 2 — Ügyfélkommunikáció</strong></p>
 <ul>
-<li>7+ → automatikus email "Köszönjük, kapja a Cal.com linket", + Telegram értesítés az ügyvédnek.</li>
-<li>5-7 → szokásos köszönő email, nincs Cal.com.</li>
-<li>5 alatt → semmi, csak Supabase-be logolás.</li>
+<li><strong>Kommunikációs agent</strong> (6. modul egésze): élő chat a weboldalon vagy Telegram-on.</li>
+<li>Modell: Haiku alapból (Sonnet-re válthatsz ha a tesztelés megmutatja hogy szükséges).</li>
 </ul>
-<p><strong>Heti riport:</strong> "12 lead bejött, 8 komoly, 5 foglalt időpontot." Két számjegy. Ezt nézi meg az ügyvéd minden hétfő reggel.</p>` },
-      { position: 3, title: 'Eszközök — Supabase, Cal.com, Telegram a workflow-ban',
-        body: `<p>A workflow-hoz 3 alapeszköz kell. Mindegyik a kurzus repo-jában készen áll (másold, állítsd be a saját adataidat):</p>
+<p><strong>Pillér 3 — Háttér és riport</strong></p>
 <ul>
-<li><strong>Supabase</strong> — adatbázis és memória. Lead-ek táblája (név, email, score, status), beszélgetések logja. Ingyenes Free tier elég kezdetben (500 MB, 50000 monthly active users).</li>
-<li><strong>Cal.com</strong> — foglalási rendszer. Saját profilod 1 link, automata Google Meet csatolás, naptár-szinkron. Ingyenes 1 event-type-ra.</li>
-<li><strong>Telegram Bot</strong> — értesítési csatorna. Az AI küld neked Telegram üzenetet ha valami fontos történt ("ÚJ KOMOLY LEAD: Kiss Péter, ingatlankereső, 60M, 0630..."). 0 forint, 0 setup overhead.</li>
+<li><strong>Riport-író agent</strong> (5.4 lecke): heti összefoglaló neked.</li>
+<li>Modell: Sonnet, költség ~5 Ft / hét.</li>
 </ul>
-<p>Felépítés: a Vercel serverless function hívja sorban: <code>insert lead → Claude score → if score &gt; 7 → send Telegram + email Cal.com link</code>. Kb. 80 sor JavaScript.</p>
-<p>FONTOS: NEM kell n8n-t használni. Az n8n vizuális workflow-t kínál, de Vercel + 80 sor kód olcsóbb, gyorsabb, kódolva van (verzió-kontroll).</p>` },
-      { position: 4, title: 'A saját workflow-d felépítése — 4 lépéses sablon a vállalkozásodra',
-        body: `<p>Most lerajzolod a saját workflow-d. Sablon:</p>
-<p><strong>Lépés 1 — Input.</strong> Honnan jön az ügyfél kérdése/megkeresése? Listázd a 2-3 fő bemeneti csatornát (weboldal űrlap, Instagram DM, email, telefon).</p>
-<p><strong>Lépés 2 — Szűrés.</strong> Mi az ami eldönti hogy érdemes-e foglalkozni vele?</p>
-<ul>
-<li>Mi az "ideális ügyfél" három jellemzője nálad?</li>
-<li>Mi az 1-2 azonnali kizáró ok? (pl. más városban van és nem utazol, vagy a költségvetése túl kicsi)</li>
-</ul>
-<p><strong>Lépés 3 — Döntés.</strong> Score 1-10. Milyen kérdésekre adsz pontot? Pl.:</p>
-<ul>
-<li>A költségvetése legalább X Ft? (+3)</li>
-<li>Konkrét helyzet, nem általános érdeklődés? (+2)</li>
-<li>Megfelelő városban van? (+2)</li>
-<li>Sürgős (1 hónapon belül)? (+2)</li>
-</ul>
-<p><strong>Lépés 4 — Akció.</strong> Mit csinálsz 7+ score-nál? Mit 5-7 között? Mit 5 alatt?</p>
-<p>Ez az 1-oldalas sablon a hét feladata. Egyszer megírod, és onnantól ezt fogja az agent végrehajtani.</p>` },
-    ],
-  },
-  {
-    position: 4,
-    title: 'Multi-Agent rendszer',
-    description: 'Egy agent nem oldja meg a teljes vállalkozásod. Itt megtanulod hogyan dolgozik együtt 3 specializált agent (Lead-szűrő, Kommunikációs, Riport-író). A modul végén a saját 3-agent rendszered kész.',
-    lessons: [
-      { position: 1, title: 'Miért nem egy agent csinál mindent — szerepek és felelősség',
-        body: `<p>Az első ötlet általában: csináljunk egy nagy agent-et ami mindent megold. Rossz ötlet. Indok:</p>
-<ul>
-<li><strong>Hosszú system prompt = hibázás.</strong> Egy 2000 szavas prompt ami "ha lead jön akkor szűrd, ha kérdés jön akkor válaszolj, ha vasárnap reggel van akkor riportot küldj" — szét fog esni. A modell hol az egyikre koncentrál, hol a másikra.</li>
-<li><strong>Költség.</strong> Egy ilyen agent minden hívásnál drágább modellt használ (mert komplexebb feladatra van tervezve). Pedig a lead-szűréshez Haiku is elég, csak a kommunikációhoz kell Sonnet.</li>
-<li><strong>Karbantartás.</strong> Ha valamit változtatsz, mindenre hat. Külön agent-ek esetén csak egyet módosítasz.</li>
-</ul>
-<p>A jobb megoldás: <strong>3 specializált agent</strong>, mindegyiknek 1 szerep, 1 prompt, 1 feladat. Egymás közt egy közös memóriában (Supabase) beszélnek.</p>
-<p>Ez a "team-of-experts" minta. Ugyanaz mint egy kis irodában: nincs egy ember aki mindent csinál — van egy aki szűr, egy aki kommunikál, egy aki riportoz.</p>` },
-      { position: 2, title: 'Az Expert Flow 6 agent példa — referencia architektúra',
-        body: `<p>A saját rendszerem (Solo Business Hermes) 7 agent-tel működik. Ezt nem kell most lemásolnod, de jó látni hova fut ki a rendszer.</p>
-<ul>
-<li><strong>Anna (Orchestrator)</strong> — Telegram bot, ide írok én. Eldönti melyik sub-agent-nek kell delegálni.</li>
-<li><strong>Security</strong> — kódbázis biztonsági review.</li>
-<li><strong>Personal</strong> — naptár, jegyzetek, Drive.</li>
-<li><strong>Client</strong> — ügyfélkommunikáció, Cal.com, email.</li>
-<li><strong>YouTube</strong> — videó pipeline, transcript, cím-leírás generálás.</li>
-<li><strong>Reception</strong> — weboldali voice agent backend, beérkező megkeresések.</li>
-<li><strong>Sustainability</strong> — fenntarthatóság-kutatás (saját brand).</li>
-</ul>
-<p>Mindegyiknek saját Claude session-je, saját rendszer-promptja, saját MCP server-csatlakozása (Google Workspace, Cal.com, Telegram). Anna nevében szólnak vissza emoji-prefixszel (🛡️, 📋, 👋, 📺, 📞, 🌱).</p>
-<p>NEKED most nem kell 7. A te első multi-agent rendszered 3 agent-tel indul.</p>` },
-      { position: 3, title: 'A saját 3 ügynököd — Lead-szűrő, Kommunikációs, Riport-író',
-        body: `<p>A minimum életképes multi-agent rendszer szolgáltatónak:</p>
-<p><strong>1. Lead-szűrő agent</strong></p>
-<ul>
-<li>Bemenet: új űrlap-kitöltés, chat-megkeresés, DM.</li>
-<li>Szerep: 1-10 score, "ki vagy mi" rövid összegzés.</li>
-<li>Kimenet: Supabase lead tábla + Telegram értesítés ha 7+.</li>
-<li>Modell: Haiku (olcsó, gyors, elég jó score-oláshoz).</li>
-</ul>
-<p><strong>2. Kommunikációs agent</strong></p>
-<ul>
-<li>Bemenet: élő chat üzenet a weboldalon vagy Telegram-on.</li>
-<li>Szerep: GYIK-válasz, foglalás-ajánlat, eskaláció hozzád ha komplex.</li>
-<li>Kimenet: válasz a felhasználónak + Cal.com link ha aktuális.</li>
-<li>Modell: Sonnet (jobb nyelvtan, hosszabb beszélgetés-emlékezet).</li>
-</ul>
-<p><strong>3. Riport-író agent</strong></p>
-<ul>
-<li>Bemenet: heti 1x cron, lekérdezi a Supabase lead + beszélgetés táblákat.</li>
-<li>Szerep: 5 mondatos összefoglaló neked. "Múlt héten X lead, Y komoly, Z foglalás. Top téma: ..."</li>
-<li>Kimenet: Telegram üzenet vagy email neked, minden hétfő reggel 8-kor.</li>
-<li>Modell: Sonnet (összefoglalás minőséghez kell).</li>
-</ul>
-<p>Ez a hármas a kurzus végére mind futni fog a saját rendszereden.</p>` },
-      { position: 4, title: 'Hogyan beszélnek egymással — state, hand-off, kontextus átadás',
-        body: `<p>A 3 agent egymással NEM közvetlenül beszél (nincs API hívás agent-ből agent-be). Helyette egy <strong>közös memória</strong> van: Supabase.</p>
+<p>A 3 agent ugyanazon a <strong>Supabase</strong> adatbázison osztozik (közös memória). Egyetlen domain alá kerülnek (<code>te-vallakozasod.hu/chat</code>, <code>/admin</code>). A Telegram bot az értesítési csatorna neked.</p>
+<p>Ez a teljes rendszer. NEM kell 7 agent mint nálam — neked 3 elég, és 5-10 ezer Ft havi költségből működik.</p>` },
+      { position: 2, title: 'Multi-agent koordináció — Supabase mint blackboard',
+        body: `<p>A 3 agent egymással NEM közvetlenül beszél (nincs API-hívás agent-ből agent-be). Helyette egy <strong>közös memória</strong> van: Supabase.</p>
 <p>Példa flow:</p>
 <ol>
-<li><strong>Lead-szűrő agent</strong> beír egy új sort a <code>leads</code> táblába: <code>{ name, email, score: 8, status: 'qualified' }</code>.</li>
-<li><strong>Kommunikációs agent</strong>, amikor új chat-üzenet jön, mielőtt válaszol, lekéri ugyanennek az email-nek a lead-jét: "Á, ez egy 8-as score-os érdeklődő, ő már látta a Cal.com linket?". Eszerint hangol.</li>
-<li><strong>Riport-író agent</strong>, vasárnap este, lekérdezi az egész hét adatait mindkét táblából (<code>leads</code>, <code>chats</code>), és összeáll a heti riport.</li>
+<li>Valaki feliratkozik a lead magnet-re. A <strong>Lead-szűrő agent</strong> beír egy új sort a <code>leads</code> táblába: <code>{ email, name, score: 8, status: 'qualified' }</code>.</li>
+<li>Másnap ugyanaz az ember chat-el a weboldaladon. A <strong>Kommunikációs agent</strong>, mielőtt válaszol, lekéri a <code>leads</code> tábláról ennek az e-mailnek a score-ját: "Aha, 8-as score, qualified — kínáljam azonnal a Cal.com linket".</li>
+<li>Vasárnap este a <strong>Riport-író agent</strong> lekérdezi az egész hét <code>leads</code> + <code>chats</code> + <code>bookings</code> adatait, és összerakja az összefoglalót neked.</li>
 </ol>
-<p>Ez a <strong>state-pattern</strong>: minden agent ír és olvas ugyanabból a központi DB-ből. Nem kell összetett message-passing protokol — a Supabase a "fekete tábla" amire mindenki felír és olvas.</p>
-<p>A hand-off (átadás) is ezen keresztül megy: ha a Kommunikációs agent eldönti hogy ez a beszélgetés komplex és kell rád eskalálni, beír egy sort a <code>escalations</code> táblába → cron lefuttatja a Telegram értesítést neked.</p>` },
-    ],
-  },
-  {
-    position: 5,
-    title: 'Önfejlesztő agent — feedback loop',
-    description: 'Az agent statikusan rohad ha nem tanul. Itt megtanulod hogyan méred, mit logolj, és hogyan frissítsd a prompt-okat heti ritmusban. A modul végén tudod mikor cseréld le a modellt (Haiku → Sonnet → Opus).',
-    lessons: [
-      { position: 1, title: 'Mit jelent "önfejlesztő" — a feedback loop logikája',
-        body: `<p>"Önfejlesztő agent" nem azt jelenti hogy az AI magától okosabb lesz. Azt jelenti hogy van egy <strong>visszacsatolási rendszer</strong> amivel TE rendszeresen javítod a működést.</p>
-<p>A loop 4 lépéses:</p>
-<ol>
-<li><strong>Mérés</strong> — minden agent-hívás logolva van. Mit kérdeztek, mit válaszolt, helyes volt-e (vagy panasz jött rá).</li>
-<li><strong>Áttekintés</strong> — hetente 30 perc, átolvasod az utolsó 50-100 beszélgetést. Hol esett szét? Hol mondott rosszat?</li>
-<li><strong>Javítás</strong> — a system prompt-ot frissíted az új mintákkal. "Ha ezt kérdezi, ezt válaszold." vagy "Soha ne mondj olyat hogy X."</li>
-<li><strong>Új verzió bevetése</strong> — push a Vercel-re, és az új prompt él. A következő hét megint mérés.</li>
-</ol>
-<p>Ez nem AI-magic — ez ipari mérés-iteráció. Az "önfejlesztés" abból jön hogy a rendszer mindig rögzíti a saját hibáit, és te ezeket havi szinten 20-30%-kal csökkented.</p>
-<p>3-4 hónap múlva az agent-ed a saját ügyfeleidre van hangolva. Senki más nem tudja lemásolni.</p>` },
-      { position: 2, title: 'Mérés — PostHog event-ek a 3 alapra',
-        body: `<p>Mit kell mérni? Ne mindent — pont 3 dolgot, ami megmutatja működik-e a rendszer.</p>
-<p><strong>PostHog event-ek (ingyenes 1M event/hó):</strong></p>
-<ol>
-<li><code>chat_message_sent</code> — valaki beír valamit. Property: <code>{ source: 'web' | 'telegram', user_msg_length }</code>. Megmutatja: mennyien érdeklődnek?</li>
-<li><code>lead_qualified</code> — az AI 7+ score-t adott. Property: <code>{ score, lead_id }</code>. Megmutatja: hány komoly?</li>
-<li><code>calcom_booked</code> — a Cal.com webhook visszajelez hogy foglalás történt. Property: <code>{ lead_id, slot }</code>. Megmutatja: hány foglalt?</li>
-</ol>
-<p>Két konverziós arány érdekel:</p>
-<ul>
-<li><strong>Chat → Qualified</strong> (hány érdeklődőből lesz komoly) — egészséges: 30-50%.</li>
-<li><strong>Qualified → Booked</strong> (hány komolyból foglal) — egészséges: 40-60%.</li>
-</ul>
-<p>Ha az első alacsony: az agent túl szigorú a szűrésben (vagy az ügyfeleid valóban nem komolyak — akkor a marketing baj). Ha a második alacsony: rossz a Cal.com link kommunikációja, vagy a foglalási rendszer.</p>` },
-      { position: 3, title: 'Iteráció — heti review és prompt-frissítés',
-        body: `<p>Heti rutin (30 perc, péntek vagy hétfő reggel):</p>
-<p><strong>1. PostHog dashboard megnyitása.</strong> Megnézed a 2 konverziós arányt. Esett-e múlt héthez képest? Ha igen, miért?</p>
-<p><strong>2. Az utolsó 20 chat-beszélgetés átolvasása</strong> (Supabase chat tábla). Keresel:</p>
-<ul>
-<li>Olyan kérdést amit az agent nem értett meg.</li>
-<li>Olyan választ amit kellett volna ESKALÁLNI hozzád, de az agent megválaszolt rosszul.</li>
-<li>Visszatérő mintát — pl. "5 ember kérdezett árat csütörtökön és mindegyik elment válasz nélkül".</li>
-</ul>
-<p><strong>3. System prompt update.</strong> A felfedezett 3-5 hibára kiegészítés. Egy-egy mondat új utasítás. Pl.:</p>
-<ul>
-<li>"Ha az ügyfél áfás számlát kérdez, mondd hogy én KATA-s vagyok és számlázz.hu-n állítok ki."</li>
-<li>"Ha valaki első konzultációt kér de a Cal.com link nem nyílik meg neki, küldd el az emailemet közvetlen."</li>
-</ul>
-<p><strong>4. Push és élesítés.</strong> 5 perc.</p>
-<p>Ez minden héten. Egy év alatt az agent-ed 50-szer fejlődik. Eleinte sok hiba, később alig.</p>` },
-      { position: 4, title: 'Modell-választás — Haiku, Sonnet, Opus, mikor melyik',
-        body: `<p>Nem ugyanazt a modellt kell használnod minden agent-hez. A három Claude modell ára és sebessége nagyon különbözik:</p>
-<ul>
-<li><strong>Haiku 4.5</strong> — 0.8 $ / 1M input token. Gyors (~500 ms). Egyszerű döntésekhez, score-oláshoz, kategorizáláshoz. Itt fut a <strong>Lead-szűrő agent</strong>.</li>
-<li><strong>Sonnet 4.6</strong> — 3 $ / 1M input token. Jó nyelvtan, hosszú kontextus, jobb döntések. Itt fut a <strong>Kommunikációs agent</strong> és a <strong>Riport-író agent</strong>.</li>
-<li><strong>Opus 4.7</strong> — 15 $ / 1M input token. A legjobb, a legdrágább. Csak komplex elemzéshez (jogi vélemény-vázlat, hosszú dokumentum összefoglaló). <strong>Live agent-hez NE használd</strong> — nem éri meg.</li>
-</ul>
-<p>Trükk: kezdj Haiku-val. Ha az adott agent rendszeresen rosszul dönt, próbáld ki Sonnet-tel ugyanazokkal a teszt-kérdésekkel. Ha látható javulás → cseréld le. Ha nem → maradj Haiku-n.</p>
-<p>Költség becslés szolgáltatónál (heti 30-50 érdeklődő): Haiku-val 50-200 Ft / hó. Sonnet-tel 500-2000 Ft / hó. A Cloudflare Stream és a Vercel ingyenes tier elviszi a többit.</p>` },
-    ],
-  },
-  {
-    position: 6,
-    title: 'AI Operations System — a teljes rendszer',
-    description: 'Itt összerakjuk az egészet egy működő rendszerré: 3 pillér × 3 agent, monitoring, költség-tracking. A modul végén tudod mikor érdemes az AI Operations retainerre upgrade-elni — vagy a sajátodat üzemeltetni tovább.',
-    lessons: [
-      { position: 1, title: 'Az AI Operations System térképe — 3 pillér × 3 agent',
-        body: `<p>Az "AI Operations System" nem új technológia — egy szerkezet. 3 pillér, és mindegyik pilléren 1-3 agent dolgozik. Itt a térkép amit a kurzusig felépítettél:</p>
-<p><strong>Pillér 1 — Ügyfélszerzés (Lead → Foglalás)</strong></p>
-<ul>
-<li>Lead-szűrő agent (Modul 2-3-ban épült)</li>
-<li>Kommunikációs agent — első ajánlat / Cal.com ajánlás</li>
-</ul>
-<p><strong>Pillér 2 — Ügyfélkiszolgálás</strong></p>
-<ul>
-<li>Kommunikációs agent — élő chat GYIK + eskaláció</li>
-<li>Email-followup agent (opcionális, később)</li>
-</ul>
-<p><strong>Pillér 3 — Háttérműködés (Mérés + Riport)</strong></p>
-<ul>
-<li>Riport-író agent (Modul 4-ben épült)</li>
-<li>Költség-tracker (opcionális — havi költségek log)</li>
-</ul>
-<p>A 3 pillér ugyanazon a Supabase adatbázison osztozik. Egyetlen domain: a saját <code>te-vallakozasod.hu</code> alá kerülnek a /chat és /admin oldalak. A Telegram bot pedig értesít.</p>
-<p>Ez most már 3 agent (vagy 4) — egy szolgáltatóhoz éppen elég. A 7. agent (Personal, YouTube stb.) már az én rendszerem — neked nem kell.</p>` },
-      { position: 2, title: 'Bevetés élesben — domain, biztonság, monitoring',
-        body: `<p>A 30. napon élesíted. Checklist:</p>
+<p>Ez a <strong>blackboard pattern</strong>: minden agent ír és olvas ugyanabból a központi DB-ből. Nem kell összetett message-passing — a Supabase a "fekete tábla" amire mindenki felír és olvas.</p>
+<p>Hand-off (átadás) is ezen keresztül megy: ha a Kommunikációs agent eldönti hogy ez a beszélgetés komplex és kell rád eskalálni, beír egy sort a <code>escalations</code> táblába → cron lefuttatja a Telegram értesítést neked.</p>` },
+      { position: 3, title: 'Élesítés — domain, biztonság, költség-tracking',
+        body: `<p>Production-ready checklist a 30. napra:</p>
 <p><strong>Domain</strong></p>
 <ul>
-<li>Vercel projekt → Custom Domain → <code>te-vallakozasod.hu</code> vagy <code>ai.te-vallakozasod.hu</code>.</li>
-<li>DNS A-record vagy CNAME, ahogy a Vercel kéri.</li>
+<li>Vercel projekt → Custom Domain → <code>te-vallakozasod.hu</code> vagy aldomain.</li>
+<li>DNS A-record vagy CNAME (Vercel megadja a pontos beállítást).</li>
 </ul>
 <p><strong>Biztonság</strong></p>
 <ul>
-<li>Az API endpointokra Bearer auth (<code>CRON_SECRET</code> env változó). A chat endpoint hitelesítés nélkül publikus marad, de rate-limit Supabase-ben.</li>
-<li>Webhook-okat HMAC-szel írj alá (Cal.com és Telegram is támogatja).</li>
+<li>API endpoint-okra Bearer auth: <code>CRON_SECRET</code> env változó, csak a webhook-ok és cron-ok használhatják.</li>
+<li>Webhook-ok HMAC-szel aláírva (Cal.com <code>X-Cal-Signature-256</code>, Stripe <code>Stripe-Signature</code>).</li>
 <li>Supabase RLS bekapcsolva, csak <code>service_role</code>-nak van hozzáférés.</li>
-<li>Soha NE commitold a <code>.env.local</code>-t a Git-be (gitignore!).</li>
+<li><code>.env.local</code> SOHA git-be (gitignore!).</li>
 </ul>
 <p><strong>Monitoring</strong></p>
 <ul>
-<li>PostHog dashboard fent leírt 3 event-tel.</li>
-<li>Vercel Analytics — havi tabló.</li>
-<li>Telegram értesítés ha az agent leáll (cron health-check, ha 24 órán át nincs új lead, küldjön egy "minden rendben?" üzit).</li>
+<li>Vercel Analytics — automata.</li>
+<li>PostHog dashboard — az 5.3-ban beállított 5 esemény.</li>
+<li>Health-check cron: ha 24 órán át nincs Claude API-hívás, küldjön Telegram "minden rendben?" üzit.</li>
 </ul>
-<p>Ezt egy estében meg tudod csinálni a meglévő alapok mellett.</p>` },
-      { position: 3, title: 'Költségek és mérőszámok — mennyi pénz, mennyi érték',
-        body: `<p>A teljes AI Operations System havi költsége egy 1-fős szolgáltatónál:</p>
+<p><strong>Költség-tracking</strong></p>
 <ul>
-<li>Vercel Hobby plan — 0 Ft</li>
-<li>Supabase Free → Pro (ha kell) — 0-7000 Ft</li>
-<li>Cal.com Free — 0 Ft</li>
-<li>Claude API (Haiku + Sonnet mix) — 200-2000 Ft</li>
-<li>PostHog Free — 0 Ft</li>
-<li>Domain — 5-15 ezer Ft / év (havi 500-1500 Ft)</li>
+<li>Anthropic Console → Usage. Heti egyszer megnézed mennyit költöttél.</li>
+<li>Supabase Free tier alatt nincs költség. Ha Pro-ra váltasz: ~7000 Ft / hó.</li>
+<li>Vercel Hobby: 0 Ft. Stripe: ~1.5% + 30 Ft / tranzakció.</li>
 </ul>
-<p><strong>Összesen: 700-10000 Ft / hó</strong> attól függően mekkora a forgalom. Egy érdeklődőnként durván 5-50 Ft.</p>
-<p>Mit jelent ez gyakorlatban? Ha az agent az első hónapban EGY komoly ügyfelet hoz aki 50 ezer Ft-os szolgáltatást fizet, már megtérült 5x-7x. Hatékonyság mérőszámként:</p>
-<ul>
-<li><strong>Idő-megtakarítás</strong>: heti 3-5 óra (lead-szűrés + GYIK + riport-készítés manuális helyett). Évente ~150-250 óra.</li>
-<li><strong>Konverzió-nővekedés</strong>: 24/7 elérhetőség = több lead, gyorsabb válasz = jobb konverzió. Mérhetően általában +15-30% lead-to-booking.</li>
-</ul>` },
+<p>Várt összköltség egy 1-fős szolgáltatónál: <strong>2-10 ezer Ft / hó</strong> attól függően mekkora a forgalom.</p>` },
       { position: 4, title: 'Mikor upgrade-elj — AI Operations retainer vs DIY',
-        body: `<p>A 30. nap végén két irány:</p>
-<p><strong>Marad DIY (a saját kezedben)</strong></p>
+        body: `<p>A 30. nap végén két irány lehet a tied:</p>
+<p><strong>Maradsz DIY (a saját kezedben)</strong></p>
 <ul>
-<li>Van időd havi 2-4 órát rákölteni karbantartásra.</li>
-<li>Kedveled a kódolást, és tovább akarsz fejleszteni.</li>
-<li>A költségvetésed feszített, nem fér bele 200k+ Ft havi.</li>
+<li>Heti 2-4 órát rákölthetsz karbantartásra.</li>
+<li>Kedveled a kódolást, és tovább akarsz fejleszteni (új agent, új workflow).</li>
+<li>A költségvetésed feszített, nem fér bele 120 ezer Ft+ havi.</li>
+<li>A vállalkozásod kis-méretű és nem kell skálázni.</li>
 </ul>
-<p><strong>Upgrade AI Operations retainer-re</strong></p>
+<p><strong>Upgrade — Solo Business AI Operations retainer</strong></p>
 <ul>
-<li><strong>120 ezer Ft / hó alapcsomag</strong> — 1 rendszer karbantartása, havi 1 review meeting. Akkor jó ha működik a rendszer és csak figyelni kell.</li>
+<li><strong>120 ezer Ft / hó alap</strong> — 1 rendszer karbantartása, havi 1 review meeting. Akkor jó ha működik a rendszer és csak figyelni kell.</li>
 <li><strong>220 ezer Ft / hó</strong> — 2-3 rendszer, kétheti review, prioritás email-támogatás. Akkor jó ha bővítenéd (új agent, új workflow).</li>
 <li><strong>450 ezer Ft / hó</strong> — teljes AI ops, heti meeting, ad hoc support, új features. Akkor jó ha skálázol és ez nem a te szakmád.</li>
 </ul>
-<p>Egyszerű döntési kérdés: <em>"A havi 2-4 óra karbantartás többet vagy kevesebbet ér mint 120 ezer Ft?"</em> Ha az időd 30 ezer Ft / óra, akkor 4 óra = 120 ezer = pont annyi. Ha az időd 50 ezer Ft / óra, már az alapcsomag is megéri.</p>
-<p>Foglalj egy 30 perces díjmentes konzultációt Cal.com-on ha tovább akarsz beszélni róla.</p>` },
+<p><strong>Döntési képlet</strong>: <em>"A havi 2-4 óra karbantartás többet vagy kevesebbet ér mint 120 ezer Ft?"</em></p>
+<ul>
+<li>Ha az időd 30 ezer Ft / óra: 4 óra = 120 ezer = pont annyi.</li>
+<li>Ha az időd 50+ ezer Ft / óra: már az alapcsomag is megéri.</li>
+</ul>
+<p>Foglalj egy 30 perces díjmentes konzultációt: <code>cal.com/expertflow/30perc</code> — végigvesszük melyik csomag illene rád, és NEM próbálok rád tukmálni semmit.</p>
+<p>Vagy maradsz DIY — ugyanúgy jó döntés. A rendszer a tied. Hetente 30 perc karbantartás és működik.</p>` },
     ],
   },
 ];
 
+// ─── Validation a futtatás előtt ─────────────────────────────────────
+function validate() {
+  const errors = [];
+  for (const m of MODULES) {
+    if (!m.position || !m.title || !m.lessons?.length) errors.push(`Modul ${m.position || '?'}: hiányos`);
+    if (!m.description) errors.push(`Modul ${m.position}: nincs description`);
+    for (const l of m.lessons) {
+      if (!l.position || !l.title || !l.body) errors.push(`Lecke ${m.position}.${l.position || '?'}: hiányos`);
+      if (l.body.length < 200) errors.push(`Lecke ${m.position}.${l.position}: body túl rövid (${l.body.length} char)`);
+      // anti-AI szótár check
+      const banned = ['kontroverz', 'paradigma', 'szinergikus', 'szinergia', 'holisztikus', 'exponenciálisan', 'transzformatív', 'autentikus', 'transzparens'];
+      for (const w of banned) {
+        if (l.body.toLowerCase().includes(w)) {
+          errors.push(`Lecke ${m.position}.${l.position}: tiltott szó "${w}"`);
+        }
+      }
+    }
+  }
+  return errors;
+}
+
 // ─── Futtatás ────────────────────────────────────────────────────────
 async function run() {
-  console.log('Kurzus keresése:', SLUG);
-  const courses = await get(`courses?slug=eq.${SLUG}&select=id`);
-  if (!courses.length) { console.error('Nincs ilyen kurzus.'); process.exit(1); }
-  const courseId = courses[0].id;
-  console.log('  Kurzus ID:', courseId);
+  console.log(`Solo Business Akadémia kurzus-rebuild ${DRY ? '(DRY-RUN)' : ''}`);
+  console.log(`Modulok: ${MODULES.length}, Leckék: ${MODULES.reduce((a, m) => a + m.lessons.length, 0)}`);
 
-  // 1. CLEANUP — összes meglévő modul törlése (cascade: lessons + progress is megy)
-  console.log('\n1. Régi modulok törlése (cascade-del: leckék, progress is megy)...');
-  const existing = await get(`course_modules?course_id=eq.${courseId}&select=id,position`);
-  console.log(`   Talált: ${existing.length} modul`);
+  console.log('\n0. Validáció...');
+  const errs = validate();
+  if (errs.length) {
+    console.error('  HIBÁK:');
+    for (const e of errs) console.error('   ', e);
+    process.exit(1);
+  }
+  console.log('  OK — minden modul és lecke érvényes.');
+
+  console.log('\n1. Kurzus keresése:', SLUG);
+  const courses = await get(`courses?slug=eq.${SLUG}&select=id,title,price_huf`);
+  if (!courses.length) { console.error('  Nincs ilyen kurzus.'); process.exit(1); }
+  const courseId = courses[0].id;
+  console.log(`  Kurzus ID: ${courseId} ("${courses[0].title}", ${courses[0].price_huf} Ft)`);
+
+  console.log('\n2. Régi modulok törlése (cascade: leckék is)...');
+  const existing = await get(`course_modules?course_id=eq.${courseId}&select=id,position,title&order=position`);
+  console.log(`  Talált: ${existing.length} modul`);
   if (existing.length) {
+    for (const m of existing) console.log(`    - Modul ${m.position}: ${m.title}`);
     await del(`course_modules?course_id=eq.${courseId}`);
-    console.log('   Törölve.');
+    console.log('  Törölve.');
   }
 
-  // 2. Course frissítés
-  console.log('\n2. Course mező-frissítés (title, subtitle, description)...');
+  console.log('\n3. Course mező-frissítés...');
   await patch(`courses?slug=eq.${SLUG}`, {
-    title: NEW_TITLE,
-    subtitle: NEW_SUBTITLE,
-    description: NEW_DESCRIPTION,
-    published: true,
+    title: NEW_TITLE, subtitle: NEW_SUBTITLE, description: NEW_DESCRIPTION, published: true,
   });
-  console.log('   Frissítve.');
+  console.log('  Frissítve.');
 
-  // 3. Új modulok + leckék
-  console.log('\n3. Új modulok és leckék létrehozása...');
+  console.log('\n4. Új modulok és leckék létrehozása...');
   let mc = 0, lc = 0;
   for (const m of MODULES) {
     const [mod] = await post('course_modules', {
@@ -437,11 +646,12 @@ async function run() {
       await post('course_lessons', {
         module_id: mod.id, position: l.position, title: l.title, body_html: l.body, is_preview: l.is_preview ?? false,
       });
-      console.log(`      + ${m.position}.${l.position} ${l.title}`);
+      console.log(`      + ${m.position}.${l.position} ${l.title}${l.is_preview ? '  [PREVIEW]' : ''}`);
       lc++;
     }
   }
-  console.log(`\nKész. ${mc} modul / ${lc} lecke beillesztve.`);
+
+  console.log(`\nKész. ${mc} modul / ${lc} lecke ${DRY ? '(dry-run, NEM lett mentve)' : 'beillesztve'}.`);
 }
 
-run().catch(e => { console.error('HIBA:', e.message); process.exit(1); });
+run().catch(e => { console.error('\nHIBA:', e.message); process.exit(1); });
