@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/lead-magnet/process-pending",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/lead-magnet/auto-release",
+      "schedule": "0 7 * * *"
+    }
+  ]
+}
