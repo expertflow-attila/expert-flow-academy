@@ -50,17 +50,17 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
                 ? `${new Intl.NumberFormat("hu-HU").format(course.price_huf)} Ft`
                 : "Hamarosan"}
             </SectionLabel>
-            <h1 className="mt-6 font-display text-5xl tracking-tight text-balance md:text-6xl lg:text-7xl">
+            <h1 className="mt-6 font-display text-4xl tracking-tight text-balance md:text-5xl lg:text-6xl">
               <em className="italic em-rose">{course.title}</em>
             </h1>
             {course.subtitle && (
-              <p className="mt-8 max-w-prose font-sans text-lg leading-relaxed text-foreground-soft md:text-xl">
+              <p className="mt-8 max-w-prose font-sans text-xl leading-snug text-foreground md:text-2xl">
                 {course.subtitle}
               </p>
             )}
             {course.description && (
               <div
-                className="mt-8 max-w-prose font-sans text-base leading-relaxed text-foreground-soft"
+                className="mt-6 max-w-prose font-sans text-sm leading-relaxed text-foreground-soft md:text-base"
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(course.description) }}
               />
             )}
@@ -149,6 +149,61 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
             )}
           </div>
         </section>
+
+        {!isMember && (
+          <section className="border-b border-border">
+            <div className="mx-auto max-w-3xl px-6 py-16 lg:px-10 lg:py-20">
+              <SectionLabel>Még nem vagy biztos?</SectionLabel>
+              <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
+                Próbáld ki <em className="italic em-violet">ingyen</em>, milyen velem dolgozni.
+              </h2>
+              <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
+                Mielőtt belevágsz, három ingyenes belépő áll rendelkezésre. Mindegyik konkrét érték, nincs eladási pitch a végén.
+              </p>
+              <div className="mt-10 grid grid-cols-1 gap-px bg-border-strong sm:grid-cols-3">
+                <Link
+                  href="/lead-magnet/ai-mukodesi-terkep"
+                  className="hover-arrow group flex flex-col bg-background p-6 transition-colors hover:bg-surface"
+                >
+                  <div className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-foreground-muted">1 perc · 24h</div>
+                  <h3 className="mt-4 font-display text-xl italic em-violet">AI-működési térkép</h3>
+                  <p className="mt-3 font-sans text-xs leading-relaxed text-foreground-soft">
+                    3 kérdés, 24 órán belül 4 oldalas térkép.
+                  </p>
+                  <div className="mt-6 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-foreground-soft group-hover:text-foreground">
+                    Kérek <span className="arrow">→</span>
+                  </div>
+                </Link>
+                <Link
+                  href="/lead-magnet/ai-folyamatvazlat-48h"
+                  className="hover-arrow group flex flex-col bg-background p-6 transition-colors hover:bg-surface"
+                >
+                  <div className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-foreground-muted">5 perc · 48h</div>
+                  <h3 className="mt-4 font-display text-xl italic em-sky">AI-folyamatvázlat</h3>
+                  <p className="mt-3 font-sans text-xs leading-relaxed text-foreground-soft">
+                    6 kérdés, 48 órán belül vizuális vázlat.
+                  </p>
+                  <div className="mt-6 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-foreground-soft group-hover:text-foreground">
+                    Kérek <span className="arrow">→</span>
+                  </div>
+                </Link>
+                <Link
+                  href="/lead-magnet/ugyfelut-audit"
+                  className="hover-arrow group flex flex-col bg-background p-6 transition-colors hover:bg-surface"
+                >
+                  <div className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-foreground-muted">20 perc · heti 5</div>
+                  <h3 className="mt-4 font-display text-xl italic em-rose">Ügyfélút audit</h3>
+                  <p className="mt-3 font-sans text-xs leading-relaxed text-foreground-soft">
+                    20 perces hívás + 1 oldalas írásos audit.
+                  </p>
+                  <div className="mt-6 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-foreground-soft group-hover:text-foreground">
+                    Foglalok <span className="arrow">→</span>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
       <Footer />
     </>

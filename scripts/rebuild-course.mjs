@@ -67,9 +67,8 @@ async function patch(path, body) {
 // ─── A kurzus konfiguráció ────────────────────────────────────────────
 const SLUG = 'build-in-public-30nap'; // slug megmarad — 3 lead-magnet oldal hardcoded
 const NEW_TITLE = 'Saját AI Operations rendszer 30 nap alatt';
-const NEW_SUBTITLE = 'Egyéni vállalkozóknak. Az alapoktól a saját AI rendszerig.';
-const NEW_DESCRIPTION = `<p>Felépítjük a vállalkozásod alapjait: pozícionálás, ajánlat, weboldal, ügyfélszerzés, mérés. Aztán beleépítünk egy AI rendszert, ami szűri a lead-eket, kommunikál az ügyfeleiddel és heti riportot küld.</p>
-<p>Akkor érdemes, ha most indítod a vállalkozásod, vagy ha van már, de AI-val szeretnéd megerősíteni.</p>
+const NEW_SUBTITLE = 'Egyéni vállalkozóknak, akik üzleti alapokra építenek működő AI rendszert.';
+const NEW_DESCRIPTION = `<p>Felépítjük a vállalkozásod alapjait: pozícionálás, ajánlat, weboldal, ügyfélszerzés, mérés. A végén egy AI rendszer szűri a lead-eket, kommunikál az ügyfeleiddel és heti riportot küld.</p>
 <p>7 modul, 27 lecke.</p>`;
 
 const MODULES = [
