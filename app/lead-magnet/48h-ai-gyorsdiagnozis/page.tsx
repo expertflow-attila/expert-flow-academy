@@ -15,7 +15,7 @@ import {
 } from "../_components/lm-form";
 
 export const metadata = {
-  title: "48 órás AI Gyorsdiagnózis — Solo Business",
+  title: "48 órás AI Gyorsdiagnózis — Expert Flow",
   description:
     "Tölts ki 5 kérdést, és 48 órán belül kapsz egy 7 napos akciótervet azzal hogy a 8. napra mit építs fel automatizálva. Konkrét, nem általános.",
 };
@@ -143,7 +143,7 @@ export default async function LM48hPage({
             {error === "time" && <ErrorBox>Válassz egy időtartomány-opciót a 4. kérdéshez.</ErrorBox>}
             {error === "too-many" && <ErrorBox>Túl sok kitöltés. Próbáld meg 1 óra múlva.</ErrorBox>}
             {error === "server" && (
-              <ErrorBox>Szerver hiba — pár perc múlva próbáld újra. Vagy írj a hello@solobusiness.hu-ra.</ErrorBox>
+              <ErrorBox>Szerver hiba — pár perc múlva próbáld újra. Vagy írj a hello@expertflow.hu-ra.</ErrorBox>
             )}
 
             <form action={submitForm} className="mt-10 space-y-8">

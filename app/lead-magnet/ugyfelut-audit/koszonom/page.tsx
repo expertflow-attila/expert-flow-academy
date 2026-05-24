@@ -37,7 +37,7 @@ export default async function AuditThankYou({
               </ul>
               <div className="mt-10 flex flex-wrap gap-4">
                 <a
-                  href="https://solobusiness.hu/hirlevel"
+                  href="https://expertflow.hu/hirlevel"
                   className="hover-arrow group inline-block border border-foreground bg-foreground px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
                 >
                   Iratkozz fel a hírlevélre <span className="arrow">→</span>
@@ -75,7 +75,7 @@ export default async function AuditThankYou({
             </p>
             <div className="mt-10">
               <a
-                href={process.env.CAL_AUDIT_URL ?? "https://cal.com/solobusiness/ugyfelut-audit"}
+                href={process.env.CAL_AUDIT_URL ?? "https://cal.com/attila-nagy-8uefco/ugyfelut-audit"}
                 className="hover-arrow group inline-block border border-foreground bg-foreground px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
               >
                 Naptár <span className="arrow">→</span>

@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const metadata = {
-  title: "Mini-onboarding vázlat 48 órán belül — Solo Business",
+  title: "Mini-onboarding vázlat 48 órán belül — Expert Flow",
   description:
     "Mini-csapat? Töltsd ki 6 kérdést, és 48 órán belül emailben kapsz egy 5-6 lépéses vázlatot arra, hogyan vezessétek be új ügyfeleteket VAGY új csapattagotokat egységesen.",
 };
@@ -124,7 +124,7 @@ export default async function LeadMagnetMiniOnboardingPage({
               <ErrorBox>Túl sok kitöltés ugyanarról az IP-ről / e-mailről. Próbáld meg 1 óra múlva.</ErrorBox>
             )}
             {error === "server" && (
-              <ErrorBox>Szerver hiba — pár perc múlva próbáld újra. Ha továbbra is, írj a hello@solobusiness.hu-ra.</ErrorBox>
+              <ErrorBox>Szerver hiba — pár perc múlva próbáld újra. Ha továbbra is, írj a hello@expertflow.hu-ra.</ErrorBox>
             )}
 
             <form action={submitMiniOnboarding} className="mt-10 space-y-8">
@@ -208,7 +208,7 @@ export default async function LeadMagnetMiniOnboardingPage({
                     className="mt-1 h-4 w-4 border border-border-strong"
                   />
                   <span className="font-sans text-sm leading-relaxed text-foreground-soft">
-                    Iratkozz fel a 41 leveles ingyenes Solo Business hírlevélre — heti 1-2 e-mail, semmi kemény eladás. Bármikor leiratkozhatsz.
+                    Iratkozz fel a 41 leveles ingyenes Expert Flow hírlevélre — heti 1-2 e-mail, semmi kemény eladás. Bármikor leiratkozhatsz.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer">
@@ -243,10 +243,10 @@ export default async function LeadMagnetMiniOnboardingPage({
           <div className="mx-auto max-w-2xl px-6 lg:px-10">
             <SectionLabel>Hitelesség</SectionLabel>
             <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-              Itt vagyok a 30. <em className="italic em-violet">napon</em>.
+              Az <em className="italic em-violet">Expert Flow</em> módszertan.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              Még nincs fizetős ügyfelem, és most rakom össze a Hermes 6 sub-agent + 3 cron rendszerembe a sub-agent-onboardingot. A te 2-3 fős csapatodra ezt a vázolási logikát adaptálom. Nem szervezetfejlesztő-anyag, hanem amit én is most végigjárok.
+              , és most rakom össze a Hermes 6 sub-agent + 3 cron rendszerembe a sub-agent-onboardingot. A te 2-3 fős csapatodra ezt a vázolási logikát adaptálom. Nem szervezetfejlesztő-anyag, hanem amit én is most végigjárok.
             </p>
           </div>
         </section>

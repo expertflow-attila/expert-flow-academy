@@ -24,7 +24,7 @@ export default async function LM48hThankYou({
               48 órán belül megkapod a 7 napos akciótervet e-mailben. Először az AI rakja össze a vázlatot a válaszaid alapján, aztán én átolvasom és kiküldöm.
             </p>
             <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-muted">
-              Ha 48 óra múlva sem érkezett meg, nézd meg a spam mappát is. Ha ott sincs, írj a hello@solobusiness.hu-ra.
+              Ha 48 óra múlva sem érkezett meg, nézd meg a spam mappát is. Ha ott sincs, írj a hello@expertflow.hu-ra.
             </p>
 
             {id && (

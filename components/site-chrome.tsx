@@ -20,10 +20,10 @@ export function Header({ active, member }: { active: string; member?: boolean })
         <div className="flex items-center border-b border-r border-border-strong px-6 py-7 lg:px-10 md:border-b-0">
           <Link
             href="/"
-            aria-label="Solo Business Akadémia — főoldal"
+            aria-label="Expert Flow Akadémia — főoldal"
             className="font-display text-2xl italic tracking-tight"
           >
-            Solo Business
+            Expert Flow
           </Link>
         </div>
 
@@ -99,7 +99,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border">
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-6 py-10 text-xs uppercase tracking-[0.22em] text-foreground-muted md:flex-row md:items-center lg:px-10">
-        <div className="font-mono">Solo Business · Akadémia</div>
+        <div className="font-mono">Expert Flow · Akadémia</div>
         <Link
           href="https://expertflow.hu"
           target="_blank"

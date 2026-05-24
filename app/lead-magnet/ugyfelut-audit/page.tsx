@@ -5,14 +5,14 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const metadata = {
-  title: "Ügyfélút audit — 20 perces hívás — Solo Business",
+  title: "Ügyfélút audit — 20 perces hívás — Expert Flow",
   description:
     "Megnézzük, mi történik attól a pillanattól, hogy valaki érdeklődik nálad, addig, hogy ügyfél lesz belőle. 20 perc beszélgetés, 1 munkanapon belül írásos összefoglaló.",
 };
 
 const WEEKLY_CAP = 5;
 
-const CAL_AUDIT_URL = process.env.CAL_AUDIT_URL ?? "https://cal.com/solobusiness/ugyfelut-audit";
+const CAL_AUDIT_URL = process.env.CAL_AUDIT_URL ?? "https://cal.com/attila-nagy-8uefco/ugyfelut-audit";
 
 export default async function LeadMagnetAuditPage({
   searchParams,
@@ -204,7 +204,7 @@ export default async function LeadMagnetAuditPage({
                   <ErrorBox>A heti kapacitás épp most telt be. Hétfő reggel újra nyitnak a helyek.</ErrorBox>
                 )}
                 {error === "server" && (
-                  <ErrorBox>Szerver hiba — próbáld újra. Ha továbbra is, írj a hello@solobusiness.hu-ra.</ErrorBox>
+                  <ErrorBox>Szerver hiba — próbáld újra. Ha továbbra is, írj a hello@expertflow.hu-ra.</ErrorBox>
                 )}
 
                 <form action={submitAudit} className="mt-10 space-y-8">
@@ -253,7 +253,7 @@ export default async function LeadMagnetAuditPage({
                         className="mt-1 h-4 w-4 border border-border-strong"
                       />
                       <span className="font-sans text-sm leading-relaxed text-foreground-soft">
-                        Iratkozz fel a 41 leveles ingyenes Solo Business hírlevélre — heti 1-2 e-mail. Az audit-elemzéseimet rendszeresen megosztom anonimizálva.
+                        Iratkozz fel a 41 leveles ingyenes Expert Flow hírlevélre — heti 1-2 e-mail. Az audit-elemzéseimet rendszeresen megosztom anonimizálva.
                       </span>
                     </label>
                   </fieldset>
@@ -298,12 +298,12 @@ export default async function LeadMagnetAuditPage({
         {/* Hitelességi blokk */}
         <section className="border-b border-border py-24 md:py-32">
           <div className="mx-auto max-w-2xl px-6 lg:px-10">
-            <SectionLabel>Hitelesség</SectionLabel>
+            <SectionLabel>Az Expert Flow módszertan</SectionLabel>
             <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-              Nem konzulens, hanem másik <em className="italic em-violet">szóló vállalkozó</em>.
+              20 perc, és <em className="italic em-violet">kívülről látod</em> a folyamatod.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              Itt vagyok a 30. napon a saját Solo Business útammal. Az ügyfélút-térképet a saját rendszerem felépítése közben raktam össze, és most ennek egy sűrített 20 perces verzióját adom át. A 49 000 Ft-os Akadémia 1. modulja gyakorlatilag ez — itt ingyen, és ha utána szeretnéd a többi modult is, az teljesen a te döntésed.
+              Az ügyfélút-audit az Expert Flow Akadémia 1. moduljának sűrített, közvetlen verziója — ingyen, 20 percben. Ha utána a teljes Akadémiát szeretnéd, az teljesen a Te döntésed. A módszertan ugyanaz: kívülről átnézzük, hogy mi történik attól a pillanattól, hogy valaki érdeklődik, addig hogy ügyfél lesz.
             </p>
           </div>
         </section>

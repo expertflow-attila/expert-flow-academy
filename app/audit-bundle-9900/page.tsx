@@ -3,7 +3,7 @@ import { Footer, Header, SectionLabel } from "@/components/site-chrome";
 import { createAudit9900CheckoutSession } from "@/lib/stripe";
 
 export const metadata = {
-  title: "9 900 Ft Audit + Folyamatvázlat Bundle — Solo Business",
+  title: "9 900 Ft Audit + Folyamatvázlat Bundle — Expert Flow",
   description:
     "Vedd meg a 9 900 Ft AI-Működési Auditot, és ajándékba elkészítjük az érdeklődő-kezelési folyamatvázlatodat is — pontosan azt amit a 49 000 Ft Akadémia első leckéje tanít.",
 };
@@ -48,7 +48,7 @@ export default async function AuditBundlePage({
             </p>
             {canceled && (
               <div className="mt-8 border border-border-strong bg-surface px-4 py-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-soft">
-                A fizetés megszakadt. Ha bármi gond volt, írj a hello@solobusiness.hu-ra.
+                A fizetés megszakadt. Ha bármi gond volt, írj a hello@expertflow.hu-ra.
               </div>
             )}
           </div>
@@ -93,7 +93,7 @@ export default async function AuditBundlePage({
             </table>
 
             <p className="mt-8 font-sans text-sm leading-relaxed text-foreground-muted">
-              Bundle összérték: 32 900 Ft. Most fizetsz: 9 900 Ft. 80% kedvezmény a teljes csomagra — mert még most kísérletezem és bizonyítanom kell.
+              Bundle összérték: 32 900 Ft. Most fizetsz: 9 900 Ft. 80% kedvezmény a teljes csomagra — az Expert Flow most indítja a Belépő Audit programot — limitált hely.
             </p>
           </div>
         </section>

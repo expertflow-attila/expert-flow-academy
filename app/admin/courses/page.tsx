@@ -52,7 +52,7 @@ export default async function AdminCoursesPage() {
                 name="slug"
                 required
                 pattern="[a-z0-9-]+"
-                placeholder="slug (pl. build-in-public-30nap)"
+                placeholder="slug (pl. szakmai-leíró-30nap)"
                 className="border border-border-strong bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-foreground-dim focus:border-foreground focus:outline-none"
               />
               <input

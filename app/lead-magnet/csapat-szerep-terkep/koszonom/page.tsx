@@ -24,7 +24,7 @@ export default async function TeamRolesThankYou({
               24 órán belül megkapod a csapat-szerep térképet e-mailben. Először az AI rakja össze a vázlatot a 3 válaszotok alapján, aztán én átolvasom és kiküldöm.
             </p>
             <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-muted">
-              Ha 24 óra múlva sem érkezett meg, nézd meg a spam mappát is. Ha ott sincs, írj nekem a hello@solobusiness.hu-ra.
+              Ha 24 óra múlva sem érkezett meg, nézd meg a spam mappát is. Ha ott sincs, írj nekem a hello@expertflow.hu-ra.
             </p>
 
             {id && (
@@ -46,7 +46,7 @@ export default async function TeamRolesThankYou({
             </p>
             <div className="mt-10">
               <a
-                href="/courses/build-in-public-30nap"
+                href="/courses/expert-flow-akademia"
                 className="hover-arrow group inline-block border border-foreground bg-foreground px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
               >
                 Nézd meg az Akadémiát <span className="arrow">→</span>

@@ -15,7 +15,7 @@ import {
 } from "../_components/lm-form";
 
 export const metadata = {
-  title: "Q3 AI-Rendszer Pályázat — Solo Business",
+  title: "Q3 AI-Rendszer Pályázat — Expert Flow",
   description:
     "Egy magyar szóló vállalkozó kap a Q3 nyertesként egy teljes AI-rendszert az első ügyfélfolyamatára — 599 000 Ft értékben, 30 napos beépítéssel. A többi pályázó kedvezményes belépő ajánlatot kap. Pályázat, nem nyereményjáték.",
 };
@@ -26,7 +26,7 @@ const BUSINESS_TYPE_OPTIONS = [
   { value: "tanacsado", label: "Tanácsadó" },
   { value: "kreativ", label: "Kreatív (designer / copywriter / fotós / videós)" },
   { value: "konyveles-jog", label: "Könyvelő / ügyvéd / adótanácsadó" },
-  { value: "trener-coach", label: "Tréner (NEM coach — Solo Business szabály)" },
+  { value: "trener-coach", label: "Tréner (NEM coach — Expert Flow szabály)" },
   { value: "online-tanfolyam", label: "Online tanfolyam-tulajdonos" },
   { value: "egyeb", label: "Egyéb szakértői szolgáltatás" },
 ];
@@ -174,7 +174,7 @@ export default async function LMGiveawayPage({
               Egy magyar szóló vállalkozó kap a Q3 nyertesként egy teljes AI-rendszert az első ügyfélfolyamatára — 30 napos beépítéssel, 0 Ft költséggel. A többi pályázó kedvezményes belépő ajánlatot kap.
             </p>
             <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-muted">
-              <strong className="text-foreground-soft">Ez nem nyereményjáték.</strong> Ez egy szakmai pályázat. 10 kérdés, ICP-szűrés, és nyilvános dokumentáció a nyertes munkájáról (build-in-public).
+              <strong className="text-foreground-soft">Ez nem nyereményjáték.</strong> Ez egy szakmai pályázat. 10 kérdés, ICP-szűrés, és nyilvános dokumentáció a nyertes munkájáról (szakmai-leíró).
             </p>
 
             <ul className="mt-10 space-y-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-soft">
@@ -269,10 +269,10 @@ export default async function LMGiveawayPage({
             <SectionLabel>Pályázati szabályzat</SectionLabel>
             <ul className="mt-8 space-y-4 font-sans text-base leading-relaxed text-foreground-soft">
               <li>— Min. 6 hónap működés + heti 3 érdeklődő szükséges (objektív ICP-szűrés)</li>
-              <li>— NEM fogadunk coach pályázatokat (Solo Business szabály)</li>
+              <li>— NEM fogadunk coach pályázatokat (Expert Flow szabály)</li>
               <li>— Az AI-előminősítés után Attila kézzel állítja össze a shortlist-et (top 3)</li>
               <li>— A nyertes a kampány végén kerül kiválasztásra</li>
-              <li>— A nyertes vállalja a build-in-public dokumentációt</li>
+              <li>— A nyertes vállalja a szakmai-leíró dokumentációt</li>
               <li>— Top 20 pályázó 30% kedvezményt kap a Belépő Auditra (7 napos érvényesség)</li>
               <li>— Minden többi runner-up 20% kedvezményt kap az Akadémiára (14 napos érvényesség)</li>
               <li>— A pályázás ingyenes és nem köt semmilyen jogi kötelezettséggel</li>

@@ -3,13 +3,13 @@
 //   1. sendLeadMagnetReport — LM1 (AI-működési térkép) és LM2 (AI-folyamatvázlat 48h) deliverable
 //   2. sendQualificationDeclined — LM3 (Ügyfélút audit) "too-early" vagy "no-fit" esetén
 //
-// A HTML stílusrendszer az auth-email.ts-ből származik (Solo Business dark serif).
+// A HTML stílusrendszer az auth-email.ts-ből származik (Expert Flow dark serif).
 // inline-stílus minden — Gmail / Outlook nem tölt be külső CSS-t.
 
 import { createTransport } from "nodemailer";
 
 const EMAIL_SERVER = process.env.EMAIL_SERVER;
-const EMAIL_FROM = process.env.EMAIL_FROM ?? "akademia@solobusiness.hu";
+const EMAIL_FROM = process.env.EMAIL_FROM ?? "akademia@expertflow.hu";
 
 type SendResult = { messageId: string };
 
@@ -111,7 +111,7 @@ export async function sendLeadMagnetReport(params: {
     html: htmlBodyV2({ name: params.name, meta, reportMarkdown: params.reportMarkdown, isMap }),
     attachments,
     headers: {
-      "X-Solo-LM-Slug": params.leadMagnetSlug,
+      "X-ExpertFlow-LM-Slug": params.leadMagnetSlug,
     },
   });
 
@@ -144,7 +144,7 @@ function textBodyV2({
     `Üdv,`,
     `Attila`,
     ``,
-    `solobusiness.hu · A 30. napon · ${meta.title}`,
+    `expertflow.hu · ${meta.title}`,
   ].join("\n");
 }
 
@@ -167,7 +167,7 @@ function htmlBodyV2({
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Solo Business — ${meta.title}</title>
+  <title>Expert Flow — ${meta.title}</title>
 </head>
 <body style="margin:0;padding:0;background:${palette.bg};font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:${palette.fg};-webkit-font-smoothing:antialiased;">
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:${palette.bg};">
@@ -176,7 +176,7 @@ function htmlBodyV2({
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;background:${palette.bg};border:1px solid ${palette.border};">
           <tr>
             <td style="padding:32px 32px 24px 32px;border-bottom:1px solid ${palette.border};">
-              <div style="font-family:Georgia,serif;font-style:italic;font-size:24px;letter-spacing:-0.01em;color:${palette.fg};">Solo Business</div>
+              <div style="font-family:Georgia,serif;font-style:italic;font-size:24px;letter-spacing:-0.01em;color:${palette.fg};">Expert Flow</div>
               <div style="margin-top:8px;font-family:'SF Mono',Menlo,monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.22em;color:${palette.fgMuted};">Lead Magnet · ${escapeHtml(meta.title)}</div>
             </td>
           </tr>
@@ -200,7 +200,7 @@ function htmlBodyV2({
           </tr>
           <tr>
             <td style="padding:16px 32px;text-align:center;background:${palette.surface};border-top:1px solid ${palette.border};">
-              <div style="font-family:'SF Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:${palette.fgMuted};">solobusiness.hu · A 30. napon · ${escapeHtml(meta.title)}</div>
+              <div style="font-family:'SF Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:${palette.fgMuted};">expertflow.hu · ${escapeHtml(meta.title)}</div>
             </td>
           </tr>
         </table>
@@ -268,9 +268,9 @@ function textBody({ name, isMap, reportMarkdown }: { name: string; isMap: boolea
     ``,
     `Ha tetszett és érdekel, hogyan rakok össze hasonló kis rendszereket —`,
     `anélkül, hogy meg kéne tanulnod AI-eszközöket — itt vagyok a 41 leveles`,
-    `Solo Business hírlevélben. Heti 1-2 e-mail. Ha nem érdekel, ezzel is megvagy.`,
+    `Expert Flow hírlevélben. Heti 1-2 e-mail. Ha nem érdekel, ezzel is megvagy.`,
     ``,
-    `Iratkozz fel: https://solobusiness.hu/hirlevel`,
+    `Iratkozz fel: https://expertflow.hu/hirlevel`,
     ``,
     `Üdv,`,
     `Attila`,
@@ -303,7 +303,7 @@ function htmlBody({
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Solo Business — ${title}</title>
+  <title>Expert Flow — ${title}</title>
   <meta name="description" content="${previewLine}" />
 </head>
 <body style="margin:0;padding:0;background:${palette.bg};font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:${palette.fg};-webkit-font-smoothing:antialiased;">
@@ -314,7 +314,7 @@ function htmlBody({
           <tr>
             <td style="padding:32px 32px 24px 32px;border-bottom:1px solid ${palette.border};">
               <div style="font-family:Georgia,serif;font-style:italic;font-size:24px;letter-spacing:-0.01em;color:${palette.fg};">
-                Solo Business
+                Expert Flow
               </div>
               <div style="margin-top:8px;font-family:'SF Mono',Menlo,monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.22em;color:${palette.fgMuted};">
                 Lead Magnet · ${title}
@@ -348,7 +348,7 @@ function htmlBody({
               <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                   <td style="background:${palette.fg};">
-                    <a href="https://solobusiness.hu/hirlevel" target="_blank" style="display:inline-block;padding:14px 24px;font-family:'SF Mono',Menlo,monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.22em;color:${palette.bg};text-decoration:none;">
+                    <a href="https://expertflow.hu/hirlevel" target="_blank" style="display:inline-block;padding:14px 24px;font-family:'SF Mono',Menlo,monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.22em;color:${palette.bg};text-decoration:none;">
                       Iratkozz fel a hírlevélre &rarr;
                     </a>
                   </td>
@@ -366,7 +366,7 @@ function htmlBody({
           <tr>
             <td style="padding:16px 32px;text-align:center;">
               <div style="font-family:'SF Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:${palette.fgMuted};">
-                solobusiness.hu · A 30. napon készült
+                expertflow.hu készült
               </div>
             </td>
           </tr>
@@ -392,7 +392,7 @@ function earlyText(name: string): string {
     `Mit javaslok először:`,
     ``,
     `1. Iratkozz fel az ingyenes 41 leveles hírlevélre — heti 1-2 e-mail,`,
-    `   fél év alatt minden alappillér: solobusiness.hu/hirlevel`,
+    `   fél év alatt minden alappillér: expertflow.hu/hirlevel`,
     ``,
     `2. Ha 2-3 hónap múlva többen találnak meg, foglalj akkor auditot.`,
     `   Addig én is fejlődöm ezen a vonalon.`,
@@ -413,11 +413,11 @@ function noFitText(name: string): string {
     ``,
     `Két másik dolgot tudok javasolni:`,
     ``,
-    `1. Ha érdekel a Solo Business szemlélet — heti 1-2 e-mail a 41 leveles`,
-    `   ingyenes hírlevélen: solobusiness.hu/hirlevel`,
+    `1. Ha érdekel az Expert Flow szemlélet — heti 1-2 e-mail a 41 leveles`,
+    `   ingyenes hírlevélen: expertflow.hu/hirlevel`,
     ``,
     `2. Ha komolyabb beavatkozás kell — 14 napos sprint csomag 199-599 ezer`,
-    `   Ft-tól: itt foglalhatsz egy felfedező hívást: solobusiness.hu/sprint`,
+    `   Ft-tól: itt foglalhatsz egy felfedező hívást: expertflow.hu/sprint`,
     ``,
     `Üdv,`,
     `Attila`,
@@ -431,7 +431,7 @@ function earlyHtml(name: string): string {
     body:
       "Foglaltál egy ügyfélút auditot, de a válaszaid alapján úgy érzem, most még egy ingyenes ráhangolódás többet ér neked. Az audit akkor működik igazán, ha már havi 3+ érdeklődőd van. Ha most még az érdeklődő-szám építése a fő feladat, az Akadémia és a hírlevél többet ad.",
     ctaLabel: "Iratkozz fel a hírlevélre",
-    ctaHref: "https://solobusiness.hu/hirlevel",
+    ctaHref: "https://expertflow.hu/hirlevel",
   });
 }
 
@@ -440,9 +440,9 @@ function noFitHtml(name: string): string {
     name,
     title: "Egy másik irány",
     body:
-      "Köszi a jelentkezést. A válaszaid alapján az audit-keret most nem a legjobb illeszkedés. Két másik dolgot tudok javasolni: ha érdekel a Solo Business szemlélet, csatlakozz a hírlevélhez. Ha komolyabb beavatkozás kell, foglalj egy sprint felfedező hívást.",
+      "Köszi a jelentkezést. A válaszaid alapján az audit-keret most nem a legjobb illeszkedés. Két másik dolgot tudok javasolni: ha érdekel az Expert Flow szemlélet, csatlakozz a hírlevélhez. Ha komolyabb beavatkozás kell, foglalj egy sprint felfedező hívást.",
     ctaLabel: "Foglalj sprint felfedező hívást",
-    ctaHref: "https://solobusiness.hu/sprint",
+    ctaHref: "https://expertflow.hu/sprint",
   });
 }
 
@@ -461,13 +461,13 @@ function baseDeclineHtml({
 }): string {
   const p = brandPalette();
   return `<!DOCTYPE html>
-<html lang="hu"><head><meta charset="utf-8" /><title>Solo Business — ${title}</title></head>
+<html lang="hu"><head><meta charset="utf-8" /><title>Expert Flow — ${title}</title></head>
 <body style="margin:0;padding:0;background:${p.bg};font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:${p.fg};">
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:${p.bg};">
   <tr><td align="center" style="padding:48px 16px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="520" style="max-width:520px;background:${p.bg};border:1px solid ${p.border};">
       <tr><td style="padding:32px;border-bottom:1px solid ${p.border};">
-        <div style="font-family:Georgia,serif;font-style:italic;font-size:24px;color:${p.fg};">Solo Business</div>
+        <div style="font-family:Georgia,serif;font-style:italic;font-size:24px;color:${p.fg};">Expert Flow</div>
       </td></tr>
       <tr><td style="padding:32px;">
         <div style="font-family:Georgia,serif;font-size:28px;color:${p.fg};">Szia <em style="color:${p.accentViolet};">${name}</em>,</div>
@@ -477,7 +477,7 @@ function baseDeclineHtml({
         </div>
       </td></tr>
       <tr><td style="padding:16px 32px;text-align:center;background:${p.surface};">
-        <div style="font-family:'SF Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:${p.fgMuted};">solobusiness.hu · A 30. napon</div>
+        <div style="font-family:'SF Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:${p.fgMuted};">expertflow.hu</div>
       </td></tr>
     </table>
   </td></tr>
@@ -600,8 +600,8 @@ export async function sendSequenceEmail(params: {
     text: textForSequence({ bodyText, ctaLabel: step.ctaLabel, ctaHref }),
     html: htmlForSequence({ name: params.name, bodyText, ctaLabel: step.ctaLabel, ctaHref }),
     headers: {
-      "X-Solo-Sequence-Slug": params.slug,
-      "X-Solo-Sequence-Step": String(params.step),
+      "X-ExpertFlow-Sequence-Slug": params.slug,
+      "X-ExpertFlow-Sequence-Step": String(params.step),
     },
   });
 
@@ -626,7 +626,7 @@ function textForSequence({
     lines.push("");
   }
   lines.push("──────────");
-  lines.push("solobusiness.hu · A 30. napon · Leiratkozás: hello@solobusiness.hu");
+  lines.push("expertflow.hu · Leiratkozás: hello@expertflow.hu");
   return lines.join("\n");
 }
 
@@ -678,8 +678,8 @@ function htmlForSequence({
   <tr><td align="center" style="padding:48px 16px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="560" style="max-width:560px;background:${p.bg};border:1px solid ${p.border};">
       <tr><td style="padding:32px 32px 24px 32px;border-bottom:1px solid ${p.border};">
-        <div style="font-family:Georgia,serif;font-style:italic;font-size:22px;color:${p.fg};">Solo Business</div>
-        <div style="margin-top:6px;font-family:'SF Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:${p.fgMuted};">A 30. napon</div>
+        <div style="font-family:Georgia,serif;font-style:italic;font-size:22px;color:${p.fg};">Expert Flow</div>
+        <div style="margin-top:6px;font-family:'SF Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:${p.fgMuted};"></div>
       </td></tr>
       <tr><td style="padding:32px 32px 16px 32px;">
         ${paragraphHtml}
@@ -687,7 +687,7 @@ function htmlForSequence({
       </td></tr>
       <tr><td style="padding:16px 32px;background:${p.surface};border-top:1px solid ${p.border};">
         <p style="margin:0;font-family:'SF Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.22em;color:${p.fgMuted};">
-          solobusiness.hu · Leiratkozás: <a href="mailto:hello@solobusiness.hu?subject=Leiratkozás" style="color:${p.fgMuted};">hello@solobusiness.hu</a>
+          expertflow.hu · Leiratkozás: <a href="mailto:hello@expertflow.hu?subject=Leiratkozás" style="color:${p.fgMuted};">hello@expertflow.hu</a>
         </p>
       </td></tr>
     </table>

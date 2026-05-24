@@ -1,6 +1,6 @@
 // Vercel Cron — 1 óránként fut.
 // Auto-release pending submission-eket, ha Attila > 18/40 órája nem nyúlt hozzá.
-// Build-in-public hitelesség: a 24h / 48h ígéret nem szakadhat meg.
+// Szakmai-leíró hitelesség: a 24h / 48h ígéret nem szakadhat meg.
 
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";

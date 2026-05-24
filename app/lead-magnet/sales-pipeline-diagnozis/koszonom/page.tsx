@@ -38,7 +38,7 @@ function QualifiedView({ id }: { id?: string }) {
             </p>
             <div className="mt-8">
               <a
-                href={process.env.CAL_SALES_PIPELINE_URL ?? "https://cal.com/solobusiness/sales-pipeline-diagnozis"}
+                href={process.env.CAL_SALES_PIPELINE_URL ?? "https://cal.com/attila-nagy-8uefco/sales-pipeline-diagnozis"}
                 className="hover-arrow group inline-block border border-foreground bg-foreground px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
               >
                 Időpontválasztás <span className="arrow">→</span>

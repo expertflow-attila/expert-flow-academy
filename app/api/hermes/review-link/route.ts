@@ -169,7 +169,7 @@ function htmlShell(title: string, message: string, color: string): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Solo Business — ${title}</title>
+  <title>Expert Flow — ${title}</title>
   <style>
     body{margin:0;background:#1a1a1f;color:#e2e0d8;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
     .card{max-width:480px;border:1px solid #303035;background:#1a1a1f;padding:48px 32px;text-align:center}
@@ -181,10 +181,10 @@ function htmlShell(title: string, message: string, color: string): string {
 </head>
 <body>
   <div class="card">
-    <div class="label">Solo Business · Hermes Review</div>
+    <div class="label">Expert Flow · Hermes Review</div>
     <h1>${title}</h1>
     <p>${escapeHtml(message)}</p>
-    <div class="footer">solobusiness.hu</div>
+    <div class="footer">expertflow.hu</div>
   </div>
 </body>
 </html>`;

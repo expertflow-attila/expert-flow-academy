@@ -4,7 +4,7 @@ import { createAudit9900CheckoutSession } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export const metadata = {
-  title: "9 900 Ft Belépő Audit — Solo Business",
+  title: "9 900 Ft Belépő Audit — Expert Flow",
   description:
     "8 oldalas AI-Működési Audit + 1 órás Loom-magyarázat + Notion munkalap. 9 900 Ft. Ha 7 napon belül továbblépsz a 359 000 Ft Teljes Auditra, az ár 100%-ban beszámít.",
 };
@@ -64,12 +64,12 @@ export default async function Audit9900Page({
               8 oldalas dokumentum + 1 órás Loom-magyarázat + Notion munkalap. Ha 7 napon belül továbblépsz a 359 000 Ft-os Teljes Auditra, a 9 900 Ft 100%-ban beszámít — egyszerűen.
             </p>
             <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-muted">
-              Korábban 49 000 Ft volt — most az első 30 audit 9 900 Ft, hogy bizonyítani tudjam. Build-in-public 30. nap.
+              Korábban 49 000 Ft volt — most az első 30 audit 9 900 Ft, hogy bizonyítani tudjam. Szakmai-leíró 30. nap.
             </p>
 
             {canceled && (
               <div className="mt-8 border border-border-strong bg-surface px-4 py-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-soft">
-                A fizetés megszakadt. Ha bármi gond volt, írj a hello@solobusiness.hu-ra.
+                A fizetés megszakadt. Ha bármi gond volt, írj a hello@expertflow.hu-ra.
               </div>
             )}
           </div>
@@ -151,7 +151,7 @@ export default async function Audit9900Page({
             {isFull ? (
               <>
                 <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-                  Visszamentem a 49 000 Ft-os árazásra. Ha mégis komolyan érdekel, írj a hello@solobusiness.hu-ra és váróhívlistára teszlek.
+                  Visszamentem a 49 000 Ft-os árazásra. Ha mégis komolyan érdekel, írj a hello@expertflow.hu-ra és váróhívlistára teszlek.
                 </p>
                 <div className="mt-10">
                   <a
@@ -223,7 +223,7 @@ export default async function Audit9900Page({
               Korábban ingyen csináltam (a /lead-magnet/ai-mukodesi-terkep oldalon még most is megvan az ingyenes verzió, 4 oldalas térkép). De ami ingyenes, azt nem nézik meg. A 9 900 Ft elköteleződés, nem ár. És ha tovább mész, visszakapod a 100%-át. Ha nem mész tovább, 7 napon belül 14 napos garanciával vissza is kérheted.
             </p>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              Build-in-public: a 30. napon vagyok. Most ezzel a low-ticket belépővel kísérletezem — nézd a YouTube-csatornámon, hogy hogy alakul.
+              Az Expert Flow most indítja ezt a low-ticket Belépő Audit programot, hogy a komolyabb 359k Teljes Auditra való belépést kockázatmentessé tegye. Az első 30 audit kedvezményes — utána normál ár.
             </p>
           </div>
         </section>

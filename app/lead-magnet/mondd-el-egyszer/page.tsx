@@ -13,7 +13,7 @@ import {
 } from "../_components/lm-form";
 
 export const metadata = {
-  title: "Mondd el egyszer — Solo Business",
+  title: "Mondd el egyszer — Expert Flow",
   description:
     "Mondd el egyszer hangban, szövegben vagy Loom-link formájában, hogyan működik most a vállalkozásod. Visszakapsz egy egyszerű, magyarul leírt rendszer-térképet azzal hogy hol érdemes először AI-folyamatot bevezetned.",
 };

@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const metadata = {
-  title: "Csapat-szerep térkép — Solo Business",
+  title: "Csapat-szerep térkép — Expert Flow",
   description:
     "Mini-csapat (2-3 fő)? Töltsd ki 3 kérdést, és 24 órán belül visszaküldök egy térképet a 3 szerep-konfliktusotokról és arról az 1 tisztázásról, amit először érdemes elindítani.",
 };
@@ -116,7 +116,7 @@ export default async function LeadMagnetTeamRolesPage({
               <ErrorBox>Túl sok kitöltés ugyanarról az IP-ről / e-mailről. Próbáld meg 1 óra múlva.</ErrorBox>
             )}
             {error === "server" && (
-              <ErrorBox>Szerver hiba — pár perc múlva próbáld újra. Ha továbbra is, írj a hello@solobusiness.hu-ra.</ErrorBox>
+              <ErrorBox>Szerver hiba — pár perc múlva próbáld újra. Ha továbbra is, írj a hello@expertflow.hu-ra.</ErrorBox>
             )}
 
             <form action={submitTeamRoles} className="mt-10 space-y-8">
@@ -178,7 +178,7 @@ export default async function LeadMagnetTeamRolesPage({
                     className="mt-1 h-4 w-4 border border-border-strong"
                   />
                   <span className="font-sans text-sm leading-relaxed text-foreground-soft">
-                    Iratkozz fel a 41 leveles ingyenes Solo Business hírlevélre — heti 1-2 e-mail, semmi kemény eladás. Bármikor leiratkozhatsz.
+                    Iratkozz fel a 41 leveles ingyenes Expert Flow hírlevélre — heti 1-2 e-mail, semmi kemény eladás. Bármikor leiratkozhatsz.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer">
@@ -213,10 +213,10 @@ export default async function LeadMagnetTeamRolesPage({
           <div className="mx-auto max-w-2xl px-6 lg:px-10">
             <SectionLabel>Hitelesség</SectionLabel>
             <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-              Itt vagyok a 30. <em className="italic em-violet">napon</em>.
+              Az <em className="italic em-violet">Expert Flow</em> módszertan.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              Még nincs fizetős ügyfelem, de van egy működő AI-rendszerem 6 sub-agenttel — én is most rakom össze a saját szerep-térképemet közöttük. A te 2-3 fős csapatodra ugyanezt a kérdés-keretet alkalmazom. Nem szervezetfejlesztő anyag, hanem amit én is végigjárok most.
+              , de van egy működő AI-rendszerem 6 sub-agenttel — én is most rakom össze a saját szerep-térképemet közöttük. A te 2-3 fős csapatodra ugyanezt a kérdés-keretet alkalmazom. Nem szervezetfejlesztő anyag, hanem amit én is végigjárok most.
             </p>
           </div>
         </section>

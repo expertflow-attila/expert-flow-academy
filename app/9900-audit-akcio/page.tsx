@@ -4,9 +4,9 @@ import { createAudit9900CheckoutSession } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export const metadata = {
-  title: "AI Audit 49 000 Ft helyett 9 900 Ft — Solo Business",
+  title: "AI Audit 49 000 Ft helyett 9 900 Ft — Expert Flow",
   description:
-    "Korábban 49 000 Ft. Most az első 30 audit 9 900 Ft. 80% kedvezmény, mert a build-in-public 30. napon vagyok és bizonyítanom kell.",
+    "Korábban 49 000 Ft. Most az első 30 audit 9 900 Ft. 80% kedvezmény, mert az Expert Flow most indítja ezt a programot — az első 30 audit így kedvezményes.",
 };
 
 const LAUNCH_DATE = "2026-05-23";
@@ -66,11 +66,11 @@ export default async function Audit9900AkcioPage({
               <strong className="text-foreground">{remaining} hely</strong> van.
             </p>
             <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-muted">
-              Miért most ennyivel olcsóbb: a 30. napon vagyok saját Solo Business vállalkozásommal, és bizonyítanom kell. Az első 30 audit a "bizonyítási hely" — ezeknél lesz a YouTube case study (anonimizálva). Utána normál áron megy.
+              Miért most ennyivel olcsóbb: az Expert Flow most indítja ezt a programot — az első 30 audit így kedvezményes. Az első 30 audit a kezdő kapacitás — ezeknél lesz a YouTube case study (anonimizálva). Utána normál áron megy.
             </p>
             {canceled && (
               <div className="mt-8 border border-border-strong bg-surface px-4 py-3 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-soft">
-                A fizetés megszakadt — ha kérdés, írj a hello@solobusiness.hu-ra.
+                A fizetés megszakadt — ha kérdés, írj a hello@expertflow.hu-ra.
               </div>
             )}
           </div>

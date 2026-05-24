@@ -15,7 +15,7 @@ import {
 } from "../_components/lm-form";
 
 export const metadata = {
-  title: "Kockázatmentes AI Audit — Solo Business",
+  title: "Kockázatmentes AI Audit — Expert Flow",
   description:
     "7 kérdés. 3 lehetséges első lépés kockázati súlyozással. Megnézzük együtt mi a legkisebb kockázatú, de legnagyobb hatású AI-lépésed — anélkül, hogy bármit el kéne köteleződnöd.",
 };

@@ -7,7 +7,7 @@
 //   3. Attila kattint a gombra
 //   4. Hermes POST visszaküldi a /api/hermes/lead-magnet-review endpoint-ra
 //      (HMAC-aláírva a HERMES_REVIEW_SECRET-tel)
-//   5. solobusiness-academy frissíti a submission státuszát
+//   5. akademia.expertflow.hu frissíti a submission státuszát
 //   6. APPROVED → email kimegy
 //
 // Ha a Hermes nem elérhető (HERMES_NOTIFY_URL hiányzik vagy 500), a submission
@@ -15,7 +15,7 @@
 
 const HERMES_NOTIFY_URL = process.env.HERMES_NOTIFY_URL;
 const HERMES_NOTIFY_SECRET = process.env.HERMES_NOTIFY_SECRET;
-const CALLBACK_BASE_URL = process.env.NEXTAUTH_URL ?? "https://akademia.solobusiness.hu";
+const CALLBACK_BASE_URL = process.env.NEXTAUTH_URL ?? "https://akademia.expertflow.hu";
 
 export type HermesNotifyResult =
   | { ok: true; hermesMessageId: string; hermesChatId: string }
@@ -126,7 +126,7 @@ export async function notifyHermesForReview(params: {
   }
 }
 
-// ─── HMAC verifikáció a Hermes → solobusiness-academy callback-on ─────
+// ─── HMAC verifikáció a Hermes → Expert Flow callback-on ─────
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 

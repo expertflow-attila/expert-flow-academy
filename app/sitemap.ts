@@ -5,7 +5,7 @@ import { getPublishedCourses } from "@/lib/courses";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const BASE = process.env.NEXTAUTH_URL ?? "https://akademia.solobusiness.hu";
+const BASE = process.env.NEXTAUTH_URL ?? "https://akademia.expertflow.hu";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   noStore();

@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const metadata = {
-  title: "Sales-pipeline közös diagnózis — 30 perc 2 főre — Solo Business",
+  title: "Sales-pipeline közös diagnózis — 30 perc 2 főre — Expert Flow",
   description:
     "Mini-csapat 2-3 fővel? 30 perces közös hívás (alapító + 1 csapattag), 1 munkanapon belül írásos összefoglaló a sales-pipeline 3 szivárgási pontjáról. Heti 3 hívás.",
 };
@@ -14,7 +14,7 @@ const WEEKLY_CAP = 3;
 
 const CAL_PIPELINE_URL =
   process.env.CAL_SALES_PIPELINE_URL ??
-  "https://cal.com/solobusiness/sales-pipeline-diagnozis";
+  "https://cal.com/attila-nagy-8uefco/sales-pipeline-diagnozis";
 
 export default async function LeadMagnetSalesPipelinePage({
   searchParams,
@@ -237,7 +237,7 @@ export default async function LeadMagnetSalesPipelinePage({
                   <ErrorBox>A heti kapacitás épp most telt be. Hétfő reggel újra nyitnak a helyek.</ErrorBox>
                 )}
                 {error === "server" && (
-                  <ErrorBox>Szerver hiba — próbáld újra. Ha továbbra is, írj a hello@solobusiness.hu-ra.</ErrorBox>
+                  <ErrorBox>Szerver hiba — próbáld újra. Ha továbbra is, írj a hello@expertflow.hu-ra.</ErrorBox>
                 )}
 
                 <form action={submitPipelineDiagnosis} className="mt-10 space-y-8">
@@ -304,7 +304,7 @@ export default async function LeadMagnetSalesPipelinePage({
                         className="mt-1 h-4 w-4 border border-border-strong"
                       />
                       <span className="font-sans text-sm leading-relaxed text-foreground-soft">
-                        Iratkozz fel a 41 leveles ingyenes Solo Business hírlevélre — heti 1-2 e-mail. A diagnózisaim anonimizált tanulságait rendszeresen megosztom.
+                        Iratkozz fel a 41 leveles ingyenes Expert Flow hírlevélre — heti 1-2 e-mail. A diagnózisaim anonimizált tanulságait rendszeresen megosztom.
                       </span>
                     </label>
                   </fieldset>
@@ -353,10 +353,10 @@ export default async function LeadMagnetSalesPipelinePage({
           <div className="mx-auto max-w-2xl px-6 lg:px-10">
             <SectionLabel>Hitelesség</SectionLabel>
             <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-              Itt vagyok a 30. <em className="italic em-violet">napon</em>.
+              Az <em className="italic em-violet">Expert Flow</em> módszertan.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              Még nincs fizetős ügyfelem. Saját AI-csapatommal (Hermes 6 sub-agent + 3 cron) dolgozom mini-csapat-analógiában — az ott szerzett tapasztalatomat alkalmazom a TI 2-3 fős sales-pipeline-otokra. Nem tanácsadói anyag, hanem egy diagnosztikus perspektíva amit közösen építünk ki 30 perc alatt.
+              . Saját AI-csapatommal (Hermes 6 sub-agent + 3 cron) dolgozom mini-csapat-analógiában — az ott szerzett tapasztalatomat alkalmazom a TI 2-3 fős sales-pipeline-otokra. Nem tanácsadói anyag, hanem egy diagnosztikus perspektíva amit közösen építünk ki 30 perc alatt.
             </p>
           </div>
         </section>

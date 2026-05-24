@@ -29,17 +29,17 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://akademia.solobusiness.hu"),
+  metadataBase: new URL("https://akademia.expertflow.hu"),
   title: {
-    default: "Solo Business Akadémia — kurzusok szolgáltató vállalkozóknak",
-    template: "%s · Solo Business Akadémia",
+    default: "Expert Flow Akadémia — kurzusok szolgáltató vállalkozóknak",
+    template: "%s · Expert Flow Akadémia",
   },
   description:
-    "Zárt kurzusplatform szolgáltató vállalkozóknak. Build-in-public, AI rendszerek, ügyfélszerzés — pilot 49 000 Ft-tól.",
-  applicationName: "Solo Business Akadémia",
+    "Zárt kurzusplatform szolgáltató vállalkozóknak. Szakmai-leíró, AI rendszerek, ügyfélszerzés — pilot 49 000 Ft-tól.",
+  applicationName: "Expert Flow Akadémia",
   authors: [{ name: "Nagy Attila", url: "https://expertflow.hu" }],
-  creator: "Solo Business",
-  publisher: "Solo Business",
+  creator: "Expert Flow",
+  publisher: "Expert Flow",
   alternates: {
     canonical: "/",
     languages: { "hu-HU": "/", "x-default": "/" },
@@ -56,19 +56,19 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Solo Business Akadémia",
+    title: "Expert Flow Akadémia",
     description:
-      "Zárt kurzusplatform szolgáltató vállalkozóknak. Build-in-public, AI rendszerek, pilot 49 000 Ft-tól.",
+      "Zárt kurzusplatform szolgáltató vállalkozóknak. Szakmai-leíró, AI rendszerek, pilot 49 000 Ft-tól.",
     url: "/",
-    siteName: "Solo Business Akadémia",
+    siteName: "Expert Flow Akadémia",
     locale: "hu_HU",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Solo Business Akadémia",
+    title: "Expert Flow Akadémia",
     description:
-      "Zárt kurzusplatform szolgáltató vállalkozóknak. AI rendszerek, ügyfélszerzés, build-in-public.",
+      "Zárt kurzusplatform szolgáltató vállalkozóknak. AI rendszerek, ügyfélszerzés, szakmai-leíró.",
   },
   category: "technology",
 };
@@ -76,12 +76,12 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Solo Business Akadémia",
-  alternateName: "Solo Business Academy",
-  url: "https://akademia.solobusiness.hu",
-  logo: "https://akademia.solobusiness.hu/icon.png",
+  name: "Expert Flow Akadémia",
+  alternateName: "Expert Flow Academy",
+  url: "https://akademia.expertflow.hu",
+  logo: "https://akademia.expertflow.hu/icon.png",
   description:
-    "Zárt kurzusplatform szolgáltató vállalkozóknak — AI rendszerek, ügyfélszerzés, build-in-public.",
+    "Zárt kurzusplatform szolgáltató vállalkozóknak — AI rendszerek, ügyfélszerzés, szakmai-leíró.",
   founder: { "@type": "Person", name: "Nagy Attila" },
   sameAs: [
     "https://github.com/expertflow-attila",
@@ -101,8 +101,8 @@ const organizationJsonLd = {
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Solo Business Akadémia",
-  url: "https://akademia.solobusiness.hu",
+  name: "Expert Flow Akadémia",
+  url: "https://akademia.expertflow.hu",
   inLanguage: "hu-HU",
 };
 

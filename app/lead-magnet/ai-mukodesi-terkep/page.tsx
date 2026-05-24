@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const metadata = {
-  title: "AI-működési térkép — Solo Business",
+  title: "AI-működési térkép — Expert Flow",
   description:
     "Küldd el a 3 legfárasztóbb feladatodat, és 24 órán belül visszaküldök egy 4 oldalas térképet arról, hol veszíted a legtöbb időt — és melyik egyetlen folyamatot érdemes először AI-jal megtámogatnod.",
 };
@@ -118,7 +118,7 @@ export default async function LeadMagnetMapPage({
               <ErrorBox>Túl sok kitöltés ugyanarról az IP-ről / e-mailről. Próbáld meg 1 óra múlva.</ErrorBox>
             )}
             {error === "server" && (
-              <ErrorBox>Szerver hiba — pár perc múlva próbáld újra. Ha továbbra is, írj a hello@solobusiness.hu-ra.</ErrorBox>
+              <ErrorBox>Szerver hiba — pár perc múlva próbáld újra. Ha továbbra is, írj a hello@expertflow.hu-ra.</ErrorBox>
             )}
 
             <form action={submitMap} className="mt-10 space-y-8">
@@ -161,7 +161,7 @@ export default async function LeadMagnetMapPage({
                     className="mt-1 h-4 w-4 border border-border-strong"
                   />
                   <span className="font-sans text-sm leading-relaxed text-foreground-soft">
-                    Iratkozz fel a 41 leveles ingyenes Solo Business hírlevélre — heti 1-2 e-mail, semmi kemény eladás. Bármikor leiratkozhatsz.
+                    Iratkozz fel a 41 leveles ingyenes Expert Flow hírlevélre — heti 1-2 e-mail, semmi kemény eladás. Bármikor leiratkozhatsz.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer">
@@ -196,10 +196,10 @@ export default async function LeadMagnetMapPage({
           <div className="mx-auto max-w-2xl px-6 lg:px-10">
             <SectionLabel>Hitelesség</SectionLabel>
             <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-              Itt vagyok a 30. <em className="italic em-violet">napon</em>.
+              Az <em className="italic em-violet">Expert Flow</em> módszertan.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              Még nincs fizetős ügyfelem, de van egy működő AI-rendszerem, amit a saját napjaimra építettem fel. Ezt a térképet a saját rendszerem felépítése előtti gondolkodás-vázból raktam össze. Nem tanácsadói anyag, hanem amit én is kitettem magamnak az asztalra.
+              Az Expert Flow módszertan egy működő AI-rendszer építésén alapul. Ezt a térképet az Expert Flow rendszerépítési tapasztalataiból állítottuk össze. Nem tanácsadói anyag, hanem amit én is kitettem magamnak az asztalra.
             </p>
           </div>
         </section>

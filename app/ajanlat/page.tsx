@@ -3,7 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { recommendPackage } from "@/lib/anthropic";
 
 export const metadata = {
-  title: "Az ajánlatom — Solo Business",
+  title: "Az ajánlatom — Expert Flow",
   description: "3 csomag a saját helyzetedre szabva. Akadémia 49k, mini sprint 199k, teljes audit 359k.",
 };
 
@@ -19,7 +19,7 @@ const PACKAGES: Record<PkgCode, { title: string; price: string; bullets: string[
       "DIY tempóban — Te tanulod",
     ],
     cta: "Választom — 49 000 Ft",
-    href: "/courses/build-in-public-30nap",
+    href: "/courses/expert-flow-akademia",
   },
   B: {
     title: "Mini sprint",
@@ -30,7 +30,7 @@ const PACKAGES: Record<PkgCode, { title: string; price: string; bullets: string[
       "14 napos email-támogatás",
     ],
     cta: "Beszéljünk — 199 000 Ft",
-    href: "https://cal.com/solobusiness/mini-sprint",
+    href: "https://cal.com/attila-nagy-8uefco/mini-sprint",
   },
   C: {
     title: "Teljes Audit + Rendszerterv",
@@ -44,7 +44,7 @@ const PACKAGES: Record<PkgCode, { title: string; price: string; bullets: string[
       "9 900 Ft Belépő Audit beszámít!",
     ],
     cta: "Beszéljünk — 359 000 Ft",
-    href: "https://cal.com/solobusiness/teljes-audit",
+    href: "https://cal.com/attila-nagy-8uefco/teljes-audit",
   },
   D: {
     title: "Implementáció",
@@ -56,7 +56,7 @@ const PACKAGES: Record<PkgCode, { title: string; price: string; bullets: string[
       "Csak C után aktiválódik",
     ],
     cta: "Beszéljünk — 599 000 Ft",
-    href: "https://cal.com/solobusiness/teljes-impl",
+    href: "https://cal.com/attila-nagy-8uefco/teljes-impl",
   },
 };
 
@@ -129,7 +129,7 @@ export default async function AjanlatPage({
             )}
             {!reasoning && (
               <p className="mt-8 font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
-                A Solo Business / Expert Flow szolgáltatása 3 lépcsős. Az alábbi 3 csomag közül egy nagyon valószínűleg a Te helyzetedre szabott.
+                Az Expert Flow szolgáltatása 3 lépcsős. Az alábbi 3 csomag közül egy nagyon valószínűleg a Te helyzetedre szabott.
               </p>
             )}
           </div>
@@ -176,7 +176,7 @@ export default async function AjanlatPage({
             </p>
             <div className="mt-10">
               <a
-                href="https://solobusiness.hu/hirlevel"
+                href="https://expertflow.hu/hirlevel"
                 className="hover-arrow group inline-block border border-border-strong px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-foreground-soft transition-colors hover:border-foreground hover:text-foreground"
               >
                 Iratkozz fel addig <span className="arrow">→</span>

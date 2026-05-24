@@ -19,7 +19,7 @@ const HERMES_NOTIFY_SECRET = process.env.HERMES_NOTIFY_SECRET;
 const HERMES_TELEGRAM_BOT_TOKEN = process.env.HERMES_TELEGRAM_BOT_TOKEN;
 const TELEGRAM_ADMIN_ID = process.env.TELEGRAM_ADMIN_ID;
 const HERMES_REVIEW_LINK_SECRET = process.env.HERMES_REVIEW_LINK_SECRET;
-const NEXTAUTH_URL = process.env.NEXTAUTH_URL ?? "https://solobusiness-academy.vercel.app";
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL ?? "https://akademia.expertflow.hu";
 
 type IncomingPayload = {
   agent?: string;

@@ -37,11 +37,11 @@ export default async function LMGiveawayThankYou({
                 <p className="mt-8 font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
                   {reason === "tooyoung" && "A vállalkozásod még 6 hónap alatti — szeretném ha a Q4-es vagy Q1-es kampányra már 1+ éves műkkdéssel jelentkezhetnél, mert a 30 napos AI-bevezetésnek stabil ICP-re van szüksége."}
                   {reason === "lowtraffic" && "Heti 3-nál kevesebb érdeklődővel egy AI-rendszer felépítése nem éri meg neked — előbb a forgalom-építést érdemes erősíteni. Itt a 41 leveles ingyenes hírlevél, ami pontosan ezt tanítja."}
-                  {reason === "nocoach" && "Sajnos coach pályázatokat nem fogadunk — Solo Business build-in-public szabály. Ha más szakértői szolgáltatás is, jelentkezz újra a megfelelő kategóriában."}
+                  {reason === "nocoach" && "Sajnos coach pályázatokat nem fogadunk — Expert Flow szakmai-leíró szabály. Ha más szakértői szolgáltatás is, jelentkezz újra a megfelelő kategóriában."}
                 </p>
                 <div className="mt-10">
                   <a
-                    href="https://solobusiness.hu/hirlevel"
+                    href="https://expertflow.hu/hirlevel"
                     className="hover-arrow group inline-block border border-foreground bg-foreground px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
                   >
                     Iratkozz fel a hírlevélre <span className="arrow">→</span>

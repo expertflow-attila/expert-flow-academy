@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const metadata = {
-  title: "Első AI-folyamatvázlat 48 órán belül — Solo Business",
+  title: "Első AI-folyamatvázlat 48 órán belül — Expert Flow",
   description:
     "Küldd el, hogyan kezelsz ma egy új érdeklődőt. 48 óra alatt visszaküldök egy 1 oldalas vizuális vázlatot arról, hogyan rakható ez össze AI-jal.",
 };
@@ -162,7 +162,7 @@ export default async function LeadMagnetSketchPage({
                     Helyette: AI-működési térkép <span className="arrow">→</span>
                   </a>
                   <a
-                    href="/courses/build-in-public-30nap"
+                    href="/courses/expert-flow-akademia"
                     className="hover-arrow group inline-block border border-border-strong px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-foreground transition-colors hover:border-foreground"
                   >
                     Akadémia kurzus <span className="arrow">→</span>
@@ -183,7 +183,7 @@ export default async function LeadMagnetSketchPage({
                   <ErrorBox>A heti kapacitás épp most telt be. Hétfő reggel újra nyitnak a helyek.</ErrorBox>
                 )}
                 {error === "server" && (
-                  <ErrorBox>Szerver hiba — próbáld újra. Ha továbbra is, írj a hello@solobusiness.hu-ra.</ErrorBox>
+                  <ErrorBox>Szerver hiba — próbáld újra. Ha továbbra is, írj a hello@expertflow.hu-ra.</ErrorBox>
                 )}
 
                 <form action={submitSketch} className="mt-10 space-y-8">
@@ -248,7 +248,7 @@ export default async function LeadMagnetSketchPage({
                         className="mt-1 h-4 w-4 border border-border-strong"
                       />
                       <span className="font-sans text-sm leading-relaxed text-foreground-soft">
-                        Iratkozz fel a 41 leveles ingyenes Solo Business hírlevélre — heti 1-2 e-mail. Bármikor leiratkozhatsz.
+                        Iratkozz fel a 41 leveles ingyenes Expert Flow hírlevélre — heti 1-2 e-mail. Bármikor leiratkozhatsz.
                       </span>
                     </label>
                     <label className="flex items-start gap-3 cursor-pointer">
@@ -288,7 +288,7 @@ export default async function LeadMagnetSketchPage({
               Az első hetekben <em className="italic em-sky">semmit</em> nem építettem.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              Csak vázlatokat rajzoltam. A 30. napon vagyok ezzel a vállalkozással. Az általam készített vázlatok egy részét (név és személyes adat nélkül) megosztom a Skool közösségben és a hírlevélben. Így az általad kapott válasz nem zsákutca — másoknak is segít látni, mi a hatása.
+              Csak vázlatokat rajzoltam. Az Expert Flow módszertanban ezzel a vállalkozással. Az általam készített vázlatok egy részét (név és személyes adat nélkül) megosztom a Skool közösségben és a hírlevélben. Így az általad kapott válasz nem zsákutca — másoknak is segít látni, mi a hatása.
             </p>
           </div>
         </section>

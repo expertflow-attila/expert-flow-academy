@@ -1,4 +1,4 @@
-// MailerLite Connect API — subscriber enroll a Solo Business 41 leveles
+// MailerLite Connect API — subscriber enroll az Expert Flow 41 leveles
 // edu newsletter csoportba + per-LM csoportba (Wave 5+ kiterjesztés).
 //
 // Wave 4: csak a 41-leveles newsletter csoport (188014583560013564).

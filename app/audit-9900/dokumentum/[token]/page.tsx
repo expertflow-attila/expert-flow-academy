@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { markdownToInlineHtml } from "@/lib/pdf";
 
-export const metadata = { title: "Audit dokumentum — Solo Business" };
+export const metadata = { title: "Audit dokumentum — Expert Flow" };
 export const dynamic = "force-dynamic";
 
 export default async function AuditDocumentPage({ params }: { params: Promise<{ token: string }> }) {
@@ -92,11 +92,11 @@ export default async function AuditDocumentPage({ params }: { params: Promise<{ 
           </div>
           <div className="doc-card">
             <div className="doc-header">
-              <div className="doc-brand">Solo Business</div>
+              <div className="doc-brand">Expert Flow</div>
               <div className="doc-subtitle">9 900 Ft Belépő Audit · {submission.name}</div>
             </div>
             <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-            <div className="footer">solobusiness.hu · A 30. napon készült · belépő audit</div>
+            <div className="footer">expertflow.hu · Expert Flow · belépő audit</div>
           </div>
         </div>
       </body>

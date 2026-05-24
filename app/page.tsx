@@ -9,11 +9,11 @@ function Hero() {
     <section className="border-b border-border py-24 md:py-32 lg:py-40">
       <div className="mx-auto max-w-3xl px-6 text-center lg:px-10">
         <p className="animate-fade-in font-mono text-[0.65rem] uppercase tracking-[0.32em] text-foreground-muted">
-          <span>Solo Business</span>
+          <span>Expert Flow</span>
           <span aria-hidden="true" className="mx-3 text-foreground-dim">●</span>
           <span>Akadémia</span>
           <span aria-hidden="true" className="mx-3 text-foreground-dim">●</span>
-          <span>Build-in-public</span>
+          <span>Szakmai-leíró</span>
         </p>
 
         <h1 className="animate-fade-in-up delay-100 mt-10 font-display text-5xl leading-[1.05] text-balance tracking-tight md:text-6xl lg:text-7xl">
@@ -22,7 +22,7 @@ function Hero() {
         </h1>
 
         <p className="animate-fade-in-up delay-200 mx-auto mt-8 max-w-2xl font-sans text-base leading-relaxed text-foreground-soft md:text-lg">
-          Zárt, low-cost kurzusplatform. Build-in-public útvonal — minden anyag a saját
+          Zárt, low-cost kurzusplatform. Szakmai-leíró útvonal — minden anyag a saját
           gyakorlatomból, dokumentálva, nem absztrakt elmélet.
         </p>
 

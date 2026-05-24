@@ -172,7 +172,7 @@ export function ConsentFields() {
           className="mt-1 h-4 w-4 border border-border-strong"
         />
         <span className="font-sans text-sm leading-relaxed text-foreground-soft">
-          Iratkozz fel a 41 leveles ingyenes Solo Business hírlevélre — heti 1-2 e-mail, semmi kemény eladás. Bármikor leiratkozhatsz.
+          Iratkozz fel a 41 leveles ingyenes Expert Flow hírlevélre — heti 1-2 e-mail, semmi kemény eladás. Bármikor leiratkozhatsz.
         </span>
       </label>
       <label className="flex cursor-pointer items-start gap-3">
@@ -204,7 +204,7 @@ export function SubmitButton({ label }: { label: string }) {
 export function GdprFooter() {
   return (
     <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
-      Az adataidat csak a kért anyag elkészítéséhez és (ha bejelölted) a hírlevélhez használjuk. 30 napon belül törölhető, írj a hello@solobusiness.hu-ra.
+      Az adataidat csak a kért anyag elkészítéséhez és (ha bejelölted) a hírlevélhez használjuk. 30 napon belül törölhető, írj a hello@expertflow.hu-ra.
     </p>
   );
 }

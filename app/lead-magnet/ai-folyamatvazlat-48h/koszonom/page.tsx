@@ -24,7 +24,7 @@ export default async function SketchThankYou({
               48 órán belül megkapod a vázlatodat e-mailben. Először az AI rakja össze a struktúrát a válaszaid alapján, aztán én átolvasom, kézzel finomítom a rajzot, és csak utána küldöm ki.
             </p>
             <p className="mt-6 font-sans text-sm leading-relaxed text-foreground-muted">
-              Ha 48 óra múlva sem érkezett meg, nézd meg a spam mappát is. Ha ott sincs, írj nekem a hello@solobusiness.hu-ra.
+              Ha 48 óra múlva sem érkezett meg, nézd meg a spam mappát is. Ha ott sincs, írj nekem a hello@expertflow.hu-ra.
             </p>
 
             {id && (
@@ -42,11 +42,11 @@ export default async function SketchThankYou({
               Ha tetszett az ötlet — itt a <em className="italic em-sky">teljes Akadémia</em>.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              A vázlat csak az első lépés. A Solo Business Akadémia &bdquo;Saját AI Operations rendszer 30 nap alatt&rdquo; kurzusában lépésről lépésre felépítjük az alapokat (mit adsz el, kinek, hogyan találnak meg) és a működő AI rendszert. 49 000 Ft, 7 modul, 27 lecke.
+              A vázlat csak az első lépés. Az Expert Flow Akadémia &bdquo;Saját AI Operations rendszer 30 nap alatt&rdquo; kurzusában lépésről lépésre felépítjük az alapokat (mit adsz el, kinek, hogyan találnak meg) és a működő AI rendszert. 49 000 Ft, 7 modul, 27 lecke.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <a
-                href="/courses/build-in-public-30nap"
+                href="/courses/expert-flow-akademia"
                 className="hover-arrow group inline-block border border-foreground bg-foreground px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
               >
                 Nézd meg a kurzust <span className="arrow">→</span>

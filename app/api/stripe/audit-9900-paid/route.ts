@@ -160,10 +160,10 @@ async function handleRefund(charge: Stripe.Charge) {
 async function sendQuestionnaireLinkEmail(params: { to: string; name: string; accessToken: string }) {
   const { createTransport } = await import("nodemailer");
   const EMAIL_SERVER = process.env.EMAIL_SERVER;
-  const EMAIL_FROM = process.env.EMAIL_FROM ?? "akademia@solobusiness.hu";
+  const EMAIL_FROM = process.env.EMAIL_FROM ?? "akademia@expertflow.hu";
   if (!EMAIL_SERVER) throw new Error("EMAIL_SERVER nincs beállítva");
 
-  const APP_URL = process.env.NEXTAUTH_URL ?? "https://akademia.solobusiness.hu";
+  const APP_URL = process.env.NEXTAUTH_URL ?? "https://akademia.expertflow.hu";
   const link = `${APP_URL}/audit-9900/kerdoiv/${params.accessToken}`;
 
   const transport = createTransport(EMAIL_SERVER as unknown as import("nodemailer/lib/smtp-transport").Options);
