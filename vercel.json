@@ -8,6 +8,10 @@
     {
       "path": "/api/lead-magnet/auto-release",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/lead-magnet/sequence-followup",
+      "schedule": "0 8 * * *"
     }
   ]
 }

@@ -1,6 +1,11 @@
 import { Footer, Header, SectionLabel } from "@/components/site-chrome";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export const metadata = { title: "Köszönöm — kockázati térkép készül" };
+export const dynamic = "force-dynamic";
+
+const CAL_QUALIFICATION_URL =
+  process.env.CAL_QUALIFICATION_URL ?? "https://cal.com/attila-nagy-8uefco/kvalifikacio-20min";
 
 export default async function LMRiskFreeThankYou({
   searchParams,
@@ -9,6 +14,18 @@ export default async function LMRiskFreeThankYou({
 }) {
   const params = await searchParams;
   const id = params?.id;
+
+  // Lead-score lekérdezése — high-score (>50) esetén Cal.com link
+  let leadScore: number | null = null;
+  if (id) {
+    const { data } = await supabaseAdmin
+      .from("lead_magnet_submissions")
+      .select("lead_score")
+      .eq("id", id)
+      .maybeSingle();
+    leadScore = (data as { lead_score: number | null } | null)?.lead_score ?? null;
+  }
+  const isHighScore = leadScore != null && leadScore > 50;
 
   return (
     <>
@@ -34,6 +51,33 @@ export default async function LMRiskFreeThankYou({
             )}
           </div>
         </section>
+
+        {isHighScore && (
+          <section className="border-b border-border py-24 md:py-32">
+            <div className="mx-auto max-w-2xl px-6 lg:px-10">
+              <SectionLabel>A válaszaidból komoly intent látszik</SectionLabel>
+              <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
+                Beszéljünk <em className="italic em-violet">20 percet</em>?
+              </h2>
+              <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
+                A pontszámod alapján már túl vagy az "olvasgatás" fázison. Ha akarod, közösen átnézzük a térképedet — nem eladási hívás, csak kérdés-válasz. Foglalj egy időpontot.
+              </p>
+              <div className="mt-10">
+                <a
+                  href={CAL_QUALIFICATION_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover-arrow group inline-block border border-foreground bg-foreground px-6 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
+                >
+                  20 perc Cal.com foglalás <span className="arrow">→</span>
+                </a>
+              </div>
+              <p className="mt-6 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+                Lead score: {leadScore} / 100
+              </p>
+            </div>
+          </section>
+        )}
       </main>
       <Footer />
     </>

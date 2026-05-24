@@ -67,9 +67,10 @@ async function patch(path, body) {
 // ─── A kurzus konfiguráció ────────────────────────────────────────────
 const SLUG = 'build-in-public-30nap'; // slug megmarad — 3 lead-magnet oldal hardcoded
 const NEW_TITLE = 'Saját AI Operations rendszer 30 nap alatt';
-const NEW_SUBTITLE = 'Egyéni vállalkozóknak, akik üzleti alapokra építenek működő AI rendszert.';
-const NEW_DESCRIPTION = `<p>Felépítjük a vállalkozásod alapjait: pozícionálás, ajánlat, weboldal, ügyfélszerzés, mérés. A végén egy AI rendszer szűri a lead-eket, kommunikál az ügyfeleiddel és heti riportot küld.</p>
-<p>7 modul, 27 lecke.</p>`;
+const NEW_SUBTITLE = 'Egyéni szolgáltatóknak. A vállalkozás-építés alapjai mellé egy 3-agentes AI rendszer a háttérben.';
+const NEW_DESCRIPTION = `<p>Modul 1-5: a vállalkozás-építés alapjai — pozícionálás, ajánlat, weboldal, ügyfélszerzés, mérés.<br/>Modul 6-7: saját 3-agentes AI rendszer — lead-szűrő, kommunikációs, riport-író.</p>
+<p>Build-in-public. A 30. napon vagyok ezzel a saját Solo Business vállalkozásomon. Pontosan azt írom le amit én magam csináltam — beleértve a hibákat.</p>
+<p>27 lecke. 49 000 Ft, egyszer.</p>`;
 
 const MODULES = [
   // ═══════════════════════════════════════════════════════════════════

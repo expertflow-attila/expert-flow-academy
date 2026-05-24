@@ -45,6 +45,8 @@ const STANDARD_SLUGS = [
 const HERMES_REVIEW_SLUGS = new Set([
   "ai-mukodesi-terkep",
   "ai-folyamatvazlat-48h",
+  "48h-ai-gyorsdiagnozis",
+  "kockazatmentes-audit",
   "csapat-szerep-terkep",
   "mini-onboarding-vazlat",
   "operations-erettsegi-audit",
@@ -128,14 +130,16 @@ async function processStandard(results: ProcessResult[]) {
         })
         .eq("id", sub.id);
 
-      // Hermes review-card az LM1, LM2, LM4, LM5 + Wave 7 LM7, LM8 slug-okra megy.
-      // A többi (LM3 / Wave 5) slug-ot a /admin felületen Attila nézi át.
+      // Hermes review-card a HERMES_REVIEW_SLUGS-okra megy.
+      // mondd-el-egyszer és auditprogram-9900 külön ágon (processSayItOnce / processAudit9900).
       const hermes = HERMES_REVIEW_SLUGS.has(slug)
         ? await notifyHermesForReview({
             submissionId: sub.id,
             leadMagnetSlug: slug as
               | "ai-mukodesi-terkep"
               | "ai-folyamatvazlat-48h"
+              | "48h-ai-gyorsdiagnozis"
+              | "kockazatmentes-audit"
               | "csapat-szerep-terkep"
               | "mini-onboarding-vazlat"
               | "operations-erettsegi-audit"
@@ -258,7 +262,27 @@ async function processSayItOnce(results: ProcessResult[]) {
         })
         .eq("id", sub.id);
 
-      results.push({ id: sub.id, slug: "mondd-el-egyszer", ok: true, cost_huf: gen.costHuf + whisperCostHuf });
+      // Hermes review
+      const hermes = await notifyHermesForReview({
+        submissionId: sub.id,
+        leadMagnetSlug: "mondd-el-egyszer",
+        submitterName: sub.name as string,
+        submitterEmail: sub.email as string,
+        payload: { transcript: transcript.slice(0, 1500) } as Record<string, string>,
+        generatedMarkdown: gen.markdown,
+      });
+      if (hermes.ok) {
+        await supabaseAdmin
+          .from("lead_magnet_submissions")
+          .update({
+            hermes_message_id: hermes.hermesMessageId,
+            hermes_chat_id: hermes.hermesChatId,
+            hermes_sent_at: new Date().toISOString(),
+          })
+          .eq("id", sub.id);
+      }
+
+      results.push({ id: sub.id, slug: "mondd-el-egyszer", ok: true, hermes_ok: hermes.ok, cost_huf: gen.costHuf + whisperCostHuf });
     } catch (e) {
       const errMsg = e instanceof Error ? e.message : String(e);
       console.error(`[process-pending] mondd-el-egyszer failure on ${sub.id}`, e);
@@ -302,12 +326,27 @@ async function processAudit9900(results: ProcessResult[]) {
         })
         .eq("id", sub.id);
 
-      // Hermes review kötelező a 9 900 Ft auditra
-      // Bővítsd a hermes-notifier-t! Most a notifier nem támogatja a slug-ot,
-      // így itt csak attila_review_status="pending" marad, és Attila a /admin
-      // felületen átnézi.
+      // Hermes review KÖTELEZŐ a 9 900 Ft auditra — 💰 prefix-szel jelölve Attilának
+      const hermes = await notifyHermesForReview({
+        submissionId: sub.id,
+        leadMagnetSlug: "auditprogram-9900",
+        submitterName: sub.name as string,
+        submitterEmail: sub.email as string,
+        payload,
+        generatedMarkdown: gen.markdown,
+      });
+      if (hermes.ok) {
+        await supabaseAdmin
+          .from("lead_magnet_submissions")
+          .update({
+            hermes_message_id: hermes.hermesMessageId,
+            hermes_chat_id: hermes.hermesChatId,
+            hermes_sent_at: new Date().toISOString(),
+          })
+          .eq("id", sub.id);
+      }
 
-      results.push({ id: sub.id, slug: "auditprogram-9900", ok: true, cost_huf: gen.costHuf });
+      results.push({ id: sub.id, slug: "auditprogram-9900", ok: true, hermes_ok: hermes.ok, cost_huf: gen.costHuf });
     } catch (e) {
       const errMsg = e instanceof Error ? e.message : String(e);
       console.error(`[process-pending] audit-9900 failure on ${sub.id}`, e);

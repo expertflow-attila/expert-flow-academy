@@ -1,10 +1,21 @@
-import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { Footer, Header, SectionLabel } from "@/components/site-chrome";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { isAdminSession } from "@/lib/admin";
-import { sendLeadMagnetReport } from "@/lib/lead-magnet-email";
-import { enrollNewsletterSubscriber } from "@/lib/mailerlite";
+import { sendLeadMagnetReport, type LeadMagnetEmailSlug } from "@/lib/lead-magnet-email";
+import { enrollNewsletterSubscriber, type EnrollSource } from "@/lib/mailerlite";
+import { startEmailSequence, type SequenceSlug } from "@/lib/lm-email-sequences";
+
+const KNOWN_EMAIL_SLUGS: LeadMagnetEmailSlug[] = [
+  "ai-mukodesi-terkep",
+  "ai-folyamatvazlat-48h",
+  "48h-ai-gyorsdiagnozis",
+  "kockazatmentes-audit",
+  "mondd-el-egyszer",
+  "auditprogram-9900",
+  "csapat-szerep-terkep",
+  "mini-onboarding-vazlat",
+];
 
 export const metadata = { title: "Admin — Lead magnet részletek" };
 export const dynamic = "force-dynamic";
@@ -40,26 +51,26 @@ export default async function AdminLeadMagnetDetailPage({ params }: { params: Pr
       })
       .eq("id", id);
 
-    // Email kiküldés
+    // Email kiküldés — minden új slug támogatott a sendLeadMagnetReport-ban
     const finalMarkdown = useEdit ? edited : (sub!.generated_markdown as string);
-    const slug = sub!.lead_magnet_slug as string;
+    const rawSlug = sub!.lead_magnet_slug as string;
+    const slug = (KNOWN_EMAIL_SLUGS.includes(rawSlug as LeadMagnetEmailSlug)
+      ? rawSlug
+      : "ai-mukodesi-terkep") as LeadMagnetEmailSlug;
 
-    // A meglévő sendLeadMagnetReport csak LM1+LM2 slug-okat ismer.
-    // Új slug-okra ki kell bővíteni — most a generic "ai-mukodesi-terkep" fallback-et használjuk.
     try {
       const result = await sendLeadMagnetReport({
         to: sub!.email as string,
         name: sub!.name as string,
-        leadMagnetSlug: (slug === "ai-folyamatvazlat-48h" ? "ai-folyamatvazlat-48h" : "ai-mukodesi-terkep") as
-          | "ai-mukodesi-terkep"
-          | "ai-folyamatvazlat-48h",
+        leadMagnetSlug: slug,
         reportMarkdown: finalMarkdown,
       });
 
+      const now = new Date();
       await supabaseAdmin
         .from("lead_magnet_submissions")
         .update({
-          delivered_at: new Date().toISOString(),
+          delivered_at: now.toISOString(),
           delivery_message_id: result.messageId,
           delivery_provider: "smtp",
         })
@@ -69,8 +80,15 @@ export default async function AdminLeadMagnetDetailPage({ params }: { params: Pr
         await enrollNewsletterSubscriber({
           email: sub!.email as string,
           name: sub!.name as string,
-          source: `lm-${slug}` as never,
+          source: `lm-${slug}` as EnrollSource,
         }).catch((e) => console.error("[admin/lead-magnets] mailerlite enroll failed", e));
+
+        // Sequence indítás (idempotens)
+        await startEmailSequence(supabaseAdmin, {
+          submissionId: id,
+          slug: slug as SequenceSlug,
+          baseDate: now,
+        }).catch((e) => console.error("[admin/lead-magnets] startEmailSequence failed", e));
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);

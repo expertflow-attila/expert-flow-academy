@@ -24,6 +24,10 @@ export type HermesNotifyResult =
 export type HermesReviewSlug =
   | "ai-mukodesi-terkep"
   | "ai-folyamatvazlat-48h"
+  | "48h-ai-gyorsdiagnozis"
+  | "kockazatmentes-audit"
+  | "mondd-el-egyszer"
+  | "auditprogram-9900"
   | "csapat-szerep-terkep"
   | "mini-onboarding-vazlat"
   | "operations-erettsegi-audit"
@@ -46,6 +50,10 @@ export async function notifyHermesForReview(params: {
   const titleByMagnet: Record<HermesReviewSlug, string> = {
     "ai-mukodesi-terkep": "AI-működési térkép",
     "ai-folyamatvazlat-48h": "AI-folyamatvázlat 48h",
+    "48h-ai-gyorsdiagnozis": "48h AI Gyorsdiagnózis",
+    "kockazatmentes-audit": "Kockázatmentes audit",
+    "mondd-el-egyszer": "Mondd el egyszer — rendszer-térkép",
+    "auditprogram-9900": "💰 9 900 Ft Belépő Audit (FIZETETT)",
     "csapat-szerep-terkep": "Csapat-szerep térkép (mini-csapat)",
     "mini-onboarding-vazlat": "Mini-onboarding vázlat 48h",
     "operations-erettsegi-audit": "🏢 EF B2B — Operations érettségi audit",
@@ -158,6 +166,45 @@ function formatPayloadSummary(
       `4. Minősítés: ${truncate(payload.q4 ?? "", 120)}`,
       `5. Nyomon követés: ${truncate(payload.q5 ?? "", 120)}`,
       `6. Fájdalompont: ${truncate(payload.q6 ?? "", 120)}`,
+    ].join("\n");
+  }
+  if (slug === "48h-ai-gyorsdiagnozis") {
+    return [
+      `1. Szolgáltatás: ${truncate(payload.q1 ?? "", 100)}`,
+      `2. 3 manuális feladat: ${truncate(payload.q2 ?? "", 160)}`,
+      `3. Automatizálandó: ${truncate(payload.q3 ?? "", 140)}`,
+      `4. Heti óra: ${truncate(payload.q4 ?? "", 30)}`,
+      `5. Eszközök: ${truncate(payload.q5 ?? "", 140)}`,
+    ].join("\n");
+  }
+  if (slug === "kockazatmentes-audit") {
+    return [
+      `1. Szolgáltatás: ${truncate(payload.q1 ?? "", 100)}`,
+      `2. Probléma: ${truncate(payload.q2 ?? "", 160)}`,
+      `3. Félelmek: ${truncate(payload.q3 ?? "", 140)}`,
+      `4. Korábbi rossz tapasztalat: ${truncate(payload.q4 ?? "—", 140)}`,
+      `5. Eszközök: ${truncate(payload.q5 ?? "", 140)}`,
+      `6. Fizetési hajlandóság: ${truncate(payload.q6 ?? "", 30)}`,
+      `7. Csapat: ${truncate(payload.q7 ?? "", 30)}`,
+    ].join("\n");
+  }
+  if (slug === "mondd-el-egyszer") {
+    return [
+      `Szabad-szöveg / Whisper-transzkript:`,
+      truncate(payload.transcript ?? payload.q1 ?? "", 800),
+    ].join("\n");
+  }
+  if (slug === "auditprogram-9900") {
+    return [
+      `*9 900 Ft FIZETETT* — komoly munka.`,
+      `1. ICP: ${truncate(payload.q1 ?? "", 140)}`,
+      `2. Heti érdeklődő: ${truncate(payload.q2 ?? "", 40)}`,
+      `4. Első reakció: ${truncate(payload.q4 ?? "", 140)}`,
+      `5. Válaszidő: ${truncate(payload.q5 ?? "", 40)}`,
+      `8. Utál: ${truncate(payload.q8 ?? "", 120)}`,
+      `10. Automatizálna elsőként: ${truncate(payload.q10 ?? "", 140)}`,
+      `11. Heti admin: ${truncate(payload.q11 ?? "", 40)}`,
+      `12. 359k hajlandóság: ${truncate(payload.q12 ?? "", 60)}`,
     ].join("\n");
   }
   if (slug === "csapat-szerep-terkep") {

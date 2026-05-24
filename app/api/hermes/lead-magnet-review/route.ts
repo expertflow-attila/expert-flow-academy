@@ -18,8 +18,20 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { verifyHermesSignature } from "@/lib/hermes-notifier";
-import { sendLeadMagnetReport } from "@/lib/lead-magnet-email";
-import { enrollNewsletterSubscriber } from "@/lib/mailerlite";
+import { sendLeadMagnetReport, type LeadMagnetEmailSlug } from "@/lib/lead-magnet-email";
+import { enrollNewsletterSubscriber, type EnrollSource } from "@/lib/mailerlite";
+import { startEmailSequence, type SequenceSlug } from "@/lib/lm-email-sequences";
+
+const KNOWN_EMAIL_SLUGS: LeadMagnetEmailSlug[] = [
+  "ai-mukodesi-terkep",
+  "ai-folyamatvazlat-48h",
+  "48h-ai-gyorsdiagnozis",
+  "kockazatmentes-audit",
+  "mondd-el-egyszer",
+  "auditprogram-9900",
+  "csapat-szerep-terkep",
+  "mini-onboarding-vazlat",
+];
 
 export const runtime = "nodejs";
 
@@ -81,10 +93,10 @@ export async function POST(req: Request) {
   }
 
   // approve / edit → kiküldjük az emailt
-  const slug = sub.lead_magnet_slug as "ai-mukodesi-terkep" | "ai-folyamatvazlat-48h";
-  if (slug !== "ai-mukodesi-terkep" && slug !== "ai-folyamatvazlat-48h") {
+  const slug = sub.lead_magnet_slug as LeadMagnetEmailSlug;
+  if (!KNOWN_EMAIL_SLUGS.includes(slug)) {
     return NextResponse.json(
-      { error: "Csak LM1 és LM2 submission-eket lehet review-elni" },
+      { error: `Nem támogatott slug a Hermes review-ban: ${slug}` },
       { status: 400 },
     );
   }
@@ -104,27 +116,37 @@ export async function POST(req: Request) {
       reportMarkdown: finalMarkdown,
     });
 
-    // Enroll a 41 leveles hírlevélbe ha consent — nem kritikus path
+    // Enroll a 41 leveles + LM-specifikus csoportba ha consent — nem kritikus path
     if (sub.marketing_consent) {
       await enrollNewsletterSubscriber({
         email: sub.email as string,
         name: sub.name as string,
-        source: slug === "ai-mukodesi-terkep" ? "lm-ai-mukodesi-terkep" : "lm-ai-folyamatvazlat-48h",
+        source: `lm-${slug}` as EnrollSource,
       }).catch((e) => console.error(`[hermes-review] MailerLite enroll failed for ${sub.id}`, e));
     }
 
+    const now = new Date();
     await supabaseAdmin
       .from("lead_magnet_submissions")
       .update({
         attila_review_status: body.action === "edit" ? "edited" : "approved",
-        attila_reviewed_at: new Date().toISOString(),
+        attila_reviewed_at: now.toISOString(),
         attila_edits: body.action === "edit" ? finalMarkdown : null,
         attila_review_note: body.note ?? null,
-        delivered_at: new Date().toISOString(),
+        delivered_at: now.toISOString(),
         delivery_provider: "smtp",
         delivery_message_id: result.messageId,
       })
       .eq("id", body.submission_id);
+
+    // Sequence indítás (idempotens) — csak ha consent és van sequence definícója
+    if (sub.marketing_consent) {
+      await startEmailSequence(supabaseAdmin, {
+        submissionId: body.submission_id,
+        slug: slug as SequenceSlug,
+        baseDate: now,
+      }).catch((e) => console.error(`[hermes-review] startEmailSequence failed for ${sub.id}`, e));
+    }
 
     return NextResponse.json({ ok: true, action: body.action, messageId: result.messageId });
   } catch (e) {
