@@ -1,4 +1,4 @@
-// PDF / dokumentum rendering a Solo Business audit kézbesítéshez.
+// PDF / dokumentum rendering a Expert Flow audit kézbesítéshez.
 //
 // Megközelítés: NEM Puppeteer (Vercel-en bonyolult), HANEM tokenes nyilvános
 // "dokumentum-oldal" — `/audit-9900/dokumentum/[token]` — amelyet a vásárló
@@ -38,7 +38,7 @@ export async function createDocumentToken(submissionId: string, validityDays = 3
     .update({ notion_page_id: `doc-token:${token}` })
     .eq("id", submissionId);
 
-  const baseUrl = process.env.NEXTAUTH_URL ?? "https://akademia.solobusiness.hu";
+  const baseUrl = process.env.NEXTAUTH_URL ?? "https://akademia.expertflow.hu";
   const url = `${baseUrl}/audit-9900/dokumentum/${token}`;
 
   return { token, url, expiresAt };

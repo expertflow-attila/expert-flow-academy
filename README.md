@@ -1,8 +1,8 @@
-# Solo Business Akadémia
+# Expert Flow Akadémia
 
 Zárt kurzusplatform szolgáltató vállalkozóknak. Visualize Value [Course Platform Without LMS](https://visualizevalue.com/workflows/course-platform-without-lms) mintára: Next.js + Supabase + Stripe + Cloudflare Stream, ~$5/hó működési költség.
 
-**Brand:** Solo Business — design rendszer ugyanaz mint az [ev-landings.vercel.app/aios](https://ev-landings.vercel.app/aios). Dark, Instrument Serif italic, oklch színek, rose/violet/sky accentek, zero emoji, zero gradient.
+**Brand:** Expert Flow — design rendszer ugyanaz mint az [ev-landings.vercel.app/aios](https://ev-landings.vercel.app/aios). Dark, Instrument Serif italic, oklch színek, rose/violet/sky accentek, zero emoji, zero gradient.
 
 ## Stack
 

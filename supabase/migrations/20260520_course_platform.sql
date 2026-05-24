@@ -1,4 +1,4 @@
--- Solo Business Akadémia — kurzusplatform séma
+-- Expert Flow Akadémia — kurzusplatform séma
 -- Mintaforrás: Visualize Value "Course Platform Without LMS"
 -- RLS: csak service_role olvas/ír. Az anon/authenticated BLOKKOLVA.
 

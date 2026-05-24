@@ -33,7 +33,7 @@ Negyedik opció (NEM része a decoy mechanikának, csak komoly ICP-nek): **D: Im
 ## 4. Ajánlati oldal vázlat
 
 ```
-[Header: Solo Business]
+[Header: Expert Flow]
 
 Üdv [Keresztnév] — itt a 3 lehetőséged
 

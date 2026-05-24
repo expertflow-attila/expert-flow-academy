@@ -1,4 +1,4 @@
-// Solo Business Akadémia — kurzus újraépítése (v2)
+// Expert Flow Akadémia — kurzus újraépítése (v2)
 // Az alapokra építve (Business Start kurzus 12 modulja), az AI mindenbe beleszőve,
 // a végcél az AI Operations System.
 //
@@ -66,10 +66,10 @@ async function patch(path, body) {
 
 // ─── A kurzus konfiguráció ────────────────────────────────────────────
 const SLUG = 'build-in-public-30nap'; // slug megmarad — 3 lead-magnet oldal hardcoded
-const NEW_TITLE = 'Saját AI Operations rendszer 30 nap alatt';
-const NEW_SUBTITLE = 'Egyéni szolgáltatóknak. A vállalkozás-építés alapjai mellé egy 3-agentes AI rendszer a háttérben.';
+const NEW_TITLE = 'Saját AI Operations rendszer 5 nap alatt';
+const NEW_SUBTITLE = '5 nap alatt felépítjük az AI Operations rendszered — a kurzus minden napja egy konkrét rendszerelem.';
 const NEW_DESCRIPTION = `<p>Modul 1-5: a vállalkozás-építés alapjai — pozícionálás, ajánlat, weboldal, ügyfélszerzés, mérés.<br/>Modul 6-7: saját 3-agentes AI rendszer — lead-szűrő, kommunikációs, riport-író.</p>
-<p>Build-in-public. A 30. napon vagyok ezzel a saját Solo Business vállalkozásomon. Pontosan azt írom le amit én magam csináltam — beleértve a hibákat.</p>
+<p>5 napos struktúra. Pontosan azt írom le amit én magam csináltam — beleértve a hibákat — az Expert Flow vállalkozáson.</p>
 <p>27 lecke. 49 000 Ft, egyszer.</p>`;
 
 const MODULES = [
@@ -560,7 +560,7 @@ Egy mondat: ki lehet ez a feliratkozó valószínűleg?</pre>
 <li>A költségvetésed feszített, nem fér bele 120 ezer Ft+ havi.</li>
 <li>A vállalkozásod kis-méretű és nem kell skálázni.</li>
 </ul>
-<p><strong>Upgrade — Solo Business AI Operations retainer</strong></p>
+<p><strong>Upgrade — Expert Flow AI Operations retainer</strong></p>
 <ul>
 <li><strong>120 ezer Ft / hó alap</strong> — 1 rendszer karbantartása, havi 1 review meeting. Akkor jó ha működik a rendszer és csak figyelni kell.</li>
 <li><strong>220 ezer Ft / hó</strong> — 2-3 rendszer, kétheti review, prioritás email-támogatás. Akkor jó ha bővítenéd (új agent, új workflow).</li>
@@ -600,7 +600,7 @@ function validate() {
 
 // ─── Futtatás ────────────────────────────────────────────────────────
 async function run() {
-  console.log(`Solo Business Akadémia kurzus-rebuild ${DRY ? '(DRY-RUN)' : ''}`);
+  console.log(`Expert Flow Akadémia kurzus-rebuild ${DRY ? '(DRY-RUN)' : ''}`);
   console.log(`Modulok: ${MODULES.length}, Leckék: ${MODULES.reduce((a, m) => a + m.lessons.length, 0)}`);
 
   console.log('\n0. Validáció...');

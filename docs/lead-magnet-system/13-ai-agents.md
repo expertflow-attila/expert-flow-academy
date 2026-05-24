@@ -99,7 +99,7 @@ const result = await callStrategist({
 
 **Mikor fut:** Strategist után (Design mód).
 
-**Bemenet:** Strategist output + Solo Business + Expert Flow ICP-adatok (`memory/project_anna_business_audit.md`, ICP-félelem mátrix).
+**Bemenet:** Strategist output + Expert Flow + Expert Flow ICP-adatok (`memory/project_anna_business_audit.md`, ICP-félelem mátrix).
 
 **Kimenet:**
 ```json
@@ -185,7 +185,7 @@ const result = await callStrategist({
 
 **Mikor fut:** Design mód. LM Architect után, párhuzamosan a Workflow Engineer-rel.
 
-**Bemenet:** LM Architect output + Solo Business brand-hang (`docs/youtube_anti_ai_szotar.md`, `memory/feedback_youtube_build_in_public.md`).
+**Bemenet:** LM Architect output + Expert Flow brand-hang (`docs/youtube_anti_ai_szotar.md`, `memory/feedback_youtube_build_in_public.md`).
 
 **Kimenet:**
 ```json

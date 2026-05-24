@@ -1,4 +1,4 @@
--- Wave 6 — Solo Business mini-csapat lead magnetek (LM4, LM5, LM6)
+-- Wave 6 — Expert Flow mini-csapat lead magnetek (LM4, LM5, LM6)
 --
 -- Új slug-ok a B aldimenzióhoz (1-3 fős mini-csapat ICP):
 --   csapat-szerep-terkep            (LM4, könnyűség — 3 kérdés, 24h email)

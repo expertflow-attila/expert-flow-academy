@@ -12,7 +12,7 @@ URL: `/lead-magnet/kockazatmentes-audit`
 *„Megnézzük együtt mi a 3 legkisebb kockázatú, de legnagyobb hatású AI-lépésed — anélkül, hogy bármit el kéne köteleződnöd, vagy bármit fizetnél."*
 
 ## 3. Célcsoport
-- Aki már 2-3 hete olvassa a Solo Business newslettert vagy követi a YouTube-csatornát, de még nem lépett
+- Aki már 2-3 hete olvassa a Expert Flow newslettert vagy követi a YouTube-csatornát, de még nem lépett
 - Aki egyszer beleugrott egy „AI-projektbe" és csalódott (n8n flow ami leállt, ChatGPT-promptok amik nem skálázódtak)
 - Aki tudja hogy automatizálnia kellene, de fél a következőtől:
   - kidobott idő/pénz lesz
@@ -145,7 +145,7 @@ Score <20: 41-leveles newsletter only, kemény eladás semmilyen formában.
 | +3 | „Az AI-projekteim 90%-a megbukott" | Saját build-in-public sztori — kudarcok, mit tanult |
 | +7 | „Mi NEM AI-feladat" | Lista az anti-pattern-ekről, kockázatcsökkentő hangulat |
 | +14 | „Mi történne ha 30 napra elhalasztanád?" | Reverse psychology: NEM ajánljuk most a vásárlást |
-| +21 | „Itt a Solo Business 49k Akadémia — ha készen állsz" | CTA, de soft |
+| +21 | „Itt a Expert Flow 49k Akadémia — ha készen állsz" | CTA, de soft |
 
 Score >50 ügyfeleknek **+5 napos email** beszúrva: „Beszéljünk 20 percet — itt a Cal.com link, semmi eladás, csak megnézzük együtt."
 

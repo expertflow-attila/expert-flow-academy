@@ -16,7 +16,7 @@ URL variánsok:
 
 ## 3. Mi az „eredeti ár" és miért hiteles a kedvezmény
 
-**A 49 000 Ft NEM kitalált.** A Solo Business Akadémia 49 000 Ft-os kurzus a forrás-anyag az audit építéséhez. A logika:
+**A 49 000 Ft NEM kitalált.** A Expert Flow Akadémia 49 000 Ft-os kurzus a forrás-anyag az audit építéséhez. A logika:
 
 - Akadémia (49k) = TE TANULOD MEG hogyan kell auditolni magad
 - Belépő audit (9 900) = ÉN CSINÁLOM HELYETTED ugyanezzel a módszerrel

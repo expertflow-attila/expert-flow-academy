@@ -153,7 +153,7 @@ Minden lead magnet kimenetnek meg kell felelnie ezeknek (ha bármelyik sérül, 
 
 - `docs/LEAD_MAGNETS.md` — telepítési útmutató (Wave 4 live)
 - `CLAUDE.md` — projekt kontextus, build-in-public szabály, anti-AI szótár
-- `memory/project_solobusiness_brand_pivot.md` — Solo Business / Expert Flow brand kettősség
+- `memory/project_solobusiness_brand_pivot.md` — Expert Flow / Expert Flow brand kettősség
 - `memory/project_hermes_multi_agents.md` — Hermes architektúra
 - `memory/project_security_fixes_20260510.md` — Bearer auth + HMAC szabványok
 - `Expert Flow - AI Team/index.md` — LLM wiki agents/apis/libs kategóriák

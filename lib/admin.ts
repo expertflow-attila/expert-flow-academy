@@ -1,5 +1,5 @@
 // Admin gating — ADMIN_EMAILS env változó vesszővel elválasztott email lista.
-// Példa: ADMIN_EMAILS=hello@expertflow.hu,attila@solobusiness.hu
+// Példa: ADMIN_EMAILS=hello@expertflow.hu,attila@expertflow.hu
 
 import { auth } from "./auth";
 

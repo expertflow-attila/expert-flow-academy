@@ -17,7 +17,7 @@ const STRIPE_KEY = env.STRIPE_SECRET_KEY;
 const SUPA_URL = env.SUPABASE_URL.replace(/\/+$/, '');
 const SUPA_KEY = env.SUPABASE_SERVICE_ROLE_KEY;
 const COURSE_SLUG = 'build-in-public-30nap';
-const PRODUCT_NAME = 'Saját AI Operations rendszer 30 nap alatt';
+const PRODUCT_NAME = 'Saját AI Operations rendszer 5 nap alatt';
 const PRICE_HUF = 49000;
 
 if (!STRIPE_KEY || !STRIPE_KEY.startsWith('sk_')) { console.error('STRIPE_SECRET_KEY hiányzik / rossz formátum'); process.exit(1); }
@@ -51,7 +51,7 @@ async function findOrCreateProduct() {
     method: 'POST',
     body: form({
       name: PRODUCT_NAME,
-      description: 'Solo Business Akadémia kurzus — 7 modul, 27 lecke.',
+      description: 'Expert Flow Akadémia kurzus — 7 modul, 27 lecke.',
       'metadata[course_slug]': COURSE_SLUG,
     }),
   });

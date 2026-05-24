@@ -1,5 +1,5 @@
 // Brand-elt magic link email — Auth.js sendVerificationRequest override.
-// A default Nodemailer template phishing-szerű kék gombbal; itt Solo Business
+// A default Nodemailer template phishing-szerű kék gombbal; itt Expert Flow
 // dark serif esztétika, ami egyezik az oldalal.
 
 import { createTransport } from "nodemailer";
@@ -19,7 +19,7 @@ export async function sendBrandedVerificationRequest(params: {
   const result = await transport.sendMail({
     to: identifier,
     from: provider.from,
-    subject: `Belépés a Solo Business Akadémiára`,
+    subject: `Belépés a Expert Flow Akadémiára`,
     text: textBody({ url, host }),
     html: htmlBody({ url, host }),
   });
@@ -31,7 +31,7 @@ export async function sendBrandedVerificationRequest(params: {
 
 function textBody({ url, host }: { url: string; host: string }) {
   return [
-    `Solo Business Akadémia`,
+    `Expert Flow Akadémia`,
     ``,
     `Belépéshez kattints a linkre (10 percig érvényes):`,
     url,
@@ -45,7 +45,7 @@ function textBody({ url, host }: { url: string; host: string }) {
 // Inline-stílusú HTML — az email kliensek (Gmail, Outlook) nem tölthetnek
 // be external CSS-t. oklch nem támogatott emailben, így hex átírások.
 function htmlBody({ url, host }: { url: string; host: string }) {
-  // Solo Business dark palette — hex átírás
+  // Expert Flow dark palette — hex átírás
   const bg = "#1a1a1f";              // background (oklch 0.13)
   const surface = "#202025";         // surface
   const fg = "#e2e0d8";              // foreground (oklch 0.90)
@@ -60,7 +60,7 @@ function htmlBody({ url, host }: { url: string; host: string }) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Solo Business Akadémia — Belépés</title>
+  <title>Expert Flow Akadémia — Belépés</title>
 </head>
 <body style="margin:0;padding:0;background:${bg};font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:${fg};-webkit-font-smoothing:antialiased;">
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:${bg};">
@@ -70,7 +70,7 @@ function htmlBody({ url, host }: { url: string; host: string }) {
           <tr>
             <td style="padding:32px 32px 24px 32px;border-bottom:1px solid ${border};">
               <div style="font-family:Georgia,serif;font-style:italic;font-size:24px;letter-spacing:-0.01em;color:${fg};">
-                Solo Business
+                Expert Flow
               </div>
               <div style="margin-top:8px;font-family:'SF Mono',Menlo,monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.22em;color:${fgMuted};">
                 Akadémia · Belépés

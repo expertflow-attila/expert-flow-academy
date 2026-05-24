@@ -5,7 +5,7 @@
 > **Státusz: ÉL** (Wave 4, 2026-05-23). Slug: `ugyfelut-audit`.
 
 ## 1. Név (LIVE)
-**20 perces Ügyfélút Audit (Solo Business)** — slug: `ugyfelut-audit`
+**20 perces Ügyfélút Audit (Expert Flow)** — slug: `ugyfelut-audit`
 
 A teljes Expert Flow szolgáltatás 8 lépéséből (működés-térképezés / ügyfélút-elemzés / problémák / rendszerterv / workflow / bevezetés / mérés / optimalizálás) csak a **2. lépést — ügyfélút-elemzést** szakítjuk ki belépő-pontnak.
 

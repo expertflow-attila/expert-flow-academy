@@ -17,17 +17,17 @@ alter table lead_magnet_submissions
 
 alter table lead_magnet_submissions
   add constraint lead_magnet_submissions_lead_magnet_slug_check check (lead_magnet_slug in (
-    -- Wave 4 (Solo Business szóló aldim — A):
+    -- Wave 4 (Expert Flow szóló aldim — A):
     'ai-mukodesi-terkep',
     'ai-folyamatvazlat-48h',
     'ugyfelut-audit',
-    -- Wave 5 (Solo Business szóló aldim bővítés):
+    -- Wave 5 (Expert Flow szóló aldim bővítés):
     '48h-ai-gyorsdiagnozis',
     'kockazatmentes-audit',
     'mondd-el-egyszer',
     'ai-rendszer-giveaway-q3',
     'auditprogram-9900',
-    -- Wave 6 (Solo Business mini-csapat aldim — B):
+    -- Wave 6 (Expert Flow mini-csapat aldim — B):
     'csapat-szerep-terkep',
     'mini-onboarding-vazlat',
     'sales-pipeline-diagnozis',

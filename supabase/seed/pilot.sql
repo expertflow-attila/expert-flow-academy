@@ -1,4 +1,4 @@
--- Solo Business Akadémia — pilot kurzus seed
+-- Expert Flow Akadémia — pilot kurzus seed
 -- Futtatás: psql "$SUPABASE_DB_URL" -f supabase/seed/pilot.sql
 -- A stripe_price_id mezőt később frissítsd a Stripe Dashboard értékével.
 -- Egyszeri seed — re-run esetén futtasd újra a clean blokkal.
@@ -15,8 +15,8 @@ insert into public.courses (slug, title, subtitle, description, price_huf, publi
 values (
   'build-in-public-30nap',
   'Build-in-public 30 nap',
-  'Az első 30 nap a saját Solo Business útvonalon — dokumentálva, hibákkal, valós számokkal.',
-  '<p>Ez egy <strong>build-in-public</strong> útikönyv. Nem ígérek titkos formulát — végigviszem mit csináltam az első 30 napban, miközben elindítottam a Solo Business márkát: 0 fizetős ügyféltől az első retainerig.</p><p>Ha hasonló úton indulnál — szolgáltató vállalkozóként szeretnéd láthatóvá és értékesíthetővé tenni a tudásod —, itt nem teóriát kapsz, hanem rendszert, naplót és a valódi döntéseket.</p>',
+  'Az első 30 nap a saját Expert Flow útvonalon — dokumentálva, hibákkal, valós számokkal.',
+  '<p>Ez egy <strong>build-in-public</strong> útikönyv. Nem ígérek titkos formulát — végigviszem mit csináltam az első 30 napban, miközben elindítottam a Expert Flow márkát: 0 fizetős ügyféltől az első retainerig.</p><p>Ha hasonló úton indulnál — szolgáltató vállalkozóként szeretnéd láthatóvá és értékesíthetővé tenni a tudásod —, itt nem teóriát kapsz, hanem rendszert, naplót és a valódi döntéseket.</p>',
   49000,
   true,
   null

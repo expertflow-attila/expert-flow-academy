@@ -55,7 +55,7 @@ A Supabase Dashboard-on:
 
 **Webhook** (Dashboard → Developers → Webhooks → New):
 
-- Endpoint URL: `https://akademia.solobusiness.hu/api/stripe/audit-9900-paid`
+- Endpoint URL: `https://akademia.expertflow.hu/api/stripe/audit-9900-paid`
 - Eseménytípusok:
   - ✓ `checkout.session.completed`
   - ✓ `charge.refunded`

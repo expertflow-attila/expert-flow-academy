@@ -8,7 +8,7 @@
 
 ## 1. Név (LIVE)
 **AI-Működési Térkép** — slug: `ai-mukodesi-terkep`
-URL: `https://akademia.solobusiness.hu/lead-magnet/ai-mukodesi-terkep`
+URL: `https://akademia.expertflow.hu/lead-magnet/ai-mukodesi-terkep`
 
 ## 2. Ígéret (LIVE)
 *„Tölts ki 3 kérdést — küldök egy 4 oldalas térképet azzal hogy nálad melyik a 3 időszivárgási pont, és melyik egyetlen AI-folyamat hozná a legtöbb javulást."*
@@ -46,7 +46,7 @@ Kimenet (4 oldalas térkép) struktúra:
 1. „Mit látok a válaszaidból" (3-4 mondat)
 2. „A 3 időszivárgási pont nálad" (idézetekkel)
 3. „Az első AI-folyamat amit érdemes bevezetned" (1 konkrét lépés)
-4. „A következő lépés" — Solo Business hírlevél
+4. „A következő lépés" — Expert Flow hírlevél
 
 ## 8. Kimeneti dokumentum
 Markdown → branded HTML email (NEM PDF a jelenlegi verzióban).

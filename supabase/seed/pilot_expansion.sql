@@ -1,4 +1,4 @@
--- Solo Business Akadémia — "Build-in-public 30 nap" kurzus bővítése
+-- Expert Flow Akadémia — "Build-in-public 30 nap" kurzus bővítése
 -- A) Vékony bővítés: 12 új lecke a meglévő modulokba (1, 2, 3, 4)
 -- B) Új modulok: 6, 7, 8 — összesen 11 új lecke
 -- Futtatás (a pilot.sql UTÁN): psql "$SUPABASE_DB_URL" -f supabase/seed/pilot_expansion.sql
@@ -33,13 +33,13 @@ begin
 
   if not exists (select 1 from public.course_lessons where module_id = m_id and position = 3) then
     insert into public.course_lessons (module_id, position, title, body_html, is_preview) values
-      (m_id, 3, 'A Solo Business value ladder',
+      (m_id, 3, 'A Expert Flow value ladder',
 '<p>Négy szint, egymásra építve. Nem terv, hanem ami valóban kialakult az első 30 napban:</p>
 <ol>
 <li><strong>Ingyenes tartalom</strong> — YouTube videók + 41 leveles edu email sorozat. Itt minden hozzáférhető, nincs gating.</li>
 <li><strong>Közösség</strong> — Skool free plan, ahova az emailes nurturolás futtat. Itt valódi beszélgetés, nem csak "iratkozz fel".</li>
 <li><strong>49k Ft pilot</strong> — ez a kurzus, build-in-public dokumentáció, 30 nap rendszerszintű naplója.</li>
-<li><strong>120 / 220 / 450k Ft retainer</strong> — Solo Business AI Operations csomagok, már ügyfélkapcsolatra.</li>
+<li><strong>120 / 220 / 450k Ft retainer</strong> — Expert Flow AI Operations csomagok, már ügyfélkapcsolatra.</li>
 </ol>
 <p>A kulcs: a fizetős termék NEM a tartalom — a tartalom ingyen van. A fizetős termék a <em>rendszer</em>, a <em>folyamat</em> és a <em>személyes elérhetőség</em>.</p>',
         false);
@@ -59,14 +59,14 @@ begin
 
   if not exists (select 1 from public.course_lessons where module_id = m_id and position = 5) then
     insert into public.course_lessons (module_id, position, title, body_html, is_preview) values
-      (m_id, 5, 'Miért rebrandeltem Expert Flow-ról Solo Business-re',
+      (m_id, 5, 'Miért rebrandeltem Expert Flow-ról Expert Flow-re',
 '<p>2026-05-16-án váltottam brandet. Konkrét okok:</p>
 <ul>
 <li>Az "Expert Flow" túl B2B-s volt — cleantech ügynökség-hangzású. A publikus tartalmamat szóló vállalkozóknak csinálom, akik a saját üzletüket építik.</li>
-<li>A "Solo Business" pontosan ezt mondja ki: egy ember + AI rendszer + fizetős szolgáltatás.</li>
+<li>A "Expert Flow" pontosan ezt mondja ki: egy ember + AI rendszer + fizetős szolgáltatás.</li>
 <li>A design rendszer (dark, Instrument Serif italic, oklch színek, rose/violet/sky) változatlan maradt — csak a név változott.</li>
 </ul>
-<p>Az <code>expertflow.hu</code> NEM tűnt el — az maradt háttér B2B outbound brandnek a cleantech ICP-hez. A <code>solobusiness.hu</code> a publikus B2C felület. Kettős stratégia, de egyetlen tartalom-műhely.</p>',
+<p>Az <code>expertflow.hu</code> NEM tűnt el — az maradt háttér B2B outbound brandnek a cleantech ICP-hez. A <code>expertflow.hu</code> a publikus B2C felület. Kettős stratégia, de egyetlen tartalom-műhely.</p>',
         false);
   end if;
 
@@ -91,10 +91,10 @@ begin
   if not exists (select 1 from public.course_lessons where module_id = m_id and position = 5) then
     insert into public.course_lessons (module_id, position, title, body_html, is_preview) values
       (m_id, 5, '41 leveles edu email sorozat',
-'<p>A Solo Business newsletter szerkezete:</p>
+'<p>A Expert Flow newsletter szerkezete:</p>
 <ul>
 <li><strong>1 welcome levél</strong> — bemutatkozás, várakozás kezelése.</li>
-<li><strong>40 oktató levél</strong> — heti 2-3 darab, mind a Solo Business útvonal egy-egy szeletéről.</li>
+<li><strong>40 oktató levél</strong> — heti 2-3 darab, mind a Expert Flow útvonal egy-egy szeletéről.</li>
 </ul>
 <p>A MailerLite group ID <code>188014583560013564</code> alatt fut, double opt-in subscribe endpoint él a <code>solo-business-newsletter.vercel.app</code>-en. Mind a 41 kampány DRAFT-ként előre megírva, az automation workflow MailerLite UI-on lett összerakva (API nem támogatja a workflow-create-et).</p>
 <p>Miért 40 + 1: a Justin Welsh-féle "Saturday Solopreneur" minta szerint a heti edu levél bizalmat épít fizetős termék felé, nem közvetlen eladásra megy. A levelek 90%-a tartalom, 10%-a CTA.</p>',
@@ -107,7 +107,7 @@ begin
 '<p>A landing oldalon ingyenes 30 perces konzultációt ajánlok. A workflow:</p>
 <ol>
 <li>Cal.com-on időpontfoglalás, automata Google Meet link.</li>
-<li>Webhook (HMAC ellenőrzéssel, <code>X-Cal-Signature-256</code>) a Solo Business backendnek.</li>
+<li>Webhook (HMAC ellenőrzéssel, <code>X-Cal-Signature-256</code>) a Expert Flow backendnek.</li>
 <li>A webhook elindítja a recepciós voice agent ágat: Annának értesítés Telegramon, hogy új meeting van.</li>
 <li>A meeting után automatikus followup email — még aznap, nem 3 nap múlva.</li>
 </ol>
@@ -150,7 +150,7 @@ begin
   if not exists (select 1 from public.course_lessons where module_id = m_id and position = 4) then
     insert into public.course_lessons (module_id, position, title, body_html, is_preview) values
       (m_id, 4, '120 / 220 / 450 / 599k Ft retainer csomagok',
-'<p>A pilot kurzus utáni upsell a Solo Business AI Operations retainer. Négy szintes:</p>
+'<p>A pilot kurzus utáni upsell a Expert Flow AI Operations retainer. Négy szintes:</p>
 <ul>
 <li><strong>49k Ft pilot</strong> — első közös sprint, 2 hét, egy konkrét workflow automatizálása.</li>
 <li><strong>199k Ft / hó</strong> — 1 AI rendszer karbantartása, havi 1 review meeting.</li>
@@ -308,7 +308,7 @@ begin
       (m_id, 4, 'Resend + Kit V4 — branded magic link + sequence enroll',
 '<p>Két külön email rendszer, két célra:</p>
 <ul>
-<li><strong>Resend</strong> (vagy Brevo / Postmark) — tranzakciós, magic link küldés. Branded HTML, Solo Business design, Instrument Serif italic.</li>
+<li><strong>Resend</strong> (vagy Brevo / Postmark) — tranzakciós, magic link küldés. Branded HTML, Expert Flow design, Instrument Serif italic.</li>
 <li><strong>Kit V4 (ConvertKit)</strong> — marketing automation. Vásárlás után automatikus sequence enroll: 7+1 napos Justin Welsh-stílusú onboarding.</li>
 </ul>
 <p>A Stripe webhook (<code>checkout.session.completed</code>) elindítja mind a kettőt:</p>
@@ -367,7 +367,7 @@ begin
 
   -- ─── Course leírás frissítése ─────────────────────────────────────
   update public.courses
-  set description = '<p>Ez egy <strong>build-in-public</strong> útikönyv. Nem ígérek titkos formulát — végigviszem mit csináltam az első 30 napban, miközben elindítottam a Solo Business márkát: 0 fizetős ügyféltől az első retainerig.</p><p>8 modul, 34 lecke. A modul 1-5 a marketing és kiszolgálás folyamatát járja végig, a modul 6-8 a háttér-rendszereket: AI agent stack, hogyan készült ez a platform, és a YouTube cut pipeline.</p><p>Ha hasonló úton indulnál — szolgáltató vállalkozóként szeretnéd láthatóvá és értékesíthetővé tenni a tudásod —, itt nem teóriát kapsz, hanem rendszert, naplót és a valódi döntéseket.</p>',
+  set description = '<p>Ez egy <strong>build-in-public</strong> útikönyv. Nem ígérek titkos formulát — végigviszem mit csináltam az első 30 napban, miközben elindítottam a Expert Flow márkát: 0 fizetős ügyféltől az első retainerig.</p><p>8 modul, 34 lecke. A modul 1-5 a marketing és kiszolgálás folyamatát járja végig, a modul 6-8 a háttér-rendszereket: AI agent stack, hogyan készült ez a platform, és a YouTube cut pipeline.</p><p>Ha hasonló úton indulnál — szolgáltató vállalkozóként szeretnéd láthatóvá és értékesíthetővé tenni a tudásod —, itt nem teóriát kapsz, hanem rendszert, naplót és a valódi döntéseket.</p>',
       published = true
   where slug = 'build-in-public-30nap';
 

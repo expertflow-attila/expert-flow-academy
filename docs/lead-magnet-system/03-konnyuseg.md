@@ -108,7 +108,7 @@ Vizuális PDF az alábbi struktúrával:
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│  [Solo Business header]                                 │
+│  [Expert Flow header]                                 │
 │                                                          │
 │  A rendszered, ahogy én látom — [Keresztnév]            │
 │                                                          │

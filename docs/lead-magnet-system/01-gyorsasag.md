@@ -82,7 +82,7 @@ Nap 6: első mérés
 Nap 7: kézzelfogható eredmény (konkrét számmal, pl. „4 óra felszabadult heti")
 
 ## Ha ennél tovább mennél
-1 bekezdés a Solo Business Akadémia 49k kurzusról VAGY a 9 900 Ft belépő
+1 bekezdés a Expert Flow Akadémia 49k kurzusról VAGY a 9 900 Ft belépő
 auditról — válaszd ki melyik illik jobban (lásd döntési logika lent).
 
 HOSSZ: max 800 szó. Anti-AI szótár tilalom (ld. lib/anthropic.ts).
@@ -100,7 +100,7 @@ A döntés a Claude system prompt-jába dinamikusan injektálódik (process-pend
 ## 8. Ügyfélnek küldött dokumentum (markdown → branded HTML email)
 
 ```
-[Solo Business header — violet logó]
+[Expert Flow header — violet logó]
 
 # 48 órás AI Gyorsdiagnózis — [Keresztnév]
 
@@ -111,7 +111,7 @@ A döntés a Claude system prompt-jába dinamikusan injektálódik (process-pend
 
 ---
 
-[Footer: heti 1-2 email a Solo Business 41-leveles oktató sorozatból
+[Footer: heti 1-2 email a Expert Flow 41-leveles oktató sorozatból
 + Skool free közösség invite + 'válaszolj erre az emailre ha kérdés van']
 ```
 
@@ -152,7 +152,7 @@ A +14 napos email VÁLASZA emberi kéz, NEM auto. Ha az ügyfél válaszol, az a
 **A CTA dinamikus a Q4 alapján** (lásd 7. pont döntési logika):
 
 - Q4 >10h → **9 900 Ft Belépő Audit** Stripe Payment Link → 100% beszámít a 359k auditba (LM8 logika)
-- Q4 ≤10h → **Solo Business Akadémia 49 000 Ft** kurzus link
+- Q4 ≤10h → **Expert Flow Akadémia 49 000 Ft** kurzus link
 - Q5-ben ≥1 AI-eszköz + Q4 >10h → **Mini sprint 199 000 Ft** közvetlenül
 
 Az ajánlat NEM erőteljes — egy bekezdés a 4. szekcióban + a +9 napi emailben, NEM külön landing redirect.

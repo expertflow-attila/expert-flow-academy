@@ -133,7 +133,7 @@ A `.env.example` minden új env változót tartalmaz. A Vercel project Settings 
 
 A `hermes-reception` sub-agent-nek hozzá kell adni egy endpoint-ot a notifikáció fogadására és a callback POST-olására. Konkrétan:
 
-- `POST /api/notify` — fogadja a Solo Business lead magnet review értesítéseket
+- `POST /api/notify` — fogadja a Expert Flow lead magnet review értesítéseket
 - A bemenő JSON body szerint Telegram üzenetet küld 3 inline gombbal (Approve / Edit / Reject)
 - Attila kattintásra POST visszaküldi a `callback_url`-re HMAC-aláírással
 
@@ -146,11 +146,11 @@ A Cal.com `solobusiness/ugyfelut-audit` event type — Cal.com UI-on, manuálisa
 #### Event Type létrehozás
 
 1. Cal.com Dashboard → Event Types → **+ New**
-2. **Title:** "Ügyfélút audit (Solo Business)"
+2. **Title:** "Ügyfélút audit (Expert Flow)"
 3. **URL:** `solobusiness/ugyfelut-audit` — fontos, ez a slug megy a `CAL_AUDIT_URL` env változóba
 4. **Description (markdown):**
    ```
-   20 perces ügyfélút audit — Solo Business.
+   20 perces ügyfélút audit — Expert Flow.
    Megnézzük, mi történik attól a pillanattól, hogy valaki érdeklődik nálad,
    addig, hogy ügyfél lesz belőle. 1 munkanapon belül kapsz egy 1 oldalas
    írásos összefoglalót.
@@ -162,7 +162,7 @@ A Cal.com `solobusiness/ugyfelut-audit` event type — Cal.com UI-on, manuálisa
 7. **Availability:** hétfő-szerda-péntek 14:00–16:00 CET
 8. **Buffer:** 10 perc előtte, 10 perc utána
 9. **Limit bookings per day:** max 2
-10. **Limit bookings per week:** max 5 (de a Solo Business form kapacitás-check is védi)
+10. **Limit bookings per week:** max 5 (de a Expert Flow form kapacitás-check is védi)
 11. **Booking questions:**
     - Submission ID (hidden, prefilled metadata): `submission_id`
     - Mit szeretnél javítani konkrétan? (textarea, prefilled metadata: `focus`)
@@ -177,7 +177,7 @@ A Cal.com `solobusiness/ugyfelut-audit` event type — Cal.com UI-on, manuálisa
 #### Webhook konfigurálás
 
 1. Cal.com Dashboard → Webhooks → **+ New**
-2. **Subscriber URL:** `https://akademia.solobusiness.hu/api/cal/audit-booked`
+2. **Subscriber URL:** `https://akademia.expertflow.hu/api/cal/audit-booked`
 3. **Event triggers:**
    - `BOOKING_CREATED` ✅
    - `BOOKING_RESCHEDULED` ✅
@@ -187,7 +187,7 @@ A Cal.com `solobusiness/ugyfelut-audit` event type — Cal.com UI-on, manuálisa
 
 A részletes spec: `content/lead-magnets/03-ugyfelut-audit.md` — 4.4 Cal.com szekció.
 
-### 6. Solo Business homepage + Akadémia kurzus oldal — lead magnet linkek
+### 6. Expert Flow homepage + Akadémia kurzus oldal — lead magnet linkek
 
 A `app/page.tsx` és `app/courses/[slug]/page.tsx` mostantól tartalmaz "Még nem készen áll?" szekciót a 3 lead magnet-tel:
 
@@ -206,7 +206,7 @@ A `lib/mailerlite.ts` exportálja az `enrollNewsletterSubscriber`-t, amit 3 hely
 
 Mindenhol `marketing_consent = true` esetén, fire-and-forget módban (Promise catch), a flow blokkolása nélkül.
 
-Konkrét MailerLite group: `188014583560013564` ("Solo Business — Edu Newsletter").
+Konkrét MailerLite group: `188014583560013564` ("Expert Flow — Edu Newsletter").
 
 Status `unconfirmed` — DOI confirmation a meglevő MailerLite UI workflow szerint.
 

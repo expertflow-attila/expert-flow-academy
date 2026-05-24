@@ -1,4 +1,4 @@
--- Wave 4.1 — Lead magnet submissions table for Solo Business funnel
+-- Wave 4.1 — Lead magnet submissions table for Expert Flow funnel
 --
 -- Stores every lead magnet form submission (LM1 AI-működési térkép, LM2 AI-folyamatvázlat 48h,
 -- LM3 Ügyfélút audit kvalifikáció), the AI-generated draft report, Attila's review state,
@@ -95,7 +95,7 @@ create policy "service_role_full_access" on lead_magnet_submissions
 
 -- Comment for future humans
 comment on table lead_magnet_submissions is
-  'Solo Business lead magnet form submissions, AI-generated reports, Attila review state, delivery state. service_role only.';
+  'Expert Flow lead magnet form submissions, AI-generated reports, Attila review state, delivery state. service_role only.';
 
 comment on column lead_magnet_submissions.attila_review_status is
   'pending|approved|rejected|auto-released|edited|not-applicable. LM1+LM2 require approval before delivery. LM3 (ugyfelut-audit) sets not-applicable since it is qualification-only.';

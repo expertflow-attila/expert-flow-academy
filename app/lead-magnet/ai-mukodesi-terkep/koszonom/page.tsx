@@ -39,7 +39,7 @@ export default async function MapThankYou({
           <div className="mx-auto max-w-2xl px-6 lg:px-10">
             <SectionLabel>Amíg vársz</SectionLabel>
             <h2 className="mt-6 font-display text-3xl tracking-tight md:text-4xl">
-              Nézd meg a <em className="italic em-sky">Saját AI Operations rendszer 30 nap alatt</em> kurzust.
+              Nézd meg a <em className="italic em-sky">Saját AI Operations rendszer 5 nap alatt</em> kurzust.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
               Ha tetszett az ötlet, hogy a térképed alapján AI rendszert építsünk fel — pontosan ezt csinálom 7 modulban: alapok (mit adsz el, kinek, hogyan találnak meg), majd a 3-agentes AI Operations System. 49 000 Ft, 27 lecke.

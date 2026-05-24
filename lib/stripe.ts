@@ -1,4 +1,4 @@
-// Stripe wrapper a Solo Business fizetős lead magnetekhez (LM8 / LM10 / LM11).
+// Stripe wrapper a Expert Flow fizetős lead magnetekhez (LM8 / LM10 / LM11).
 //
 // Funkciók:
 //  - stripe — singleton client
@@ -30,7 +30,7 @@ export const stripe = new Stripe(key, {
 
 const PRICE_AUDIT_9900 = process.env.STRIPE_PRICE_AUDIT_9900;
 const PRICE_AUDIT_BUNDLE_9900 = process.env.STRIPE_PRICE_AUDIT_BUNDLE_9900;
-const APP_URL = process.env.NEXTAUTH_URL ?? "https://akademia.solobusiness.hu";
+const APP_URL = process.env.NEXTAUTH_URL ?? "https://akademia.expertflow.hu";
 
 export type AuditCheckoutVariant = "audit-9900" | "audit-bundle-9900" | "audit-akcio-9900";
 

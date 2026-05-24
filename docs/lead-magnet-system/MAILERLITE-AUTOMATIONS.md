@@ -10,13 +10,13 @@ A 9 új csoport már létrejött az API-val:
 
 | Slug | Group név | Group ID | Cél |
 |------|-----------|----------|-----|
-| `lm-48h-ai-gyorsdiagnozis` | Solo Business — LM4 48h Gyorsdiagnózis | `188340353953171086` | 5 email, 14 nap |
-| `lm-kockazatmentes-audit` | Solo Business — LM5 Kockázatmentes audit | `188340354113603220` | 5 email, 21 nap (lassabb nurture) |
-| `lm-mondd-el-egyszer` | Solo Business — LM3 Mondd el egyszer | `188340353787496071` | 4 email, 14 nap |
-| `lm-ai-rendszer-giveaway-q3` | Solo Business — LM7 Q3 Giveaway pályázók | `188340354309686946` | szegmentált: 4 különböző sequence |
-| `lm-auditprogram-9900` | Solo Business — LM8 9 900 Ft Belépő Audit (PAID) | `188340354477459128` | 5 email, post-delivery follow-up |
-| `lm-csapat-szerep-terkep` | Solo Business — Wave6 Csapat-szerep térkép | `188340354636842684` | 3 email, 10 nap |
-| `lm-mini-onboarding-vazlat` | Solo Business — Wave6 Mini onboarding vázlat | `188340354800420546` | 3 email, 10 nap |
+| `lm-48h-ai-gyorsdiagnozis` | Expert Flow — LM4 48h Gyorsdiagnózis | `188340353953171086` | 5 email, 14 nap |
+| `lm-kockazatmentes-audit` | Expert Flow — LM5 Kockázatmentes audit | `188340354113603220` | 5 email, 21 nap (lassabb nurture) |
+| `lm-mondd-el-egyszer` | Expert Flow — LM3 Mondd el egyszer | `188340353787496071` | 4 email, 14 nap |
+| `lm-ai-rendszer-giveaway-q3` | Expert Flow — LM7 Q3 Giveaway pályázók | `188340354309686946` | szegmentált: 4 különböző sequence |
+| `lm-auditprogram-9900` | Expert Flow — LM8 9 900 Ft Belépő Audit (PAID) | `188340354477459128` | 5 email, post-delivery follow-up |
+| `lm-csapat-szerep-terkep` | Expert Flow — Wave6 Csapat-szerep térkép | `188340354636842684` | 3 email, 10 nap |
+| `lm-mini-onboarding-vazlat` | Expert Flow — Wave6 Mini onboarding vázlat | `188340354800420546` | 3 email, 10 nap |
 | `lm-operations-erettsegi-audit` | Expert Flow B2B — Operations érettségi audit | `188340354962949869` | 4 email, B2B nurture |
 | `lm-pilot-rendszer-blueprint` | Expert Flow B2B — Pilot rendszer-blueprint | `188340355140159254` | 4 email, B2B nurture |
 
@@ -42,7 +42,7 @@ A `lib/mailerlite.ts` minden enrollment-nél MINDKETTŐbe felveszi a subscribert
 | +3 | „Az AI-projekteim 90%-a megbukott" | Saját kudarc-sztori |
 | +7 | „Mi NEM AI-feladat" | Anti-pattern lista |
 | +14 | „Mi történne ha 30 napra elhalasztanád?" | Reverse psychology |
-| +21 | „Itt a Solo Business 49k Akadémia — ha készen állsz" | Soft CTA |
+| +21 | „Itt a Expert Flow 49k Akadémia — ha készen állsz" | Soft CTA |
 
 **Extra:** A `lead_score > 50` ügyfelek a `+5` napos emailbe egy Cal.com kvalifikáció-linket kapnak. Ezt a Solobusiness-academy /lead-magnet/kockazatmentes-audit/koszonom oldal már mutatja inline — emailbe NEM kell külön szegmentálni.
 

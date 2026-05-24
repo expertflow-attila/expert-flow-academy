@@ -42,7 +42,7 @@ System prompt: `lib/anthropic.ts` `ai-folyamatvazlat-48h`.
 
 **Két kimenet ugyanabban a Claude hívásban:**
 1. Magyarázó szöveg (1 oldal)
-2. Excalidraw JSON (4-7 blokk, kézi-rajz-stílus, Solo Business violet)
+2. Excalidraw JSON (4-7 blokk, kézi-rajz-stílus, Expert Flow violet)
 
 System prompt-ban a `--- EXCALIDRAW JSON ---` delimiter elválasztja a kettőt. Process-pending cron a delimiterre splitel és külön mezőbe tárolja.
 
@@ -68,7 +68,7 @@ Standard Wave 4 flow + Excalidraw render lépés (PDF-be vagy inline image-be).
 
 ## 11. Átvezetés fizetős ajánlatba (LIVE)
 
-Cél: **Solo Business Akadémia 49 000 Ft** — „Build-in-public 30 nap" kurzus (5 modul, 11 lecke).
+Cél: **Expert Flow Akadémia 49 000 Ft** — „Build-in-public 30 nap" kurzus (5 modul, 11 lecke).
 
 A Claude system prompt-ban a 3. szekció („Ha innen tovább mennél") konkrétan az Akadémiát említi.
 

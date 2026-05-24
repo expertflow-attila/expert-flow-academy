@@ -42,7 +42,7 @@ export default async function SketchThankYou({
               Ha tetszett az ötlet — itt a <em className="italic em-sky">teljes Akadémia</em>.
             </h2>
             <p className="mt-6 font-sans text-base leading-relaxed text-foreground-soft">
-              A vázlat csak az első lépés. Az Expert Flow Akadémia &bdquo;Saját AI Operations rendszer 30 nap alatt&rdquo; kurzusában lépésről lépésre felépítjük az alapokat (mit adsz el, kinek, hogyan találnak meg) és a működő AI rendszert. 49 000 Ft, 7 modul, 27 lecke.
+              A vázlat csak az első lépés. Az Expert Flow Akadémia &bdquo;Saját AI Operations rendszer 5 nap alatt&rdquo; kurzusában lépésről lépésre felépítjük az alapokat (mit adsz el, kinek, hogyan találnak meg) és a működő AI rendszert. 49 000 Ft, 7 modul, 27 lecke.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <a

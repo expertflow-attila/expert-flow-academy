@@ -41,7 +41,7 @@ A landing oldalon és a tranzakciós emailben **egyértelmű**:
 
 ```
 HERO:
-[Solo Business header]
+[Expert Flow header]
 
 A 9 900 Ft AI-Működési Audit
 8 oldalas dokumentum + 1 órás Loom-magyarázat + Notion munkalap.
