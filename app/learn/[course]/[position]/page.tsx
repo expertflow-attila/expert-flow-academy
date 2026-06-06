@@ -11,6 +11,7 @@ import {
 import { signStreamToken, streamIframeUrl } from "@/lib/cloudflare-stream";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { CopyButton } from "@/components/copy-button";
 
 export const dynamic = "force-dynamic";
 
@@ -173,7 +174,13 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
               {lesson.title}
             </h1>
 
-            {videoIframeSrc && (
+            {lesson.subtitle && (
+              <p className="mt-5 max-w-prose font-sans text-lg leading-relaxed text-foreground-soft">
+                {lesson.subtitle}
+              </p>
+            )}
+
+            {videoIframeSrc ? (
               <div className="mt-10 aspect-video w-full overflow-hidden border border-border-strong bg-background">
                 <iframe
                   src={videoIframeSrc}
@@ -184,6 +191,35 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                   title={lesson.title}
                 />
               </div>
+            ) : (
+              (lesson.summary_points?.length ?? 0) > 0 && (
+                <div className="mt-10 flex aspect-video w-full flex-col items-center justify-center gap-3 border border-border-strong bg-surface text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border-strong text-foreground-muted">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" fill="currentColor" />
+                    </svg>
+                  </div>
+                  <span className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-foreground-muted">
+                    Videó · hamarosan
+                  </span>
+                </div>
+              )
+            )}
+
+            {(lesson.summary_points?.length ?? 0) > 0 && (
+              <div className="mt-12 border-l-2 border-[var(--color-accent-violet)] pl-6">
+                <div className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+                  Ebben a részben
+                </div>
+                <ul className="mt-4 space-y-3">
+                  {lesson.summary_points!.map((point, i) => (
+                    <li key={i} className="flex gap-3 font-sans text-base leading-relaxed text-foreground-soft">
+                      <span className="mt-1 shrink-0 text-[var(--color-accent-violet)]">—</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
 
             {lesson.body_html && (
@@ -191,6 +227,68 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                 className="prose mt-10 max-w-prose font-sans text-base leading-relaxed text-foreground-soft"
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(lesson.body_html) }}
               />
+            )}
+
+            {/* ───── Eszköztár: prompt (kötelező) + letölthető + transcript ───── */}
+            {(lesson.prompt_text || (lesson.downloads?.length ?? 0) > 0 || lesson.transcript) && (
+              <div className="mt-14 border-t border-border pt-10">
+                <div className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
+                  A lecke eszközei
+                </div>
+
+                {lesson.prompt_text && (
+                  <div className="mt-6 border border-border-strong bg-surface p-5 lg:p-6">
+                    <div className="flex items-center justify-between gap-4">
+                      <h3 className="font-display text-lg italic md:text-xl">Prompt</h3>
+                      <CopyButton
+                        text={lesson.prompt_text}
+                        className="hover-arrow shrink-0 border border-foreground bg-foreground px-4 py-2 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
+                      />
+                    </div>
+                    {lesson.prompt_intro && (
+                      <p className="mt-3 font-sans text-sm leading-relaxed text-foreground-soft">
+                        {lesson.prompt_intro}
+                      </p>
+                    )}
+                    <pre className="mt-4 max-h-80 overflow-auto whitespace-pre-wrap break-words border border-border bg-background p-4 font-mono text-xs leading-relaxed text-foreground-soft">
+                      {lesson.prompt_text}
+                    </pre>
+                  </div>
+                )}
+
+                {(lesson.downloads?.length ?? 0) > 0 && (
+                  <div className="mt-4 border border-border-strong bg-surface p-5 lg:p-6">
+                    <h3 className="font-display text-lg italic md:text-xl">Letölthető anyagok</h3>
+                    <ul className="mt-4 space-y-2">
+                      {lesson.downloads!.map((d, i) => (
+                        <li key={i}>
+                          <a
+                            href={d.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover-arrow group flex items-center justify-between border border-border bg-background px-4 py-3 font-sans text-sm text-foreground-soft transition-colors hover:text-foreground"
+                          >
+                            <span>{d.label}</span>
+                            <span className="font-mono text-foreground-muted transition-colors group-hover:text-foreground">↓</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {lesson.transcript && (
+                  <details className="mt-4 border border-border-strong bg-surface p-5 lg:p-6 [&_summary::-webkit-details-marker]:hidden">
+                    <summary className="flex cursor-pointer list-none items-center justify-between font-display text-lg italic md:text-xl">
+                      Leirat
+                      <span className="font-mono text-sm text-foreground-muted">▾</span>
+                    </summary>
+                    <div className="mt-4 whitespace-pre-wrap font-sans text-sm leading-relaxed text-foreground-soft">
+                      {lesson.transcript}
+                    </div>
+                  </details>
+                )}
+              </div>
             )}
 
             {/* Footer nav + progress */}

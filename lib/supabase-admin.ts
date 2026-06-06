@@ -33,12 +33,23 @@ export type CourseModule = {
   description: string | null;
 };
 
+export type LessonDownload = {
+  label: string;
+  url: string;
+};
+
 export type CourseLesson = {
   id: string;
   module_id: string;
   position: number;
   title: string;
+  subtitle: string | null;
+  summary_points: string[] | null;
   body_html: string | null;
+  prompt_intro: string | null;
+  prompt_text: string | null;
+  downloads: LessonDownload[] | null;
+  transcript: string | null;
   cloudflare_stream_uid: string | null;
   duration_seconds: number | null;
   is_preview: boolean;

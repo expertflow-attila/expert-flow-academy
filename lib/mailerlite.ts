@@ -25,6 +25,10 @@ const LM_GROUP_IDS: Record<EnrollSource, string | null> = {
   "lm-mini-onboarding-vazlat": "188340354800420546",
   "lm-operations-erettsegi-audit": "188340354962949869",
   "lm-pilot-rendszer-blueprint": "188340355140159254",
+  // Business Start ingyenes mini-kurzus — saját nurture csoport.
+  // A group ID env-ből jön (MAILERLITE_BUSINESS_START_GROUP_ID); amíg nincs beállítva,
+  // a feliratkozó csak a 41-leveles newsletterbe kerül.
+  "course-business-start": process.env.MAILERLITE_BUSINESS_START_GROUP_ID ?? null,
 };
 
 export type EnrollSource =
@@ -39,7 +43,8 @@ export type EnrollSource =
   | "lm-csapat-szerep-terkep"
   | "lm-mini-onboarding-vazlat"
   | "lm-operations-erettsegi-audit"
-  | "lm-pilot-rendszer-blueprint";
+  | "lm-pilot-rendszer-blueprint"
+  | "course-business-start";
 
 export type EnrollResult =
   | { ok: true; subscriberId: string; groups: string[] }
