@@ -1,0 +1,8 @@
+.env.local.bak*
+.git.broken/
+package-lock 2.json
+*.bak
+*.bak2
+*.bak3
+*.bak4
+*.bak6
