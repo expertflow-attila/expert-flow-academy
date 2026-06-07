@@ -26,6 +26,8 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
   const isMember = Boolean(
     session?.user?.id && (await userHasMembership(session.user.id, course.id)),
   );
+  // Ingyenes kurzus: nincs ár / nincs Stripe ár → önkiszolgáló beiratkozás (/api/enroll)
+  const isFree = !course.price_huf || !course.stripe_price_id;
 
   return (
     <>
@@ -48,7 +50,9 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
             <SectionLabel>
               Kurzus · {course.price_huf
                 ? `${new Intl.NumberFormat("hu-HU").format(course.price_huf)} Ft`
-                : "Hamarosan"}
+                : isFree
+                  ? "Ingyenes"
+                  : "Hamarosan"}
             </SectionLabel>
             <h1 className="mt-6 font-display text-4xl tracking-tight text-balance md:text-5xl lg:text-6xl">
               <em className="italic em-rose">{course.title}</em>
@@ -72,6 +76,13 @@ export default async function CourseDetail({ params }: { params: Promise<Params>
                   className="hover-arrow group inline-block border border-foreground bg-foreground px-8 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
                 >
                   Indítás <span className="arrow">→</span>
+                </Link>
+              ) : isFree ? (
+                <Link
+                  href={`/api/enroll?course=${course.slug}`}
+                  className="hover-arrow group inline-block border border-foreground bg-foreground px-8 py-4 font-mono text-xs uppercase tracking-[0.22em] text-background transition-colors hover:bg-transparent hover:text-foreground"
+                >
+                  Kezdés ingyen <span className="arrow">→</span>
                 </Link>
               ) : session?.user?.id ? (
                 <form action="/api/checkout" method="post">
