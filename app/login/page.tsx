@@ -4,17 +4,22 @@ import { signIn } from "@/lib/auth";
 import { Footer, Header, SectionLabel } from "@/components/site-chrome";
 import { safeInternalPath } from "@/lib/url-safety";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { AutoSubmit } from "@/components/auto-submit";
 
 export const metadata = { title: "Belépés" };
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string; error?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; error?: string; email?: string }>;
 }) {
   const params = await searchParams;
   const callbackUrl = safeInternalPath(params?.callbackUrl, "/learn");
   const error = params?.error;
+  // Előtöltött email (pl. business-start landingről átirányítva) — csak ha
+  // hibátlan és nincs hiba-állapot, hogy az auto-submit ne pörögjön körbe.
+  const rawEmail = (params?.email ?? "").toString().trim().toLowerCase();
+  const prefillEmail = !error && rawEmail.includes("@") ? rawEmail : "";
 
   async function emailSignIn(formData: FormData) {
     "use server";
@@ -54,13 +59,14 @@ export default async function LoginPage({
               </div>
             )}
 
-            <form action={emailSignIn} className="mt-10 space-y-5">
+            <form id="login-form" action={emailSignIn} className="mt-10 space-y-5">
               <input type="hidden" name="callbackUrl" value={callbackUrl} />
               <input
                 type="email"
                 name="email"
                 required
                 autoComplete="email"
+                defaultValue={prefillEmail}
                 placeholder="te@vallalkozasod.hu"
                 className="w-full border border-border-strong bg-background px-4 py-4 font-sans text-base text-foreground placeholder:text-foreground-dim focus:border-foreground focus:outline-none"
               />
@@ -71,6 +77,7 @@ export default async function LoginPage({
                 Belépési link kérése <span className="arrow">→</span>
               </button>
             </form>
+            {prefillEmail && <AutoSubmit formId="login-form" />}
 
             <p className="mt-8 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-foreground-muted">
               Még nincs hozzáférésed? Nézd meg a{" "}
